@@ -47,7 +47,11 @@ const WeatherMainPage = () => {
     }, [data])
     return(
         <div className='col-12'>
-            <form>
+            <form
+            onSubmit={(e) => {
+                e.preventDefault();
+                getWeatherData(e);
+            }}>
                 <div className="form-group">
                     <label htmlFor="cityName">City</label>
                     <input 
@@ -59,7 +63,7 @@ const WeatherMainPage = () => {
                         onChange={(e) => handleCityName(e.target.value)}
                         />
                 </div>
-                <button type="button" className="btn btn-primary" onClick={(e) => getWeatherData(e)}>Send</button>
+                <button type="submit" className="btn btn-primary">Send</button>
             </form>
             {data && <TemperatureMainInfo 
                 temp={data && temp} 

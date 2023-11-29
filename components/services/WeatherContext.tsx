@@ -17,7 +17,7 @@ type WeatherData = {
 export interface ServiceGetWeatherContextProps  {
     data: WeatherData | null,
     handleCityName: ( value:string ) => void,
-    getWeatherData: ( e: React.MouseEvent<HTMLButtonElement> ) => void
+    getWeatherData: ( e: React.FormEvent<HTMLFormElement> ) => void
 }
 
 export const WeatherContext = createContext<ServiceGetWeatherContextProps>({} as ServiceGetWeatherContextProps)
@@ -36,7 +36,7 @@ const WeatherContextProvider: FC<WeatherContextProviderProps> = ({
 
     const WEATHER_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.NEXT_PUBLIC_API_KEY_WEATHER}&units=metric&lang=en`
 
-    const getWeatherData = ( e: React.MouseEvent<HTMLButtonElement> ) => {
+    const getWeatherData = ( e: React.FormEvent<HTMLFormElement> ) => {
 
         if(e){
             e.preventDefault()
