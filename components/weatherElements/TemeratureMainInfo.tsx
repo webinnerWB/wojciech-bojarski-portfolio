@@ -1,7 +1,11 @@
 import React, {
-    FC
+    FC,
+    useEffect,
+    useContext
 } from 'react'
-
+import WeatherInfoBox from './WeatherInfoBox'
+import { ServiceGetWeatherContextProps, WeatherContext } from '../services/WeatherContext'
+import { ServiceTimeZoneContextProps, TimeZoneContext } from '../services/TimeZoneContext'
 import style from '../../style/weather.module.scss'
 
 type temperatureData = {
@@ -11,7 +15,27 @@ type temperatureData = {
     imgDesc: string | null
 }
 
+
+
+
 const TemperatureMainInfo: FC<temperatureData> = ({ temp, name, iconURL,imgDesc }: temperatureData) => {
+    const {
+        data
+    }: ServiceGetWeatherContextProps = useContext(WeatherContext)
+
+    const {
+        dataTimeZone,
+        getTimeZonaData
+    }: ServiceTimeZoneContextProps = useContext(TimeZoneContext)
+    
+    useEffect(() => {
+        if(data) {
+            getTimeZonaData(data.coord.lat, data.coord.lon)
+            if(dataTimeZone) {
+                console.log(`dataTimeZone`, dataTimeZone)
+            }
+        }
+    }, [data])
     return(
         <>
             <div className='row'>
@@ -27,6 +51,10 @@ const TemperatureMainInfo: FC<temperatureData> = ({ temp, name, iconURL,imgDesc 
                         
                         {iconURL ? <img src={`../../${iconURL}`} className={style.weatherIcon}/> : null }
                     </div>
+                    <WeatherInfoBox 
+                    icon={<i className={`fa-regular fa-sun fa-2xs ${style.iconStyle}`} ></i>}
+                    title={`Test`}
+                    value={dataTimeZone && dataTimeZone.timezone}/>
                 </div>
             </div>
         </>

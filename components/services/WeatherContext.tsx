@@ -1,7 +1,6 @@
 import React,
 {
     createContext,
-    useEffect,
     useState,
     FC,
     ReactNode
@@ -11,7 +10,8 @@ type WeatherData = {
     data: any,
     main: any,
     name: string,
-    weather: any
+    weather: any,
+    coord: any
 }
 
 export interface ServiceGetWeatherContextProps  {
@@ -44,8 +44,8 @@ const WeatherContextProvider: FC<WeatherContextProviderProps> = ({
 
         fetch(WEATHER_URL)
             .then(res => res.json())
-            .then(req => {
-                setData(() => req)
+            .then(data => {
+                setData(() => data)
             }).catch(err => {
                 console.error(`Error: ${err}`)
             })
