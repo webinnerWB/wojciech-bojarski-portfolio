@@ -24,15 +24,30 @@
     font-size: 12px;
     font-weight: 500;
 }
-.infoWeatherWrapper {
+
+.boxContainer {
     display: flex;
-    background-color: #2f2f2f;
-    color: #ffffff;
-    width: 50%;
-    border-radius: 25px;
-}
-.iconStyle {
-    font-size: 22px;
-    display: flex;
-    margin: 22px 15px 0 15px;
+    flex-wrap: wrap;
+    .infoWeatherWrapper {
+        display: flex;
+        background-color: #2f2f2f;
+        color: #ffffff;
+        width: 45%;
+        margin: 15px 15px 15px 0;
+        border-radius: 25px;
+    }
+    .iconStyle {
+        font-size: 22px;
+        display: flex;
+        margin: 25px 20px 0 25px;
+    }
+    .weatherDetailsWrapper {
+        padding: 5px;
+    }
+    .boxTitle {
+        font-size: 1.5rem;
+    }
+    .boxValue {
+        font-weight: 500
+    }
 }

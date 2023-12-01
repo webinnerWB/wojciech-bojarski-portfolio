@@ -9,7 +9,9 @@ import React, {
 
 type TimeZoneData = {
     dataTimeZone: any,
-    timezone: any
+    timezone: string,
+    date: string,
+    time_12: string
 }
 
 export interface ServiceTimeZoneContextProps  {

@@ -5,7 +5,7 @@ import style from '../../style/weather.module.scss'
 type BoxInfo = {
     icon: React.ReactNode,
     title: string,
-    value: string|null
+    value: string|React.ReactNode|null
 }
 
 const WeatherInfoBox: FC<BoxInfo> = ({icon, title, value}: BoxInfo) => {
@@ -13,8 +13,8 @@ const WeatherInfoBox: FC<BoxInfo> = ({icon, title, value}: BoxInfo) => {
         <div className={style.infoWeatherWrapper}>
             {icon}
             <div className={style.weatherDetailsWrapper}>
-                <h2>{title}</h2>
-                <p>{value}</p>
+                <h2 className={style.boxTitle}>{title}</h2>
+                <p className={`${style.margin0} ${style.boxValue}`}>{value}</p>
             </div>
         </div>
     )

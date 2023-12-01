@@ -11,13 +11,17 @@ type WeatherData = {
     main: any,
     name: string,
     weather: any,
-    coord: any
+    coord: any,
+    wind: any,
+    clouds: any,
+    sys: any
 }
 
 export interface ServiceGetWeatherContextProps  {
     data: WeatherData | null,
     handleCityName: ( value:string ) => void,
     getWeatherData: ( e: React.FormEvent<HTMLFormElement> ) => void
+    getTimeFromTimeZone: (timeZone:string, country:string, time:number) => string
 }
 
 export const WeatherContext = createContext<ServiceGetWeatherContextProps>({} as ServiceGetWeatherContextProps)
@@ -51,10 +55,17 @@ const WeatherContextProvider: FC<WeatherContextProviderProps> = ({
             })
     }
 
+    const getTimeFromTimeZone = (timeZone:string, country:string, time:number) => {
+       const converterTime =  new Date(time * 1000).toLocaleTimeString(`${country.toLowerCase()}-${country}`, {hour12: true, timeZone: timeZone})
+       console.log(`converterTime`, converterTime)
+       return converterTime
+    }
+
     const contextValue: ServiceGetWeatherContextProps = {
         handleCityName,
         data,
-        getWeatherData
+        getWeatherData,
+        getTimeFromTimeZone
     };
     
     return (
