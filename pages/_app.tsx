@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app'
 import WeatherContextProvider from '../components/services/WeatherContext'
 import TimeZoneContextProvider from '../components/services/TimeZoneContext'
+import MultiWeatherProvider from '../components/services/MultiWeatherContext'
 import Head from 'next/head';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -15,7 +16,9 @@ export default function App({ Component, pageProps }: AppProps) {
                 <div className='row'>
                     <WeatherContextProvider>
                         <TimeZoneContextProvider>
-                            <Component {...pageProps}/>
+                            <MultiWeatherProvider>
+                                <Component {...pageProps}/>
+                            </MultiWeatherProvider>
                         </TimeZoneContextProvider>
                     </WeatherContextProvider>
                 </div>
