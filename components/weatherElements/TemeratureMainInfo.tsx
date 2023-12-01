@@ -43,7 +43,7 @@ const TemperatureMainInfo: FC<temperatureData> = ({ temp, name, iconURL,imgDesc 
         <>
             <div className='row'>
                 <div className='col-6'>
-                    <div className={style.setFlex}>
+                    <div className={style.infoWeatherWrapper}>
                         <div className={style.weatherInfoContainer}>
                             <div className={style.title}>
                                 <h1 className={style.margin0}>{`Weather in ${name}`}</h1>

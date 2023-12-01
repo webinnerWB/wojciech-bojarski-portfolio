@@ -1,11 +1,14 @@
-.setFlex {
+.infoWeatherWrapper {
     color: #ffffff;
     display: flex;
     align-items: center;
+    width: 90%;
 }
 .weatherIcon {
     width: 96px;
     height: 96px;
+    display: block;
+    margin: auto;
 }
 .weatherInfoContainer {
     margin-right: 10px;

@@ -26,7 +26,7 @@ const WeatherMainPage = () => {
             if (matchedInfo) {
                 if(((iconID === 800) || (iconID === 801) || (iconID === 802) || (iconID === 803)) && (icon === 'n') && matchedInfo.n) {
                     setImgURL(matchedInfo.n);
-                }else if(matchedInfo.img && (icon === 'd')) {
+                }else if(matchedInfo.img) {
                     setImgURL(matchedInfo.img);
                     }
                 setImgDesc(matchedInfo.description);
