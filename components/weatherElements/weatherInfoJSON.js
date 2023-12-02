@@ -206,7 +206,7 @@ const weatherInfo = [
     {
         id: 701,
         description: 'mist',
-        // img: '/weather_icons/'
+        img: '/weather_icons/fog.gif'
     },
     {
         id: 711,
@@ -226,7 +226,7 @@ const weatherInfo = [
     {
         id: 741,
         description: 'fog',
-        // img: '/weather_icons/'
+        img: '/weather_icons/fog.gif'
     },
     {
         id: 751,

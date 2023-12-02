@@ -7,14 +7,16 @@ import React, {
 
 type MultiWeatherData = {
     dataMultiWeather: any,
+    dt: number,
+    weather: any
 }
 
-export interface MultiWeatherContextProps {
-    dataMultiWeather: MultiWeatherData|null,
+export interface ServiceMultiWeatherContextProps {
+    dataMultiWeather: MultiWeatherData[]|null,
     getMultiWeather: (lat:string, long:string) => void
 }
 
-export const MultiWeatherContext = createContext<MultiWeatherContextProps>({} as MultiWeatherContextProps)
+export const MultiWeatherContext = createContext<ServiceMultiWeatherContextProps>({} as ServiceMultiWeatherContextProps)
 
 type MultiWeatherProviderProps = {
     children: ReactNode
@@ -38,7 +40,7 @@ const MultiWeatherProvider: FC<MultiWeatherProviderProps> = ({
             })
 
     }
-    const contextValue: MultiWeatherContextProps ={
+    const contextValue: ServiceMultiWeatherContextProps ={
         dataMultiWeather,
         getMultiWeather
     }
