@@ -22,6 +22,7 @@ const WeatherMainPage = () => {
     const [icon, setIcon] = useState<string|null>(null)
     const [iconForecast, setIconForecast] = useState<string|null>(null)
     const [forecastDataArray, setForecastDataArray] = useState<any[]>([])
+    const [currentDay, setCurrentDay] = useState<string|null>(null)
 
     const {
         handleCityName,
@@ -103,15 +104,40 @@ const WeatherMainPage = () => {
         }
     }, [data, dataMultiWeather, forecastDataArray, iconForecastID])
 
-    const multiWeatherForecastTemplate = forecastDataArray.map((el, index) => (
+    useEffect(() => {
+        if(data&& dataTimeZone) {
+            const now = new Date(parseInt(data.dt) *1000).toLocaleDateString(`${data.sys.country.toLowerCase()}-${data.sys.country}`, {timeZone: dataTimeZone.timezone})
+            const date = now.split('.')
+            let day = date[0]
+            let month = date[1]
+            const year =date[2]
+            const currentDate = `${day}.${month}.${year}`;
+            setCurrentDay(currentDate)
+            console.log(dataTimeZone.date)
+            console.log(currentDay)
+        }
+    }, [data, dataTimeZone])
+
+    const FORECASTtoDay = forecastDataArray.filter(el => {
+        const elDay = new Date(el.dt * 1000).toLocaleDateString()
+        return  currentDay == elDay
+    });
+
+    console.log(`FORECASTtoDay: `, FORECASTtoDay)
+    
+    const FORECASTnext = forecastDataArray.filter(el => {
+        const elDay = new Date(el.dt * 1000).toLocaleDateString()
+        return elDay !== currentDay
+    });
+
+    const multiWeatherForecastTemplateToDay = FORECASTtoDay.map((el, index) => (
         <CurrentDayForecast 
-            key={el.dt} // Adding a unique key prop is recommended when rendering arrays of components
+            key={el.dt}
             time={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && getTimeFromTimeZone(dataTimeZone.timezone, data.sys.country, el.dt)}
             icon={dataMultiWeather && imgForecastURL[index]}
             temp={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(el.main.temp)}
         />
     ));
-    
 
     return(
         <div className='col-12'>
@@ -187,12 +213,7 @@ const WeatherMainPage = () => {
                 </div>
                 <div className='col-6'>
                     {dataMultiWeather &&
-                    // <CurrentDayForecast 
-                    //     time={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && getTimeFromTimeZone(dataTimeZone.timezone, data.sys.country, forecastDataArray[0].dt)}
-                    //     icon={dataMultiWeather && imgForecastURL}
-                    //     temp={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(forecastDataArray[0].main.temp)}
-                    // />
-                    multiWeatherForecastTemplate
+                        multiWeatherForecastTemplateToDay
                     }
                 </div>
             </div>
