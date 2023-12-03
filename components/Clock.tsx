@@ -22,6 +22,9 @@ const [sec, setSec] = useState<number>(parseInt(splitTmesec[0]))
 const [amPm, setAmPm] = useState<string>(splitTmesec[1])
 
 useEffect(() => {
+    setYear(splitDate[0])
+    setMonth(splitDate[1])
+    setDay(splitDate[2])
     setHour(parseInt(splitTime[0]))
     setMin(parseInt(splitTime[1]))
     setSec(parseInt(splitTmesec[0]))
