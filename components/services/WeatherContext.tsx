@@ -59,9 +59,9 @@ const WeatherContextProvider: FC<WeatherContextProviderProps> = ({
 
     const getTimeFromTimeZone = (timeZone:string, country:string, time:number) => {
        const converterTime =  new Date(time * 1000).toLocaleTimeString(`${country.toLowerCase()}-${country}`, {hour12: true, timeZone: timeZone})
-       const x = new Date(time * 1000).toLocaleDateString()
-       const z = `${x} ${converterTime}`
-       return z
+    //    const x = new Date(time * 1000).toLocaleDateString()
+    //    const z = `${x} ${converterTime}`
+    //    return z
        return converterTime
     }
 

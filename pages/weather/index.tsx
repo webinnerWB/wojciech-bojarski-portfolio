@@ -161,7 +161,8 @@ const WeatherMainPage = () => {
         <SwiperSlide id={el.dt} key={`slide-${el.dt}`} onClick={() => showForecastDetails(el)}>
             <CurrentDayForecast 
             time={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && getTimeFromTimeZone(dataTimeZone.timezone, data.sys.country, el.dt)}
-            icon={dataMultiWeather && FORECASTtoDay.length > 1 ?  imgForecastURL[index+1] : imgForecastURL[index]}
+            icon={dataMultiWeather && (FORECASTtoDay[0].dt !== forecastDataArray[0].dt && FORECASTtoDay[0].dt === forecastDataArray[1].dt) ?  
+                imgForecastURL[index+1] : imgForecastURL[index]}
             temp={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(el.main.temp)}
             />
         </SwiperSlide>
