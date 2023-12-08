@@ -1,11 +1,14 @@
-import React, { FC } from 'react'
+import React, { 
+    FC, 
+    ReactNode 
+} from 'react'
 
 import style from '../../style/weather.module.scss'
 
 type BoxInfo = {
-    icon: React.ReactNode,
+    icon: ReactNode,
     title: string,
-    value: string|React.ReactNode|null
+    value: string|ReactNode|null
 }
 
 const WeatherInfoBox: FC<BoxInfo> = ({icon, title, value}: BoxInfo) => {

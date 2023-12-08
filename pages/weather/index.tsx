@@ -8,6 +8,7 @@ import { Clock } from '../../components/Clock'
 import { CurrentDayForecast } from '../../components/weatherElements/CurrentDayForecast'
 import weatherInfo from '../../components/weatherElements/weatherInfoJSON'
 import { Swiper, SwiperSlide } from '../../components/Swiper'
+import WeatherForecast from '../../components/weatherElements/WeatherForecast'
 
 import style from '../../style/weather.module.scss'
 
@@ -22,14 +23,15 @@ const WeatherMainPage = () => {
     const [icon, setIcon] = useState<string|null>(null)
     const [forecastDataArray, setForecastDataArray] = useState<any[]>([])
     const [currentDay, setCurrentDay] = useState<string|null>(null)
-    const [forecastDataInfo, setforecastDataInfo ] = useState<any>()
+    const [forecastDataInfo, setForecastDataInfo ] = useState<any>()
     const [showForecast, setShowForecast] = useState<boolean>(false)
 
     const {
         handleCityName,
         data,
         getWeatherData,
-        getTimeFromTimeZone
+        getTimeFromTimeZone,
+        getTimeFromTimeZoneWithDate
     }: ServiceGetWeatherContextProps = useContext(WeatherContext)
 
     const {
@@ -75,6 +77,7 @@ const WeatherMainPage = () => {
     useEffect(() => {
         setForecastDataArray([])
         setImgForecastURL([])
+        setImgDescForecastURL([])
         if (data) {
             generateIcon(data.weather[0])
         }
@@ -84,7 +87,7 @@ const WeatherMainPage = () => {
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
         if(data){
-            console.log(data)
+            console.log(`data: `, data)
             setTemp(Math.floor(data.main.temp))
             setName(data.name)
             setIconID(data.weather[0].id)
@@ -109,6 +112,7 @@ const WeatherMainPage = () => {
             }
             if (data && dataMultiWeather && forecastDataArray.length > 0) {
                 setImgForecastURL([])
+                setImgDescForecastURL([])
                 generateIcon(forecastDataArray)
                 console.log(`forecastDataArray: `, forecastDataArray)
             }
@@ -141,9 +145,6 @@ const WeatherMainPage = () => {
     useEffect(() => {
         if(forecastDataInfo && showForecast) {
             generateIcon(forecastDataInfo.weather[0])
-            console.log(forecastDataInfo)
-            console.log(iconID)
-
         }
     }, [iconID])
 
@@ -152,51 +153,71 @@ const WeatherMainPage = () => {
         return  currentDay === elDay
     });
     
-    const FORECASTnext = forecastDataArray.filter(el => {
-        const elDay = new Date(el.dt * 1000).toLocaleDateString()
-        return elDay !== currentDay
-    });
+    const FORECASTnext = forecastDataArray.slice(FORECASTtoDay.length)
     console.log(`FORECASTtoDay: `, FORECASTtoDay)
+    console.log(`FORECASTnext: `, FORECASTnext)
+
+    const multiWeatherForecastTemplateNextDay = FORECASTnext.map((el, index) => (
+        <SwiperSlide id={el.dt} key={`slide-${el.dt}`} onClick={() => showForecastDetails(el)}>
+            <WeatherForecast 
+            day={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && getTimeFromTimeZoneWithDate(dataTimeZone.timezone, data.sys.country, el.dt)}
+            icon={dataMultiWeather && imgForecastURL[FORECASTtoDay.length + index]}
+            description={dataMultiWeather && imgDescForecastURL[FORECASTtoDay.length + index]}
+            temp={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(el.main.temp)}
+            />
+        </SwiperSlide>
+    ));
+
     const multiWeatherForecastTemplateToDay = FORECASTtoDay.map((el, index) => (
         <SwiperSlide id={el.dt} key={`slide-${el.dt}`} onClick={() => showForecastDetails(el)}>
             <CurrentDayForecast 
             time={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && getTimeFromTimeZone(dataTimeZone.timezone, data.sys.country, el.dt)}
-            icon={dataMultiWeather && (FORECASTtoDay[0].dt !== forecastDataArray[0].dt && FORECASTtoDay[0].dt === forecastDataArray[1].dt) ?  
-                imgForecastURL[index+1] : imgForecastURL[index]}
+            icon={dataMultiWeather &&
+                (
+                  FORECASTtoDay[0].dt !== forecastDataArray[0].dt &&
+                  (
+                    FORECASTtoDay[0].dt === forecastDataArray[1].dt ? imgForecastURL[index + 1] :
+                    FORECASTtoDay[0].dt === forecastDataArray[2].dt ? imgForecastURL[index + 2] :
+                    FORECASTtoDay[0].dt === forecastDataArray[3].dt ? imgForecastURL[index + 3] :
+                    imgForecastURL[index]
+                  )
+                ) || imgForecastURL[index]}
             temp={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(el.main.temp)}
             />
         </SwiperSlide>
     ));
 
     const showForecastDetails = (el:any) => {
-        setforecastDataInfo(el)
+        // setShowForecast(false)
+        setForecastDataInfo(el)
         setIconID(null)
         setIcon(null)
         setShowForecast(true)
+        console.log(`EL: `, el)
+        console.log(`FORECASTtoDay.length + 1: `, FORECASTtoDay.length + 1)
     }
 
     return(
-        <div className='col-12'>
+        <div className='col-lg-12'>
             <form
-            onSubmit={(e) => {
-                e.preventDefault();
-                getWeatherData(e);
-            }}>
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    getWeatherData(e);
+                }}>
                 <div className="form-group">
-                    <label htmlFor="cityName">City</label>
                     <input 
                         type="cityName" 
-                        className="form-control" 
+                        className={`form-control ${style.searchInput}`} 
                         id="cityName" 
                         aria-describedby="cityName" 
-                        placeholder="City"
+                        placeholder="Search for locations"
                         onChange={(e) => handleCityName(e.target.value)}
                         />
+                    {/* <button type="submit" className="btn btn-primary">Send</button> */}
                 </div>
-                <button type="submit" className="btn btn-primary">Send</button>
             </form>
-            <div className='row'>
-                <div className='col-6'>
+            <div className={`row ${style.alignCenter}`}>
+                <div className='col-lg-6'>
                     {data && <TemperatureMainInfo 
                         temp={data && !showForecast ? temp : Math.floor(forecastDataInfo.main.temp)} 
                         name={ data && name } 
@@ -250,14 +271,24 @@ const WeatherMainPage = () => {
                         </div>
                     }
                 </div>
-                <div className='col-6'>
-                    {dataMultiWeather &&
+                <div className='col-lg-6'>
+                    {dataMultiWeather && (multiWeatherForecastTemplateToDay.length > 0) ?
                        <>
                         <h3 className={style.h3}>Today`s weather forecast:</h3>
                         <Swiper>
-                            {multiWeatherForecastTemplateToDay.length > 0 ? multiWeatherForecastTemplateToDay : <span className={style.nodata}>No data</span>}
+                            {multiWeatherForecastTemplateToDay}
                         </Swiper>
                        </>
+                       : null
+                    }
+                    {dataMultiWeather && (multiWeatherForecastTemplateNextDay.length > 0) ?
+                       <>
+                        <h3 className={`${style.h3} ${style.space}`}>5-day weather forecast:</h3>
+                        <Swiper>
+                            {multiWeatherForecastTemplateNextDay}
+                        </Swiper>
+                       </>
+                       : null
                     }
                 </div>
             </div>

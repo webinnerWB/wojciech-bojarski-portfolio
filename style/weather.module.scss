@@ -38,6 +38,9 @@
         width: 45%;
         margin: 15px 15px 15px 0;
         border-radius: 25px;
+        @media screen and (max-width:767px) {
+            width: 100%;
+        }
     }
     .iconStyle {
         font-size: 22px;
@@ -49,6 +52,9 @@
     }
     .boxTitle {
         font-size: 1.5rem;
+        @media screen and (max-width:1199px) {
+            font-size: 1.2rem;
+        }
     }
     .boxValue {
         font-weight: 500
@@ -65,8 +71,12 @@
     background-color: #2f2f2f;
     border-radius: 25px;
     padding: 15px 0;
+    max-height: 235px;
     .p {
         margin: 0;
+        text-wrap: balance;
+        text-align: center;
+        padding: 2px;
     }
     
 }
@@ -78,4 +88,34 @@
     font-size: 30px;
     font-weight: 500;
     text-align: center;
+}
+.space {
+    margin-top: 35px;
+}
+.alignCenter {
+    align-items: center;
+    height: 85vh;
+}
+.searchInput {
+    background-color: #2f2f2f !important;
+    border: none;
+    width: 45%;
+    color:#ffffff !important;
+    display: block;
+    padding: 10px 15px;
+    margin: 15px auto;
+    border-radius: 25px;
+    outline: none;
+    box-shadow: none;
+}
+.searchInput::placeholder  {
+    color:#ffffff;
+    @media screen and (max-width:401px) {
+        font-size: 0.7rem;
+    }
+}
+.searchInput:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: #ffffff !important;
 }
