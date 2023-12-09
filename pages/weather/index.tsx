@@ -89,7 +89,6 @@ const WeatherMainPage = () => {
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
         if(!error404 && data){
-            console.log(`data: `, data)
             setTemp(Math.floor(data.main.temp))
             setName(data.name)
             setIconID(data.weather[0].id)
@@ -116,7 +115,6 @@ const WeatherMainPage = () => {
                 setImgForecastURL([])
                 setImgDescForecastURL([])
                 generateIcon(forecastDataArray)
-                console.log(`forecastDataArray: `, forecastDataArray)
             }
         }
     }, [data, dataMultiWeather, forecastDataArray])
@@ -130,7 +128,6 @@ const WeatherMainPage = () => {
             const year =date[2]
             const currentDate = `${day}.${month}.${year}`;
             setCurrentDay(currentDate)
-            // console.log(dataTimeZone.date)
         }
     }, [data, dataTimeZone])
 
@@ -156,8 +153,6 @@ const WeatherMainPage = () => {
     });
     
     const FORECASTnext = forecastDataArray.slice(FORECASTtoDay.length)
-    console.log(`FORECASTtoDay: `, FORECASTtoDay)
-    console.log(`FORECASTnext: `, FORECASTnext)
 
     const multiWeatherForecastTemplateNextDay = FORECASTnext.map((el, index) => (
         <SwiperSlide id={el.dt} key={`slide-${el.dt}`} onClick={() => showForecastDetails(el)}>
@@ -190,13 +185,10 @@ const WeatherMainPage = () => {
     ));
 
     const showForecastDetails = (el:any) => {
-        // setShowForecast(false)
         setForecastDataInfo(el)
         setIconID(null)
         setIcon(null)
         setShowForecast(true)
-        console.log(`EL: `, el)
-        console.log(`FORECASTtoDay.length + 1: `, FORECASTtoDay.length + 1)
     }
 
     return(
