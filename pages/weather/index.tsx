@@ -9,6 +9,7 @@ import { CurrentDayForecast } from '../../components/weatherElements/CurrentDayF
 import weatherInfo from '../../components/weatherElements/weatherInfoJSON'
 import { Swiper, SwiperSlide } from '../../components/Swiper'
 import WeatherForecast from '../../components/weatherElements/WeatherForecast'
+import Error404 from '../../components/error/404'
 
 import style from '../../style/weather.module.scss'
 
@@ -29,6 +30,7 @@ const WeatherMainPage = () => {
     const {
         handleCityName,
         data,
+        error404,
         getWeatherData,
         getTimeFromTimeZone,
         getTimeFromTimeZoneWithDate
@@ -78,7 +80,7 @@ const WeatherMainPage = () => {
         setForecastDataArray([])
         setImgForecastURL([])
         setImgDescForecastURL([])
-        if (data) {
+        if (!error404 && data) {
             generateIcon(data.weather[0])
         }
     }, [data, dataMultiWeather]);
@@ -86,7 +88,7 @@ const WeatherMainPage = () => {
    
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
-        if(data){
+        if(!error404 && data){
             console.log(`data: `, data)
             setTemp(Math.floor(data.main.temp))
             setName(data.name)
@@ -96,7 +98,7 @@ const WeatherMainPage = () => {
     }, [data])
 
     useEffect(() => {
-        if(data) {
+        if(!error404 && data) {
             getTimeZonaData(data.coord.lat, data.coord.lon)
             getMultiWeather(data.coord.lat, data.coord.lon)
         }
@@ -120,7 +122,7 @@ const WeatherMainPage = () => {
     }, [data, dataMultiWeather, forecastDataArray])
 
     useEffect(() => {
-        if(data&& dataTimeZone) {
+        if(!error404 && data && dataTimeZone) {
             const now = new Date(parseInt(data.dt) *1000).toLocaleDateString(`${data.sys.country.toLowerCase()}-${data.sys.country}`, {timeZone: dataTimeZone.timezone})
             const date = now.split('.')
             let day = date[0]
@@ -160,10 +162,10 @@ const WeatherMainPage = () => {
     const multiWeatherForecastTemplateNextDay = FORECASTnext.map((el, index) => (
         <SwiperSlide id={el.dt} key={`slide-${el.dt}`} onClick={() => showForecastDetails(el)}>
             <WeatherForecast 
-            day={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && getTimeFromTimeZoneWithDate(dataTimeZone.timezone, data.sys.country, el.dt)}
-            icon={dataMultiWeather && imgForecastURL[FORECASTtoDay.length + index]}
-            description={dataMultiWeather && imgDescForecastURL[FORECASTtoDay.length + index]}
-            temp={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(el.main.temp)}
+            day={!error404 && data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && getTimeFromTimeZoneWithDate(dataTimeZone.timezone, data.sys.country, el.dt)}
+            icon={!error404 && dataMultiWeather && imgForecastURL[FORECASTtoDay.length + index]}
+            description={!error404 && dataMultiWeather && imgDescForecastURL[FORECASTtoDay.length + index]}
+            temp={!error404 && data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(el.main.temp)}
             />
         </SwiperSlide>
     ));
@@ -171,8 +173,8 @@ const WeatherMainPage = () => {
     const multiWeatherForecastTemplateToDay = FORECASTtoDay.map((el, index) => (
         <SwiperSlide id={el.dt} key={`slide-${el.dt}`} onClick={() => showForecastDetails(el)}>
             <CurrentDayForecast 
-            time={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && getTimeFromTimeZone(dataTimeZone.timezone, data.sys.country, el.dt)}
-            icon={dataMultiWeather &&
+            time={!error404 && data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && getTimeFromTimeZone(dataTimeZone.timezone, data.sys.country, el.dt)}
+            icon={!error404 && dataMultiWeather &&
                 (
                   FORECASTtoDay[0].dt !== forecastDataArray[0].dt &&
                   (
@@ -182,7 +184,7 @@ const WeatherMainPage = () => {
                     imgForecastURL[index]
                   )
                 ) || imgForecastURL[index]}
-            temp={data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(el.main.temp)}
+            temp={!error404 && data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(el.main.temp)}
             />
         </SwiperSlide>
     ));
@@ -199,6 +201,7 @@ const WeatherMainPage = () => {
 
     return(
         <div className='col-lg-12'>
+
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
@@ -216,83 +219,86 @@ const WeatherMainPage = () => {
                     {/* <button type="submit" className="btn btn-primary">Send</button> */}
                 </div>
             </form>
-            <div className={`row ${style.alignCenter}`}>
-                <div className='col-lg-6'>
-                    {data && <TemperatureMainInfo 
-                        temp={data && !showForecast ? temp : Math.floor(forecastDataInfo.main.temp)} 
-                        name={ data && name } 
-                        iconURL={ data && imgURL}
-                        imgDesc={ data && imgDesc}
-                    />}
-                    {data &&
-                        <div className={style.boxContainer}>
-                            <WeatherInfoBox 
-                            icon={<i className={`fa-regular fa-clock fa-2xs ${style.iconStyle}`} ></i>}
-                            title='Current time'
-                            value={dataTimeZone && data ? <Clock date={dataTimeZone.date} time={dataTimeZone.time_12}/> : ''}/>
-                            
-                            <WeatherInfoBox 
-                            icon={<i className={`fa-solid fa-wind fa-2xs ${style.iconStyle}`} ></i>}
-                            title='Wind speed'
-                            value={`${data && !showForecast ? data.wind.speed : forecastDataInfo.wind.speed} m/s`}/>
-
-                            <WeatherInfoBox 
-                            icon={<i className={`fa-regular fa-face-smile fa-2xs ${style.iconStyle}`} ></i>}
-                            title='Pressure'
-                            value={`${data && !showForecast ? data.main.pressure : forecastDataInfo.main.pressure} hPa`}/>
-
-                            <WeatherInfoBox 
-                            icon={<i className={`fa-solid fa-droplet fa-2xs ${style.iconStyle}`} ></i>}
-                            title='Humidity'
-                            value={`${data && !showForecast ? data.main.humidity : forecastDataInfo.main.humidity }%`}/>
-                            
-                            <WeatherInfoBox 
-                            icon={<i className={`fa-solid fa-temperature-high fa-2xs ${style.iconStyle}`} ></i>}
-                            title='Feels like'
-                            value={`${data && !showForecast ? Math.floor(data.main.feels_like) : Math.floor(forecastDataInfo.main.feels_like) }℃`}/>
-                            
-                            <WeatherInfoBox 
-                            icon={<i className={`fa-solid fa-temperature-high fa-2xs ${style.iconStyle}`} ></i>}
-                            title='Clouds'
-                            value={`${data && !showForecast ? data.clouds.all : forecastDataInfo.clouds.all }%`}/>
-
-                            {!showForecast && 
+            {error404 ? (
+                <Error404 />
+            ) : (
+                <div className={`row ${style.alignCenter}`}>
+                    <div className='col-lg-6'>
+                        {data && <TemperatureMainInfo 
+                            temp={data && !showForecast ? temp : Math.floor(forecastDataInfo.main.temp)} 
+                            name={ data && name } 
+                            iconURL={ data && imgURL}
+                            imgDesc={ data && imgDesc}
+                        />}
+                        {data &&
+                            <div className={style.boxContainer}>
                                 <WeatherInfoBox 
-                                icon={<i className={`fa-regular fa-sun fa-2xs ${style.iconStyle}`} ></i>}
-                                title='Sunrise time'
-                                value={dataTimeZone && data && getTimeFromTimeZone(dataTimeZone.timezone, data.sys.country, data.sys.sunrise)}/>
-                            }
-                            {!showForecast && 
+                                icon={<i className={`fa-regular fa-clock fa-2xs ${style.iconStyle}`} ></i>}
+                                title='Current time'
+                                value={dataTimeZone && data ? <Clock date={dataTimeZone.date} time={dataTimeZone.time_12}/> : ''}/>
+                                
                                 <WeatherInfoBox 
-                                icon={<i className={`fa-regular fa-moon fa-2xs ${style.iconStyle}`} ></i>}
-                                title='Sunset time'
-                                value={dataTimeZone && data && getTimeFromTimeZone(dataTimeZone.timezone, data.sys.country, data.sys.sunset)}/>
-                            }
-                        </div>
-                    }
+                                icon={<i className={`fa-solid fa-wind fa-2xs ${style.iconStyle}`} ></i>}
+                                title='Wind speed'
+                                value={`${data && !showForecast ? data.wind.speed : forecastDataInfo.wind.speed} m/s`}/>
+
+                                <WeatherInfoBox 
+                                icon={<i className={`fa-regular fa-face-smile fa-2xs ${style.iconStyle}`} ></i>}
+                                title='Pressure'
+                                value={`${data && !showForecast ? data.main.pressure : forecastDataInfo.main.pressure} hPa`}/>
+
+                                <WeatherInfoBox 
+                                icon={<i className={`fa-solid fa-droplet fa-2xs ${style.iconStyle}`} ></i>}
+                                title='Humidity'
+                                value={`${data && !showForecast ? data.main.humidity : forecastDataInfo.main.humidity }%`}/>
+                                
+                                <WeatherInfoBox 
+                                icon={<i className={`fa-solid fa-temperature-high fa-2xs ${style.iconStyle}`} ></i>}
+                                title='Feels like'
+                                value={`${data && !showForecast ? Math.floor(data.main.feels_like) : Math.floor(forecastDataInfo.main.feels_like) }℃`}/>
+                                
+                                <WeatherInfoBox 
+                                icon={<i className={`fa-solid fa-temperature-high fa-2xs ${style.iconStyle}`} ></i>}
+                                title='Clouds'
+                                value={`${data && !showForecast ? data.clouds.all : forecastDataInfo.clouds.all }%`}/>
+
+                                {!showForecast && 
+                                    <WeatherInfoBox 
+                                    icon={<i className={`fa-regular fa-sun fa-2xs ${style.iconStyle}`} ></i>}
+                                    title='Sunrise time'
+                                    value={dataTimeZone && data && getTimeFromTimeZone(dataTimeZone.timezone, data.sys.country, data.sys.sunrise)}/>
+                                }
+                                {!showForecast && 
+                                    <WeatherInfoBox 
+                                    icon={<i className={`fa-regular fa-moon fa-2xs ${style.iconStyle}`} ></i>}
+                                    title='Sunset time'
+                                    value={dataTimeZone && data && getTimeFromTimeZone(dataTimeZone.timezone, data.sys.country, data.sys.sunset)}/>
+                                }
+                            </div>
+                        }
+                    </div>
+                    <div className='col-lg-6'>
+                        {dataMultiWeather && (multiWeatherForecastTemplateToDay.length > 0) ?
+                        <>
+                            <h3 className={style.h3}>Today`s weather forecast:</h3>
+                            <Swiper>
+                                {multiWeatherForecastTemplateToDay}
+                            </Swiper>
+                        </>
+                        : null
+                        }
+                        {dataMultiWeather && (multiWeatherForecastTemplateNextDay.length > 0) ?
+                        <>
+                            <h3 className={`${style.h3} ${style.space}`}>5-day weather forecast:</h3>
+                            <Swiper>
+                                {multiWeatherForecastTemplateNextDay}
+                            </Swiper>
+                        </>
+                        : null
+                        }
+                    </div>
                 </div>
-                <div className='col-lg-6'>
-                    {dataMultiWeather && (multiWeatherForecastTemplateToDay.length > 0) ?
-                       <>
-                        <h3 className={style.h3}>Today`s weather forecast:</h3>
-                        <Swiper>
-                            {multiWeatherForecastTemplateToDay}
-                        </Swiper>
-                       </>
-                       : null
-                    }
-                    {dataMultiWeather && (multiWeatherForecastTemplateNextDay.length > 0) ?
-                       <>
-                        <h3 className={`${style.h3} ${style.space}`}>5-day weather forecast:</h3>
-                        <Swiper>
-                            {multiWeatherForecastTemplateNextDay}
-                        </Swiper>
-                       </>
-                       : null
-                    }
-                </div>
-            </div>
-            
+            )}
         </div>
     )
 }

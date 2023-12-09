@@ -21,6 +21,7 @@ type WeatherData = {
 
 export interface ServiceGetWeatherContextProps  {
     data: WeatherData | null,
+    error404: boolean,
     handleCityName: ( value:string ) => void,
     getWeatherData: ( e: React.FormEvent<HTMLFormElement> ) => void
     getTimeFromTimeZone: (timeZone:string, country:string, time:number) => string,
@@ -37,6 +38,7 @@ const WeatherContextProvider: FC<WeatherContextProviderProps> = ({
     children,
 }: WeatherContextProviderProps) => {
     const [city, setCity] = useState<string>('')
+    const [error404, setError404] = useState<boolean>(false)
     const [data, setData] = useState<WeatherData | null>(null);
     
     const handleCityName = ( value: string ) => setCity(value)
@@ -44,18 +46,28 @@ const WeatherContextProvider: FC<WeatherContextProviderProps> = ({
     const WEATHER_URL = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${process.env.NEXT_PUBLIC_API_KEY_WEATHER}&units=metric&lang=en`
 
     const getWeatherData = ( e: React.FormEvent<HTMLFormElement> ) => {
+        setData(null)
+        setError404(false)
 
         if(e){
             e.preventDefault()
         }
-
-        fetch(WEATHER_URL)
-            .then(res => res.json())
+        if(city) {
+            fetch(WEATHER_URL)
+            .then(res => {
+                if(!res.ok) {
+                    if(res.status === 404) {
+                        setError404(true)
+                    }
+                }
+                return res.json()
+            })
             .then(data => {
                 setData(() => data)
             }).catch(err => {
                 console.error(`Error: ${err}`)
             })
+        }
     }
 
     const getTimeFromTimeZone = (timeZone:string, country:string, time:number) => {
@@ -74,6 +86,7 @@ const WeatherContextProvider: FC<WeatherContextProviderProps> = ({
     const contextValue: ServiceGetWeatherContextProps = {
         handleCityName,
         data,
+        error404,
         getWeatherData,
         getTimeFromTimeZone,
         getTimeFromTimeZoneWithDate

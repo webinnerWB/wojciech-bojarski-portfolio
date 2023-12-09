@@ -1,0 +1,11 @@
+.errorWrapper {
+    display: flex;
+    color: #ffffff;
+    justify-content: center;
+    text-align: center;
+    margin-top: 65px;
+    align-items: center;
+    @media screen and (max-width:767px) {
+        display: block;
+    }
+}

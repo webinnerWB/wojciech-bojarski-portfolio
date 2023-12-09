@@ -12,10 +12,12 @@ type ForecastData = {
 }
 
 const WeatherForecast: FC<ForecastData> = ({day, icon, description, temp}: ForecastData) => {
+    const altText = icon ? `${icon} icon` : undefined;
+
     return(
         <div className={`${style.forecastCurrentDayWrapper}`}>
             <p className={style.p}>{day}</p>
-            <img src={`../../${icon}`} className={style.weatherIcon}/>
+            <img src={`../../${icon}`} className={style.weatherIcon} alt={altText}/>
             <p className={style.p}>{description}</p>
             <p className={style.p}>{`${temp}℃`}</p>
         </div>

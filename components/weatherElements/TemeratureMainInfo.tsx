@@ -15,6 +15,7 @@ type temperatureData = {
 
 
 const TemperatureMainInfo: FC<temperatureData> = ({ temp, name, iconURL,imgDesc }: temperatureData) => {
+    const altText = iconURL ? `${iconURL} icon` : undefined;
 
     return(
         <>
@@ -27,7 +28,7 @@ const TemperatureMainInfo: FC<temperatureData> = ({ temp, name, iconURL,imgDesc 
                     <p className={`${style.temp} ${style.margin0}` }>{`Temperature: ${temp}`}<span>&#x2103;</span></p>
                 </div>
                 
-                {iconURL ? <img src={`../../${iconURL}`} className={style.weatherIcon}/> : null }
+                {iconURL ? <img src={`../../${iconURL}`} className={style.weatherIcon} alt={altText}/> : null }
             </div>
         </>
     )
