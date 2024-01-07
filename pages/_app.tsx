@@ -12,7 +12,7 @@ export default function App({ Component, pageProps }: AppProps) {
                 <title>Portfolio Wojciech Bojarski</title>
                 <script src="https://kit.fontawesome.com/fced0552ee.js" crossOrigin="anonymous"></script>
             </Head>
-            <div className='container'>
+            <div className='container-fluid'>
                 <div className='row'>
                     <WeatherContextProvider>
                         <TimeZoneContextProvider>

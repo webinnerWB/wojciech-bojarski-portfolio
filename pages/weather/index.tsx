@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState} from 'react'
+import React, { FC, useContext, useEffect, useState} from 'react'
 import TemperatureMainInfo from '../../components/weatherElements/TemeratureMainInfo'
 import { WeatherContext, ServiceGetWeatherContextProps } from '../../components/services/weather/WeatherContext'
 import { ServiceTimeZoneContextProps, TimeZoneContext } from '../../components/services/weather/TimeZoneContext'
@@ -13,7 +13,7 @@ import Error404 from '../../components/error/404'
 
 import style from '../../style/weather.module.scss'
 
-const WeatherMainPage: React.FC = () => {
+const WeatherMainPage: FC = () => {
     const [iconID, setIconID] = useState<number|null>(null)
     const [temp, setTemp] = useState<number|null>(null)
     const [name, setName] = useState<string|null>(null)

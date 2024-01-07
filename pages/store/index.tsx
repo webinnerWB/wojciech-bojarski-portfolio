@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { FC, useState, useEffect } from "react";
 import Methods from '../../components/services/DB/Methods'
+import { Header } from '../../components/storeElements/Header'
 
 import style from '../../style/store.module.scss';
 
-const StoreMainPage: React.FC = () => {
+const StoreMainPage: FC = () => {
 
 
     const [prodDocuments, setProdDocuments] = useState<any>([])
@@ -31,7 +32,7 @@ const StoreMainPage: React.FC = () => {
 
     return (
         <>
-            STORE
+            <Header />
         </>
     );
 };

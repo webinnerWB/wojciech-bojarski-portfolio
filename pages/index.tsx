@@ -1,7 +1,7 @@
-import React from "react";
+import React, { FC } from "react";
 import Link from 'next/link'
 
-const Main: React.FC = () => {
+const Main: FC = () => {
     return(
         <div className='col-12'>
              <p>
