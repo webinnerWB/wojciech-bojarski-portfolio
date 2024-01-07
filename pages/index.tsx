@@ -1,6 +1,7 @@
 import React from "react";
 import Link from 'next/link'
-const Main = () => {
+
+const Main: React.FC = () => {
     return(
         <div className='col-12'>
              <p>
@@ -8,6 +9,10 @@ const Main = () => {
             </p>
             <Link href="/weather">
                 Weather
+            </Link>
+            <br/>
+            <Link href="/store">
+                WEB-Store
             </Link>
         </div>
     )

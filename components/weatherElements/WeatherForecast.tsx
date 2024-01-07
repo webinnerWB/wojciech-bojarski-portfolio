@@ -15,7 +15,7 @@ const WeatherForecast: FC<ForecastData> = ({day, icon, description, temp}: Forec
     const altText = icon ? `${icon} icon` : undefined;
 
     return(
-        <div className={`${style.forecastCurrentDayWrapper}`}>
+        <div className={`${style.forecastCurrentDayWrapper} ${style.swiperMb}`}>
             <p className={style.p}>{day}</p>
             <img src={`../../${icon}`} className={style.weatherIcon} alt={altText}/>
             <p className={style.p}>{description}</p>

@@ -77,6 +77,9 @@
         text-wrap: balance;
         text-align: center;
         padding: 2px;
+        @media screen and (max-width: 1399px) {
+            font-size: 15px;
+        }
     }
     
 }
@@ -95,6 +98,11 @@
 .alignCenter {
     align-items: center;
     height: 85vh;
+}
+.swiperMb {
+    @media screen and (max-width: 991px) {
+        margin-bottom: 20px;
+    }
 }
 .searchInput {
     background-color: #2f2f2f !important;

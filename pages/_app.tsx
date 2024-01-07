@@ -1,7 +1,7 @@
 import type { AppProps } from 'next/app'
-import WeatherContextProvider from '../components/services/WeatherContext'
-import TimeZoneContextProvider from '../components/services/TimeZoneContext'
-import MultiWeatherProvider from '../components/services/MultiWeatherContext'
+import WeatherContextProvider from '../components/services/weather/WeatherContext'
+import TimeZoneContextProvider from '../components/services/weather/TimeZoneContext'
+import MultiWeatherProvider from '../components/services/weather/MultiWeatherContext'
 import Head from 'next/head';
 import 'bootstrap/dist/css/bootstrap.min.css';
 

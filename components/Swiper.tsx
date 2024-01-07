@@ -26,7 +26,7 @@ interface SwiperProps {
         slidesPerView={slidesPerView}
         // navigation
         // pagination={{ clickable: true }}
-        // autoplay={{ delay: 3000 }}
+        autoplay={{ delay: 3000 }}
         breakpoints={{
           484: {slidesPerView: slidesPerView},
           320: {slidesPerView: 1}

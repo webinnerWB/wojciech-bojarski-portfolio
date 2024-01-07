@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState} from 'react'
 import TemperatureMainInfo from '../../components/weatherElements/TemeratureMainInfo'
-import { WeatherContext, ServiceGetWeatherContextProps } from '../../components/services/WeatherContext'
-import { ServiceTimeZoneContextProps, TimeZoneContext } from '../../components/services/TimeZoneContext'
-import { ServiceMultiWeatherContextProps, MultiWeatherContext } from '../../components/services/MultiWeatherContext'
+import { WeatherContext, ServiceGetWeatherContextProps } from '../../components/services/weather/WeatherContext'
+import { ServiceTimeZoneContextProps, TimeZoneContext } from '../../components/services/weather/TimeZoneContext'
+import { ServiceMultiWeatherContextProps, MultiWeatherContext } from '../../components/services/weather/MultiWeatherContext'
 import WeatherInfoBox from '../../components/weatherElements/WeatherInfoBox'
 import { Clock } from '../../components/Clock'
 import { CurrentDayForecast } from '../../components/weatherElements/CurrentDayForecast'
@@ -13,7 +13,7 @@ import Error404 from '../../components/error/404'
 
 import style from '../../style/weather.module.scss'
 
-const WeatherMainPage = () => {
+const WeatherMainPage: React.FC = () => {
     const [iconID, setIconID] = useState<number|null>(null)
     const [temp, setTemp] = useState<number|null>(null)
     const [name, setName] = useState<string|null>(null)
