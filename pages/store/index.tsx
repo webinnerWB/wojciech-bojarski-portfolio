@@ -1,4 +1,5 @@
 import React, { FC, useState, useEffect } from "react";
+import { useRouter } from 'next/router';
 import Methods from '../../components/services/DB/Methods'
 import { Header } from '../../components/storeElements/Header'
 
@@ -6,7 +7,9 @@ import style from '../../style/store.module.scss';
 
 const StoreMainPage: FC = () => {
 
-
+    const currentPath = useRouter().pathname
+    console.log(currentPath)
+    
     const [prodDocuments, setProdDocuments] = useState<any>([])
 
     const getAllDocuments = Methods().$getAllDocuments

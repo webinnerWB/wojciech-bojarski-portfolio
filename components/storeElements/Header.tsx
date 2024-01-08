@@ -1,12 +1,15 @@
 import React, { FC } from "react";
+import { useRouter } from 'next/router';
 import Link from "next/link";
 
 import style from '../../style/store.module.scss'
 export const Header: FC = () => {
+    const currentPath = useRouter().pathname
+
     return(
         <>
             <nav className={`navbar navbar-expand-lg bg-body-tertiary ${style.customNavbarStyles}`}>
-                <div className="container-fluid">
+                <div className={`container-fluid ${style.container}`}>
                     <a className="navbar-brand" href="/store">
                         <i className={`fa-solid fa-paw ${style.paw}`}></i>
                     </a>
@@ -16,13 +19,19 @@ export const Header: FC = () => {
                     <div className="collapse navbar-collapse" id="navbarNav">
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <a className={`nav-link active ${style.navLink}`} aria-current="page" href="#">Home</a>
+                            <Link className={`nav-link ${'/store' === currentPath ? style.active : style.navLink}`} href="/store">
+                                <span>HOME</span>
+                            </Link>
                         </li>
                         <li className="nav-item">
-                            <a className={`nav-link ${style.navLink}`} href="#">Features</a>
+                            <Link className={`nav-link ${ '/store/categories' === currentPath ? style.active : style.navLink }`} href="/store/categories">
+                                <span>CATEGORIES</span>
+                            </Link>
                         </li>
                         <li className="nav-item">
-                            <a className={`nav-link ${style.navLink}`} href="#">Pricing</a>
+                            <Link className={`nav-link ${ '/store/blog' === currentPath ? style.active : style.navLink }`} href="/store/blog">
+                                <span>BLOG</span>
+                            </Link>
                         </li>
                     </ul>
                     </div>
