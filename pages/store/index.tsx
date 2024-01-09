@@ -2,6 +2,7 @@ import React, { FC, useState, useEffect } from "react";
 import { useRouter } from 'next/router';
 import Methods from '../../components/services/DB/Methods'
 import { Header } from '../../components/storeElements/Header'
+import Main from '../../components/storeElements/Main'
 
 import style from '../../style/store.module.scss';
 
@@ -35,7 +36,10 @@ const StoreMainPage: FC = () => {
 
     return (
         <>
-            <Header />
+            <div className="col-lg-12">
+                <Header />
+                <Main />
+            </div>
         </>
     );
 };
