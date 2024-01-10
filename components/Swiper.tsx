@@ -24,8 +24,6 @@ interface SwiperProps {
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={30}
         slidesPerView={slidesPerView}
-        // navigation
-        // pagination={{ clickable: true }}
         autoplay={{ delay: 3000 }}
         breakpoints={{
           484: {slidesPerView: slidesPerView},
