@@ -4,7 +4,8 @@ import style from '../../style/store.module.scss'
 
 const Main: FC = () => {
     return(
-        <div>
+        <div className={`${style.wrapper}`}>
+            <img className={`${style.digi}`} src="/web_store/digital.png" />
             <div className={`${style.mainWrapper}`}>
                 <h1 className={`${style.title}`}>Find the perfect product with petishop</h1>
                 <div className={`${style.searchMainWrapper}`}>
@@ -13,6 +14,7 @@ const Main: FC = () => {
                     <button className={`${style.searchBtn}`}>Search</button>
                 </div>
             </div>
+            <img className={`${style.digi} ${style.secPosition}`} src="/web_store/digi.png" />
         </div>
     )
 }
