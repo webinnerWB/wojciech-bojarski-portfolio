@@ -1,15 +1,33 @@
-import React, { FC, useState } from "react";
+import React, { FC, useState, ChangeEvent, useRef, useEffect } from "react";
 import { useRouter } from 'next/router';
 import Link from "next/link";
 
 import style from '../../style/store.module.scss'
-export const Header: FC = () => {
+
+type hederComponent = {
+    handleSearchingValue: (e: ChangeEvent<HTMLInputElement>) => string|null,
+    handleSearchResults: (value: string) => void,
+}
+
+export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchResults}: hederComponent) => {
     const currentPath = useRouter().pathname
     const [isSearchVisible, setIsSearchVisible] = useState(false); 
+    const searchIntup = useRef<HTMLInputElement|null>(null)
 
     const toggleSearch = () => {
         setIsSearchVisible(prevState => !prevState);
     };
+
+    useEffect(() => {
+        const input = searchIntup.current
+        if(input) {
+            input.addEventListener('keypress', (event) => {
+                if (event.key === 'Enter') {
+                    handleSearchResults(input.value)
+                }
+              });
+        }
+    }, [])
 
     return(
         <>
@@ -40,7 +58,12 @@ export const Header: FC = () => {
                             </li>
                         </ul>
                         <div className={`${style.iconWrapper}`}>
-                            <input className={`${style.inputSearch} ${style.animationInput}  ${isSearchVisible ? style.inputVisible : ''}`} placeholder="Search for products"/>
+                            <input 
+                                className={`${style.inputSearch} ${style.animationInput}  ${isSearchVisible ? style.inputVisible : ''}`} 
+                                placeholder="Search for products" 
+                                onChange={handleSearchingValue}
+                                ref={searchIntup}
+                                />
                             <i className={`fa-solid fa-magnifying-glass ${style.ico} ${isSearchVisible ? style.activeSearch : ''}`} onClick={toggleSearch}></i>
                             <i className={`fa-solid fa-cart-shopping ${style.ico}`}></i>
                             <i className={`fa-solid fa-user ${style.ico}`}></i>
