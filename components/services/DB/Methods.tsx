@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, doc, getDoc, getFirestore, deleteDoc, updateDoc, QuerySnapshot, CollectionReference, query, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, doc, getDoc, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where } from 'firebase/firestore';
 import {firestore} from './FirebaseConfig'
 
 const Methods = () => {
@@ -34,9 +34,22 @@ const Methods = () => {
             }
       };
 
+    const $addNewDocu = async (collectionR: string, document: object) => {
+        try {
+            const collectionRef: CollectionReference<DocumentData> =  collection(db, collectionR)
+            const docRef = await addDoc(collectionRef, document)
+                .then(doc => {
+                    console.log(`success `, doc.id)
+                })
+        } catch (err) {
+            console.error(`Error: `, err)
+        }
+    }
+
     return {
         $getAllDocuments,
-        $search
+        $search,
+        $addNewDocu
     }
 }
 
