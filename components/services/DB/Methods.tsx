@@ -1,8 +1,12 @@
 import { addDoc, collection, getDocs, doc, getDoc, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where } from 'firebase/firestore';
 import {firestore} from './FirebaseConfig'
+import React, { useState, ChangeEvent } from "react";
+
 
 const Methods = () => {
     const db = getFirestore(firestore)
+    const [searchingValue, setSearchingValue] = useState<string>('')
+    const [searchResults, setSearchRelusts] = useState<any>([])
 
     const $getAllDocuments = async (collectionName: string): Promise<QuerySnapshot> => {
         try {
@@ -46,10 +50,29 @@ const Methods = () => {
         }
     }
 
+    const $handleSearchingValue = (e: ChangeEvent<HTMLInputElement>) => {
+        console.log(e.target.value)
+        setSearchingValue(e.target.value)
+        return searchingValue
+    }
+
+    const $handleSearchResults = async (value: string) => {
+        try {
+         const query = await $search('products', value)
+         setSearchRelusts(query?.docs.map(el => el.data()))
+        }catch(err) {
+            console.error(`Error: `, err)
+        }
+    }
+
     return {
         $getAllDocuments,
         $search,
-        $addNewDocu
+        $addNewDocu,
+        $handleSearchingValue,
+        $handleSearchResults,
+        searchingValue,
+        searchResults
     }
 }
 

@@ -1,6 +1,7 @@
 import React, { FC, useState, ChangeEvent, useRef, useEffect } from "react";
 import { useRouter } from 'next/router';
 import Link from "next/link";
+import Script from 'next/script'
 
 import style from '../../style/store.module.scss'
 
@@ -66,11 +67,18 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
                                 />
                             <i className={`fa-solid fa-magnifying-glass ${style.ico} ${isSearchVisible ? style.activeSearch : ''}`} onClick={toggleSearch}></i>
                             <i className={`fa-solid fa-cart-shopping ${style.ico}`}></i>
-                            <i className={`fa-solid fa-user ${style.ico}`}></i>
+                            <Link className={`${style.ico}`} href="/store/login">
+                                <i className={`fa-solid fa-user`}></i>
+                            </Link>
+                            <Link className={`${style.ico}`} href="/store/registration">
+                                <i className={`fa-solid fa-user-pen`}></i>
+                            </Link>
                         </div>
                     </div>
                 </div>
             </nav>
+            <Script src="https://kit.fontawesome.com/fced0552ee.js" crossOrigin="anonymous" />
+            <Script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossOrigin="anonymous" />
         </>
     )
 }

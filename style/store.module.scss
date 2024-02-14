@@ -76,6 +76,8 @@
     .ico {
         font-size: 25px;
         margin-right: 35px;
+        text-decoration: none;
+        color: #ffffff;
         cursor: pointer;
         @media screen and (max-width:1178px) {
             margin-right: 15px;
@@ -248,5 +250,31 @@
             border-radius: 12px;
             margin-bottom: 10px;
         }
+    }
+}
+
+.formWrapper {
+    width: 60%;
+    display: block;
+    margin: auto;
+    padding: 0 40px;
+    @media screen and (max-width: 1180px) {
+        width: 80%;
+    }
+    .formInputWrapper {
+        .input {
+            margin: 10px 0;
+            height: 65px;
+            font-weight: 800;
+            font-size: 19px;
+        }
+    }
+    .formButton {
+        width: 170px;
+        display: block;
+        height: 65px;
+        margin: 25px auto;
+        font-weight: 800;
+        font-size: 19px;
     }
 }
