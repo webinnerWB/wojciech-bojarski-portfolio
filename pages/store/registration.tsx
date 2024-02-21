@@ -4,21 +4,8 @@ import { Header } from '../../components/storeElements/Header'
 
 import style from '../../style/store.module.scss';
 
-// type registrationForm = {
-//     name: string,
-//     surname: string,
-//     email: string,
-//     password: string,
-//     street: string,
-//     houseNumber: string,
-//     city: string,
-//     postalCode: string,
-//     country: string,
-//     customer: boolean
-// }
-
 const Registration: FC = () => {
-    const { $handleSearchingValue, $handleSearchResults, searchResults, searchingValue} = Methods()
+    const { $handleSearchingValue, $handleSearchResults, $registrationUser, searchResults, searchingValue} = Methods()
 
     const [registrationFormData, setRegistrationFormData] = useState<any>({
         name: '',
@@ -32,6 +19,8 @@ const Registration: FC = () => {
         country: '',
         customer: true
     })
+    const [formSubmit, setFormSubmit] = useState<boolean>(false)
+    const [formCompletedError, setFormCompletedError] = useState<boolean>(false)
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target
@@ -41,28 +30,25 @@ const Registration: FC = () => {
         })
     }
 
+
     const isFormValid = () => {
-        const emptyFields = [];
-    
+
         for (const key in registrationFormData) {
             if (registrationFormData[key] === '') {
-                emptyFields.push(key);
+                setFormCompletedError(true)
+                return false
             }
         }
-    
-        if (emptyFields.length === 0) {
-            return true;
-        } else {
-            console.error("Empty fields: ", emptyFields.join(', '));
-            return false;
-        }
+
+        return true
     }
 
     const subbmitRegistration = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-
+        setFormSubmit(true)
+        setFormCompletedError(false)
         if(isFormValid()) {
-            console.log(`Wszystko gitara`, registrationFormData)
+            $registrationUser(registrationFormData)
         }
     }
 
@@ -86,7 +72,8 @@ const Registration: FC = () => {
                             <div className={`col-lg-6`}>
                                 <input 
                                     type="text" 
-                                    className={`form-control ${style.input}`} 
+                                    className={`form-control ${style.input} 
+                                    ${formSubmit && formCompletedError && registrationFormData.name === '' ? style.inputError : null}`} 
                                     placeholder="Name" 
                                     name="name" 
                                     value={registrationFormData.name}
@@ -96,7 +83,8 @@ const Registration: FC = () => {
                             <div className={`col-lg-6`}>
                                 <input 
                                     type="text" 
-                                    className={`form-control ${style.input}`} 
+                                    className={`form-control ${style.input} ${style.input} 
+                                    ${formSubmit && formCompletedError && registrationFormData.surname === '' ? style.inputError : null}`} 
                                     placeholder="Surname" 
                                     name="surname" 
                                     value={registrationFormData.surname}
@@ -108,7 +96,8 @@ const Registration: FC = () => {
                             <div className={`col-lg-6`}>
                                 <input 
                                     type="email" 
-                                    className={`form-control ${style.input}`} 
+                                    className={`form-control ${style.input} ${style.input} 
+                                    ${formSubmit && formCompletedError && registrationFormData.email === '' ? style.inputError : null}`} 
                                     placeholder="Email" 
                                     name="email" 
                                     value={registrationFormData.email}
@@ -118,7 +107,8 @@ const Registration: FC = () => {
                             <div className={`col-lg-6`}>
                                 <input 
                                     type="password" 
-                                    className={`form-control ${style.input}`} 
+                                    className={`form-control ${style.input} ${style.input} 
+                                    ${formSubmit && formCompletedError && registrationFormData.password === '' ? style.inputError : null}`} 
                                     placeholder="Password" 
                                     name="password" 
                                     value={registrationFormData.password}
@@ -130,7 +120,8 @@ const Registration: FC = () => {
                             <div className={`col-lg-6`}>
                                 <input 
                                     type="text" 
-                                    className={`form-control ${style.input}`} 
+                                    className={`form-control ${style.input} ${style.input} 
+                                    ${formSubmit && formCompletedError && registrationFormData.street === '' ? style.inputError : null}`} 
                                     placeholder="Street" 
                                     name="street" 
                                     value={registrationFormData.street}
@@ -140,7 +131,8 @@ const Registration: FC = () => {
                             <div className={`col-lg-6`}>
                                 <input 
                                     type="text" 
-                                    className={`form-control ${style.input}`} 
+                                    className={`form-control ${style.input} ${style.input} 
+                                    ${formSubmit && formCompletedError && registrationFormData.city === '' ? style.inputError : null}`} 
                                     placeholder="City" 
                                     name="city" 
                                     value={registrationFormData.city}
@@ -152,7 +144,8 @@ const Registration: FC = () => {
                             <div className={`col-lg-6`}>
                                 <input 
                                     type="text" 
-                                    className={`form-control ${style.input}`} 
+                                    className={`form-control ${style.input} ${style.input} 
+                                    ${formSubmit && formCompletedError && registrationFormData.houseNumber === '' ? style.inputError : null}`} 
                                     placeholder="House number" 
                                     name="houseNumber" 
                                     value={registrationFormData.houseNumber}
@@ -162,7 +155,8 @@ const Registration: FC = () => {
                             <div className={`col-lg-6`}>
                                 <input 
                                     type="text" 
-                                    className={`form-control ${style.input}`} 
+                                    className={`form-control ${style.input} ${style.input} 
+                                    ${formSubmit && formCompletedError && registrationFormData.postalCode === '' ? style.inputError : null}`} 
                                     placeholder="Postal Code" 
                                     name="postalCode" 
                                     value={registrationFormData.postalCode}
@@ -174,7 +168,8 @@ const Registration: FC = () => {
                             <div className={`col-lg-6`}>
                                 <input 
                                     type="text" 
-                                    className={`form-control ${style.input}`} 
+                                    className={`form-control ${style.input} ${style.input} 
+                                    ${formSubmit && formCompletedError && registrationFormData.country === '' ? style.inputError : null}`} 
                                     placeholder="Country" 
                                     name="country" 
                                     value={registrationFormData.country}

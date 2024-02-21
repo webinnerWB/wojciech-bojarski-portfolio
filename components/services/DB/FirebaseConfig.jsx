@@ -1,6 +1,5 @@
-import { initializeApp } from 'firebase/app'; // dla najnowszych wersji Firebase
+import { initializeApp } from 'firebase/app';
 
-import { getAnalytics } from "firebase/analytics";
 const firebaseConfigData = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -12,6 +11,6 @@ const firebaseConfigData = {
 };
 
 const FirebaseConfig = initializeApp(firebaseConfigData);
-// const analytics = getAnalytics(FirebaseConfig);
+
 
 export const firestore = FirebaseConfig;

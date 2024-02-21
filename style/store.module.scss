@@ -267,6 +267,16 @@
             height: 65px;
             font-weight: 800;
             font-size: 19px;
+            color: #000000;
+            border: 0;
+        }
+        .inputError {
+            margin: 10px 0;
+            height: 65px;
+            font-weight: 800;
+            font-size: 19px;
+            color: #ca1f1f;
+            border: 2px solid #ca1f1f;
         }
     }
     .formButton {

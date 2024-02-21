@@ -1,4 +1,6 @@
-import { addDoc, collection, getDocs, doc, getDoc, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where } from 'firebase/firestore';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, Auth } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
 import {firestore} from './FirebaseConfig'
 import React, { useState, ChangeEvent } from "react";
 
@@ -47,6 +49,7 @@ const Methods = () => {
                 })
         } catch (err) {
             console.error(`Error: `, err)
+            throw err
         }
     }
 
@@ -62,8 +65,34 @@ const Methods = () => {
          setSearchRelusts(query?.docs.map(el => el.data()))
         }catch(err) {
             console.error(`Error: `, err)
+            throw err
         }
     }
+
+    const $registrationUser = async (formData: any):Promise<void> => {
+        try {
+            const auth = getAuth(firestore)
+            const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
+            const user = userCredential.user
+
+            console.log('zarejestrowano useara: ', user)
+
+            const userCollection = collection(db, 'users')
+
+            const { password, ...userData } = formData
+
+            await addDoc(userCollection, {
+                uuid: user.uid,
+                ...userData
+            })
+
+            console.log('user dodany')
+
+        } catch (err) {
+            console.error(`ERROR: `, err);
+        }
+    }
+
 
     return {
         $getAllDocuments,
@@ -71,6 +100,7 @@ const Methods = () => {
         $addNewDocu,
         $handleSearchingValue,
         $handleSearchResults,
+        $registrationUser,
         searchingValue,
         searchResults
     }
