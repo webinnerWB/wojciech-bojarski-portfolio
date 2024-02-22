@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where } from 'firebase/firestore';
+import { addDoc, collection, getDocs, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where, QueryDocumentSnapshot } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged  } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
 import {firestore} from './FirebaseConfig'
@@ -24,29 +24,52 @@ const Methods = () => {
         }
     }
 
-    const $search = async (collectionName: string, value: string): Promise<QuerySnapshot | null | undefined> => {
+    const $search = async (collectionName: string, value: string): Promise<QuerySnapshot[] | null | undefined> => {
         try {
-            const smallFirstLettervalue = value.charAt(0).toLowerCase() + value.slice(1)
-            const collectionRef: CollectionReference = collection(db, collectionName);
+          const smallFirstLettervalue = value.charAt(0).toLowerCase() + value.slice(1)
+          const collectionRef: CollectionReference = collection(db, collectionName);
+          const combinedSnapshots: QuerySnapshot[] = [];
+      
+          const queryName = query(collectionRef, where('name', 'array-contains', smallFirstLettervalue));
+          const snapshotName = await getDocs(queryName);
 
-            const queryName = query(collectionRef, where('name', 'array-contains', smallFirstLettervalue));
-            const snapshotName = await getDocs(queryName);
-
-            const queryCategory = query(collectionRef, where('category', 'array-contains', smallFirstLettervalue))
-            const snapshotCategory = await getDocs(queryCategory)
-
-            const combinedSnapshots: any = []
-            combinedSnapshots.push(snapshotName, snapshotCategory)
-            if (combinedSnapshots.length === 0) {
+          const queryCategory = query(collectionRef, where('category', 'array-contains', smallFirstLettervalue))
+          const snapshotCategory = await getDocs(queryCategory)
+      
+          combinedSnapshots.push(snapshotName);
+          combinedSnapshots.push(snapshotCategory);
+      console.log(`combinedSnapshots: `, combinedSnapshots)
+          const flattenedSnapshots: QuerySnapshot[] = combinedSnapshots.flatMap(snapshot => snapshot);
+          console.log(`flattenedSnapshots: `, flattenedSnapshots)
+      
+          if (snapshotName.empty && snapshotCategory.empty) {
             console.error('No documents match your criteria!!!');
             return null;
-            } else {
-            return combinedSnapshots;
-            }
-            } catch (err) {
-            console.error(`Error: `, err);
-            throw err;
-            }
+          } else {
+            return flattenedSnapshots;
+          }
+        } catch (err) {
+          console.error(`Error: `, err);
+          throw err;
+        }
+      };
+      
+
+      const $handleSearchResults = async (value: string) => {
+        try {
+          const queries = await $search('products', value);
+      
+          if (queries) {
+            const flattenedResults = queries.flatMap(snapshot => snapshot.docs.map(doc => doc.data()));
+            setSearchRelusts((el: any) => [...el, ...flattenedResults]);
+          } else {
+            console.error('No documents match your criteria!!!');
+            setSearchRelusts(undefined);
+          }
+        } catch (err) {
+          console.error(`Error: `, err);
+          throw err;
+        }
       };
 
     const $addNewDocument = async (collectionR: string, document: object) => {
@@ -66,16 +89,6 @@ const Methods = () => {
         console.log(e.target.value)
         setSearchingValue(e.target.value)
         return searchingValue
-    }
-
-    const $handleSearchResults = async (value: string) => {
-        try {
-         const query = await $search('products', value)
-         setSearchRelusts(query?.docs.map(el => el.data()))
-        }catch(err) {
-            console.error(`Error: `, err)
-            throw err
-        }
     }
 
     const $isUserLogged = (): Promise<boolean> => {
