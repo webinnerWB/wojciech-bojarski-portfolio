@@ -8,8 +8,8 @@ import SearchResults from '../../components/storeElements/SearchResults'
 import style from '../../style/store.module.scss';
 
 const StoreMainPage: FC = () => {
-    const addNewDocu = Methods().$addNewDocu
-    const { $handleSearchingValue, $handleSearchResults, searchResults, searchingValue} = Methods()
+    const addNewDocu = Methods().$addNewDocument
+    const { $handleSearchingValue, $handleSearchResults, $isUserLogged, searchResults, searchingValue} = Methods()
 
 
     const add = () => {
@@ -23,10 +23,12 @@ const StoreMainPage: FC = () => {
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
         document.body.style.color = '#ffffff'
+        $isUserLogged()
     }, [])
 
     useEffect(() => {
         console.log(searchResults)
+        console.log(searchingValue)
     }, [searchResults])
 
     return (
@@ -34,7 +36,7 @@ const StoreMainPage: FC = () => {
             <div className="col-lg-12">
                 <Header handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults} />
                 <Main handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults}/>
-                <Categories />
+                <Categories handleSearchResults={$handleSearchResults} />
                 <SearchResults valueSearch={searchingValue} results={searchResults}/>
                 <button onClick={add}>KLIK</button>
             </div>

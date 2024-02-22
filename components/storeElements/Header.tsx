@@ -1,4 +1,5 @@
 import React, { FC, useState, ChangeEvent, useRef, useEffect } from "react";
+import Methods from "../services/DB/Methods";
 import { useRouter } from 'next/router';
 import Link from "next/link";
 import Script from 'next/script'
@@ -15,11 +16,21 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
     const [isSearchVisible, setIsSearchVisible] = useState(false); 
     const searchIntup = useRef<HTMLInputElement|null>(null)
 
+    const { $isUserLogged } = Methods()
+
+    const [userLogged, setUserLogged] = useState<boolean>(false)
+
     const toggleSearch = () => {
         setIsSearchVisible(prevState => !prevState);
     };
 
     useEffect(() => {
+        $isUserLogged().then(isUserLoggedIn => {
+            setUserLogged(isUserLoggedIn)
+        }).catch( err => {
+            setUserLogged(false)
+            console.error(`ERROR: `, err)
+        })
         const input = searchIntup.current
         if(input) {
             input.addEventListener('keypress', (event) => {
@@ -67,12 +78,16 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
                                 />
                             <i className={`fa-solid fa-magnifying-glass ${style.ico} ${isSearchVisible ? style.activeSearch : ''}`} onClick={toggleSearch}></i>
                             <i className={`fa-solid fa-cart-shopping ${style.ico}`}></i>
-                            <Link className={`${style.ico}`} href="/store/login">
-                                <i className={`fa-solid fa-user`}></i>
-                            </Link>
-                            <Link className={`${style.ico}`} href="/store/registration">
-                                <i className={`fa-solid fa-user-pen`}></i>
-                            </Link>
+                            {!userLogged ? 
+                                <Link className={`${style.ico}`} href="/store/login">
+                                    <i className={`fa-solid fa-user`}></i>
+                                </Link>
+                            : null}
+                            {!userLogged ? 
+                                <Link className={`${style.ico}`} href="/store/registration">
+                                    <i className={`fa-solid fa-user-pen`}></i>
+                                </Link>
+                            : null}
                         </div>
                     </div>
                 </div>

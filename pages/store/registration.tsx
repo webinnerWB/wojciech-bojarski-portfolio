@@ -1,12 +1,12 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState, FC } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState, useRef, FC } from "react";
+import { useRouter } from "next/router";
 import Methods from '../../components/services/DB/Methods'
 import { Header } from '../../components/storeElements/Header'
 
 import style from '../../style/store.module.scss';
 
 const Registration: FC = () => {
-    const { $handleSearchingValue, $handleSearchResults, $registrationUser, searchResults, searchingValue} = Methods()
-
+    const { $handleSearchingValue, $handleSearchResults, $registrationUser, $isUserLogged, searchResults, searchingValue} = Methods()
     const [registrationFormData, setRegistrationFormData] = useState<any>({
         name: '',
         surname: '',
@@ -19,9 +19,10 @@ const Registration: FC = () => {
         country: '',
         customer: true
     })
+    const [userLogged, setUserLogged] = useState<boolean>(false)
     const [formSubmit, setFormSubmit] = useState<boolean>(false)
     const [formCompletedError, setFormCompletedError] = useState<boolean>(false)
-
+    const routing = useRouter()
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target
         setRegistrationFormData({
@@ -43,19 +44,33 @@ const Registration: FC = () => {
         return true
     }
 
+    const msgRef = useRef<HTMLSpanElement>(null) 
+
     const subbmitRegistration = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         setFormSubmit(true)
         setFormCompletedError(false)
-        if(isFormValid()) {
-            $registrationUser(registrationFormData)
+        if(isFormValid() && msgRef.current) {
+            $registrationUser(registrationFormData, msgRef.current)
         }
     }
 
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
         document.body.style.color = '#ffffff'
+        $isUserLogged().then(isUserLoggedIn => {
+            setUserLogged(isUserLoggedIn)
+        }).catch( err => {
+            setUserLogged(false)
+            console.error(`ERROR: `, err)
+        })
     }, [])
+
+    useEffect(() => {
+        if(userLogged) {
+            routing.push('/store')
+        }
+    }, [userLogged])
 
     useEffect(() => {
         console.log(searchResults)
@@ -66,6 +81,7 @@ const Registration: FC = () => {
             <div className="col-lg-12">
                 <Header handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults} />
                 <h1 className={`${style.titleCategories}`}>Create account</h1>
+                <span ref={msgRef} className={`${style.formMsg}`}></span>
                 <div className={`${style.formWrapper}`}>
                     <form onSubmit={subbmitRegistration}>
                         <div className={`row ${style.formInputWrapper}`}>

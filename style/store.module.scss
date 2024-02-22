@@ -261,6 +261,9 @@
     @media screen and (max-width: 1180px) {
         width: 80%;
     }
+    @media screen and (max-width: 600px) {
+        width: 100%;
+    }
     .formInputWrapper {
         .input {
             margin: 10px 0;
@@ -269,6 +272,16 @@
             font-size: 19px;
             color: #000000;
             border: 0;
+            &.login{
+                width: 50%;
+                margin: 20px auto;
+                @media screen and (max-width: 940px) {
+                    width: 70%;
+                }
+                @media screen and (max-width: 600px) {
+                    width: 100%;
+                }
+            }
         }
         .inputError {
             margin: 10px 0;
@@ -287,4 +300,42 @@
         font-weight: 800;
         font-size: 19px;
     }
+}
+@keyframes showMsg {
+    0% {
+        opacity: 0.6;
+        margin: 25px auto;
+    }
+    50% {
+        opacity: 1;
+        margin: 25px auto;
+    }
+    100% {
+        opacity: 0;
+        margin: 25px auto;
+    }
+}
+
+.formMsg {
+    display: block;
+    opacity: 0;
+    text-align: center;
+    width: 20%;
+    margin: auto;
+    font-size: 25px;
+    padding: 12px;
+    font-weight: 600;
+}
+
+.showFormMsg {
+    animation: showMsg 10s ease-in;
+}
+
+
+.error {
+    background: #ca1f1f;
+}
+.success {
+    background: #1fca27;
+    width: 40%;
 }

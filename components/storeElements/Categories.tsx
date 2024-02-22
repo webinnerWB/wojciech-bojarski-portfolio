@@ -6,7 +6,11 @@ import Methods from '../services/DB/Methods'
 import 'swiper/swiper-bundle.css';
 import style from '../../style/store.module.scss'
 
-const Categories: FC = () => {
+type categoryComponent = {
+  handleSearchResults: (value: string) => void
+}
+
+const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComponent) => {
 
   const [categories, setCategories] = useState<any>([])
   
@@ -21,8 +25,12 @@ const Categories: FC = () => {
     }
   }
 
+  const categoryFilterHamdler = (value: string) => {
+    handleSearchResults(value)
+  }
+
   const slides = categories.map((el: any, index: number) => (
-    <SwiperSlide className={`${style.slide}`} key={index} id={el.name}>
+    <SwiperSlide className={`${style.slide}`} key={index} id={el.name} onClick={() => categoryFilterHamdler(el.name)}>
       <i className={`${el.icon} ${style.categoryIcon}`}></i>
       <h4>{el.name}</h4>
     </SwiperSlide>
