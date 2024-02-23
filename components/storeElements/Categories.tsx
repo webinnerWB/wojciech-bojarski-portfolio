@@ -13,6 +13,7 @@ type categoryComponent = {
 const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComponent) => {
 
   const [categories, setCategories] = useState<any>([])
+  const [el, setEl] = useState<string>()
   
   const getAllDocuments = Methods().$getAllDocuments
 
@@ -25,12 +26,19 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComp
     }
   }
 
-  const categoryFilterHamdler = (value: string) => {
+  const categoryFilterHamdler = ( value: string) => {
     handleSearchResults(value)
   }
+  const getElement = (name: string) => {
+    setEl(name)
+  }
 
+  const handleMethod = (name: string) => {
+    setEl(name)
+    categoryFilterHamdler(name)
+  }
   const slides = categories.map((el: any, index: number) => (
-    <SwiperSlide className={`${style.slide}`} key={index} id={el.name} onClick={() => categoryFilterHamdler(el.name)}>
+    <SwiperSlide className={`${style.slide}`} key={index} id={el.name} onClick={() => handleMethod(el.name)}>
       <i className={`${el.icon} ${style.categoryIcon}`}></i>
       <h4>{el.name}</h4>
     </SwiperSlide>
@@ -39,6 +47,15 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComp
   useEffect(() => {
     getCategories()
   }, [])
+
+  useEffect(() => {
+    if(el) {
+      let element: HTMLElement | null = document.getElementById(el)    
+      if(element) {
+        element.style.pointerEvents = 'none'
+      }
+    }
+  }, [el])
 
   // useEffect(() => {
   //   console.log(categories)
@@ -52,7 +69,7 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComp
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={50}
         loop={true}
-        autoplay={{ delay: 3000 }}
+        // autoplay={{ delay: 3000 }}
         breakpoints={{
             1219: {slidesPerView: 5},
             600: {slidesPerView: 3},

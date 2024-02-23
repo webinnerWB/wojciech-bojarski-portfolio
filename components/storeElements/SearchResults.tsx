@@ -8,15 +8,18 @@ type results = {
 }
 
 const SearchResults: FC<results> = ({ valueSearch, results }: results) => {
-  const searchResultsRef = useRef<HTMLDivElement | null>(null);
-  const noResultsRef = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    if(results && searchResultsRef.current) {
-      searchResultsRef.current.scrollIntoView({ behavior: 'smooth' })
-    }else{
-      if(noResultsRef.current) noResultsRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [results])
+    const searchResultsRef = useRef<HTMLDivElement | null>(null);
+    const noResultsRef = useRef<HTMLDivElement | null>(null);
+    
+    useEffect(() => {
+      if(results && searchResultsRef.current) {
+        searchResultsRef.current.scrollIntoView({ behavior: 'smooth' })
+      }else{
+        if(noResultsRef.current) noResultsRef.current.scrollIntoView({ behavior: 'smooth' })
+      }
+    }, [results])
+
+
     return (
       <>
         {results && results.length > 0 ? (
