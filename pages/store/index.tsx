@@ -9,7 +9,9 @@ import style from '../../style/store.module.scss';
 
 const StoreMainPage: FC = () => {
     const addNewDocu = Methods().$addNewDocument
-    const { $handleSearchingValue, $handleSearchResults, $isUserLogged, searchResults, searchingValue} = Methods()
+    const { $handleSearchingValue, $handleSearchResults, 
+        $isUserLogged, $handleFilterCategory, 
+        searchResults, searchingValue, valuesArray} = Methods()
 
 
     const add = () => {
@@ -26,18 +28,18 @@ const StoreMainPage: FC = () => {
         $isUserLogged()
     }, [])
 
-    useEffect(() => {
-        console.log(searchResults)
-        console.log(searchingValue)
-    }, [searchResults])
+    // useEffect(() => {
+    //     console.log(searchResults)
+    //     console.log(searchingValue)
+    // }, [searchResults])
 
     return (
         <>
             <div className="col-lg-12">
                 <Header handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults} />
                 <Main handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults}/>
-                <Categories handleSearchResults={$handleSearchResults} />
-                <SearchResults valueSearch={searchingValue} results={searchResults}/>
+                <Categories handleSearchResults={$handleFilterCategory} />
+                <SearchResults valueSearch={searchingValue} results={searchResults} valuesArray={valuesArray}/>
                 <button onClick={add}>KLIK</button>
             </div>
         </>

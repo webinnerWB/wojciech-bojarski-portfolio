@@ -13,7 +13,7 @@ type categoryComponent = {
 const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComponent) => {
 
   const [categories, setCategories] = useState<any>([])
-  const [el, setEl] = useState<string>()
+  // const [el, setEl] = useState<string>()
   
   const getAllDocuments = Methods().$getAllDocuments
 
@@ -26,19 +26,20 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComp
     }
   }
 
-  const categoryFilterHamdler = ( value: string) => {
-    handleSearchResults(value)
+  const categoryFilterHandler = ( value: string) => {
+    const value2: string = value.toLocaleLowerCase()
+    handleSearchResults(value2)
   }
-  const getElement = (name: string) => {
-    setEl(name)
-  }
+  // const getElement = (name: string) => {
+  //   setEl(name)
+  // }
 
-  const handleMethod = (name: string) => {
-    setEl(name)
-    categoryFilterHamdler(name)
-  }
+  // const handleMethod = (name: string) => {
+  //   setEl(name)
+  //   categoryFilterHamdler(name)
+  // }
   const slides = categories.map((el: any, index: number) => (
-    <SwiperSlide className={`${style.slide}`} key={index} id={el.name} onClick={() => handleMethod(el.name)}>
+    <SwiperSlide className={`${style.slide}`} key={index} id={el.name} onClick={() => categoryFilterHandler(el.name)}>
       <i className={`${el.icon} ${style.categoryIcon}`}></i>
       <h4>{el.name}</h4>
     </SwiperSlide>
@@ -48,14 +49,14 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComp
     getCategories()
   }, [])
 
-  useEffect(() => {
-    if(el) {
-      let element: HTMLElement | null = document.getElementById(el)    
-      if(element) {
-        element.style.pointerEvents = 'none'
-      }
-    }
-  }, [el])
+  // useEffect(() => {
+  //   if(el) {
+  //     let element: HTMLElement | null = document.getElementById(el)    
+  //     if(element) {
+  //       element.style.pointerEvents = 'none'
+  //     }
+  //   }
+  // }, [el])
 
   // useEffect(() => {
   //   console.log(categories)
