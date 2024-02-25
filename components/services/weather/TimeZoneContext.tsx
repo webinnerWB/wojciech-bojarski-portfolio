@@ -7,14 +7,14 @@ import React, {
 } from 'react'
 
 type TimeZoneData = {
-    dataTimeZone: any,
+    dataTimeZone: string,
     timezone: string,
     date: string,
     time_12: string
 }
 
 export interface ServiceTimeZoneContextProps  {
-    dataTimeZone: TimeZoneData|null,
+    dataTimeZone: TimeZoneData | string | null,
     getTimeZonaData: (lat:string, long:string) => void
 }
 
@@ -28,7 +28,7 @@ const TimeZoneContextProvider: FC<TimeZoneProviderProps> = ({
     children
 }: TimeZoneProviderProps) => {
 
-    const [dataTimeZone, setDataTimeZone] = useState<any|null>(null)
+    const [dataTimeZone, setDataTimeZone] = useState<string|null>(null)
 
     const getTimeZonaData = (lat:string, long:string) => {
         const timeZone_URL = `https://api.ipgeolocation.io/timezone?apiKey=${process.env.NEXT_PUBLIC_API_KEY_TIMEZONE}&lat=${lat}&long=${long}`

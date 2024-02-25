@@ -7,14 +7,14 @@ import React,
 } from "react";
 
 type WeatherData = {
-    data: any,
-    main: any,
+    data: string,
+    main: string,
     name: string,
-    weather: any,
-    coord: any,
-    wind: any,
-    clouds: any,
-    sys: any,
+    weather: string,
+    coord: string,
+    wind: string,
+    clouds: string,
+    sys: string,
     dt: string
     timezone: number
 }

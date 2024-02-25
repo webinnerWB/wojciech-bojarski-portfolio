@@ -11,8 +11,7 @@ const Methods = () => {
     const db = getFirestore(firestore)
     const router = useRouter()
     const [searchingValue, setSearchingValue] = useState<string>('')
-    const [searchingValueCategoryFilter, setSearchingValueCategoryFilter] = useState<string | null>(null)
-    const [searchResults, setSearchRelusts] = useState<any>([])
+    const [searchResults, setSearchRelusts] = useState<DocumentData[] | undefined>([])
     const [valuesArray, setValuesArray] = useState<string[]>([''])
 
     const $getAllDocuments = async (collectionName: string): Promise<QuerySnapshot> => {
@@ -27,8 +26,6 @@ const Methods = () => {
     }
 
     const $search = async (collectionName: string, value: string): Promise<QuerySnapshot | null | undefined> => {
-      setValuesArray([''])
-
         try {
           const smallFirstLettervalue = value.charAt(0).toLowerCase() + value.slice(1)
           const collectionRef: CollectionReference = collection(db, collectionName)
@@ -49,45 +46,22 @@ const Methods = () => {
         }
       }
 
-      const $categoryFilter = async (collectionName: string, values: string): Promise<QuerySnapshot | null | undefined> => {
-        try {
-          const newEl = values.charAt(0).toLowerCase() + values.slice(1)
-          // setValuesArray(prevValuesArray => [...prevValuesArray, newEl])
-          setValuesArray(prevValuesArray => {
-            const newArray = [...prevValuesArray, newEl]
-            return Array.from(new Set(newArray))
-          })
-          const collectionRef: CollectionReference = collection(db, collectionName)
-          const queryCategory = query(collectionRef, where('category', 'array-contains-any', valuesArray))
-          const snapshotCategory = await getDocs(queryCategory)
-    
-          if (snapshotCategory.empty) {
-            console.error('No documents match your criteria!!!')
-            return null
-          } else {
-            return snapshotCategory
-          }
-        } catch (err) {
-          console.error(`Error: `, err)
-          throw err
-        }
-      }
-      
       const $handleFilterCategory = async (value: string) => {
-        setSearchingValue('')
         try {
-          const query = await $categoryFilter('products', value)
-          setValuesArray(prevValuesArray => {
-            const newArray = [...prevValuesArray, value]
-            return Array.from(new Set(newArray))
-          })
-          setSearchingValueCategoryFilter(value)
-          if (query) {
-            setSearchRelusts(query.docs.map(el => el.data()))
-          } else {
-            console.error('No documents match your criteria!!!')
-            setSearchRelusts(undefined)
+          const toLowerCaseName = value.toLowerCase()
+          if(valuesArray.length > 1 && valuesArray.includes(toLowerCaseName)) {
+            console.log(`jest`)
+            setValuesArray(prevEl => {
+              return prevEl.filter(el => el !== toLowerCaseName)
+            })
+          }else{
+            console.log(`nie ma`)
+            setValuesArray(prevEl => {return [...prevEl, toLowerCaseName]})
           }
+          
+          console.log(`value: w metodzie1: `, value)
+          console.log(`valuesArray w metodzie1: `, valuesArray)
+          
         } catch (err) {
           console.error(`Error: `, err)
           throw err
@@ -95,10 +69,22 @@ const Methods = () => {
       }
 
       useEffect(() => {
-        if(searchingValueCategoryFilter) {
-          $handleFilterCategory(searchingValueCategoryFilter)
+
+        const fetchData = async () => {
+          const collectionRef: CollectionReference = collection(db, 'products')
+          const queryCategory = query(collectionRef, where('category', 'array-contains-any', valuesArray))
+          const snapshotCategory = await getDocs(queryCategory)
+          
+          if (snapshotCategory.empty && valuesArray.length > 1) {
+            console.error('No documents match your criteria!!!')
+            setSearchRelusts(undefined)
+            return null
+          } else {
+            setSearchRelusts(snapshotCategory.docs.map(el => el.data()))
+          }
         }
-      }, [searchingValueCategoryFilter])
+        fetchData()
+      }, [valuesArray])
 
       const $handleSearchResults = async (value: string) => {
         try {
@@ -131,6 +117,7 @@ const Methods = () => {
 
     const $handleSearchingValue = (e: ChangeEvent<HTMLInputElement>) => {
         console.log(e.target.value)
+        setValuesArray([''])
         setSearchingValue(e.target.value)
         return searchingValue
     }
@@ -154,7 +141,7 @@ const Methods = () => {
         })
     }
 
-    const $registrationUser = async (formData: any, ref: HTMLSpanElement):Promise<void> => {
+    const $registrationUser = async (formData: DocumentData, ref: HTMLSpanElement):Promise<void> => {
         try {
             const auth = getAuth(firestore)
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
@@ -203,12 +190,11 @@ const Methods = () => {
           }
     }
 
-    const $loginUser = async (formData: any, ref: HTMLSpanElement): Promise<void> => {
+    const $loginUser = async (formData: DocumentData, ref: HTMLSpanElement): Promise<void> => {
         try {
             const auth = getAuth(firestore)
             const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password)
             const user = userCredential.user
-            // console.log(`LOGGED: `, user)
             router.push('/store')
         } catch (err: any) {
             console.error(`ERROR: `, err)

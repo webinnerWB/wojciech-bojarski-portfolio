@@ -6,13 +6,13 @@ import React, {
 } from "react";
 
 type MultiWeatherData = {
-    dataMultiWeather: any,
+    dataMultiWeather: string,
     dt: number,
-    weather: any
+    weather: string
 }
 
 export interface ServiceMultiWeatherContextProps {
-    dataMultiWeather: MultiWeatherData[]|null,
+    dataMultiWeather: MultiWeatherData[] | null | string,
     getMultiWeather: (lat:string, long:string) => void
 }
 
@@ -26,7 +26,7 @@ const MultiWeatherProvider: FC<MultiWeatherProviderProps> = ({
     children
 }: MultiWeatherProviderProps) => {
 
-    const [dataMultiWeather, setDataMultiWeather] = useState<any|null>(null)
+    const [dataMultiWeather, setDataMultiWeather] = useState<string|null>(null)
 
     const getMultiWeather = (lat:string, long:string) => {
         const URL = `https://api.agromonitoring.com/agro/1.0/weather/forecast?lat=${lat}&lon=${long}&appid=${process.env.NEXT_PUBLIC_API_KEY_AGROMONITORING}&units=metric`

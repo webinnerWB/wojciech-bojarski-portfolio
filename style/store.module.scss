@@ -213,6 +213,7 @@
         border: 2px solid rgb(22, 22, 22);
         &.active {
             color: rgba(255, 255, 255, 0.7215686275);
+            border: 2px solid rgba(255, 255, 255, 0.7215686275);
         }
     }
     .slide:hover {

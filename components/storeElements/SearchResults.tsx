@@ -1,10 +1,11 @@
 import React, {useState, useEffect, FC, useRef } from "react";
 
 import style from '../../style/store.module.scss'
+import { DocumentData } from "firebase/firestore";
 
 type results = {
     valueSearch: string|null,
-    results: any[],
+    results: DocumentData[] | undefined,
     valuesArray: string[]
 }
 
@@ -26,7 +27,6 @@ const SearchResults: FC<results> = ({ valueSearch, results, valuesArray }: resul
       return category
     }).join(', ')
 
-
     return (
       <>
         {results && results.length > 0 ? (
@@ -35,7 +35,7 @@ const SearchResults: FC<results> = ({ valueSearch, results, valuesArray }: resul
             <div className={style.productWrapper}>
               {results.map((result, index) => (
                 <div key={index} className={style.product}>
-                  <p>{result.name.map((namePart: any, nameIndex: number) => (
+                  <p>{result.name.map((namePart: string, nameIndex: number) => (
                     nameIndex === 0 ?
                         namePart.charAt(0).toUpperCase() + namePart.slice(1) :
                         namePart

@@ -5,6 +5,7 @@ import Methods from '../services/DB/Methods'
 
 import 'swiper/swiper-bundle.css';
 import style from '../../style/store.module.scss'
+import { DocumentData } from "firebase/firestore";
 
 type categoryComponent = {
   handleSearchResults: (value: string) => void
@@ -12,17 +13,17 @@ type categoryComponent = {
 
 const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComponent) => {
 
-  const [categories, setCategories] = useState<any>([])
-  // const [el, setEl] = useState<string>()
+  const [categories, setCategories] = useState<DocumentData[]>([])
+  const [elIndex, setElIndex] = useState<number[]>([])
   
   const getAllDocuments = Methods().$getAllDocuments
-
+  const valuesArray = Methods().valuesArray
   const getCategories = async () => {
     try {
       const category = await getAllDocuments('categories')
       setCategories(category.docs.map(doc => doc.data()))
     } catch (err) {
-      console.log(`Error: `, err)
+      console.error(`Error: `, err)
     }
   }
 
@@ -30,16 +31,25 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComp
     const value2: string = value.toLocaleLowerCase()
     handleSearchResults(value2)
   }
-  // const getElement = (name: string) => {
-  //   setEl(name)
-  // }
-
-  // const handleMethod = (name: string) => {
-  //   setEl(name)
-  //   categoryFilterHamdler(name)
-  // }
+  const removeCategoryFilter = (index: number) => {
+    if(elIndex.includes(index)) {
+      setElIndex((prevIndex: any[]) => {
+        const newArray = prevIndex.filter(item => item !== index)
+        return newArray
+      })
+    }
+  }
+  const handleMethods = (name: string, index: number) => {
+    setElIndex((prevIndex: number[]) => {
+      const newArray = [...prevIndex, index]
+      return newArray
+    })
+    removeCategoryFilter(index)
+    categoryFilterHandler(name)
+  }
+  
   const slides = categories.map((el: any, index: number) => (
-    <SwiperSlide className={`${style.slide}`} key={index} id={el.name} onClick={() => categoryFilterHandler(el.name)}>
+    <SwiperSlide className={`${style.slide} ${elIndex.includes(index) ? style.active : null}`} key={index} id={el.name} onClick={() => handleMethods(el.name, index)}>
       <i className={`${el.icon} ${style.categoryIcon}`}></i>
       <h4>{el.name}</h4>
     </SwiperSlide>
@@ -49,19 +59,6 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComp
     getCategories()
   }, [])
 
-  // useEffect(() => {
-  //   if(el) {
-  //     let element: HTMLElement | null = document.getElementById(el)    
-  //     if(element) {
-  //       element.style.pointerEvents = 'none'
-  //     }
-  //   }
-  // }, [el])
-
-  // useEffect(() => {
-  //   console.log(categories)
-  // }, [categories])
-
 
     return (
      <>
@@ -70,7 +67,7 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComp
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={50}
         loop={true}
-        autoplay={{ delay: 3000 }}
+        // autoplay={{ delay: 3000 }}
         breakpoints={{
             1219: {slidesPerView: 5},
             600: {slidesPerView: 3},
