@@ -16,7 +16,7 @@ const Main: FC<mainComponent> = ({handleSearchingValue, handleSearchResults}: ma
         e.preventDefault()
         handleSearchResults(inputValue)
         clearInpit()
-        clearSlides(`${style.slide}`)
+        // clearSlides(`${style.slide}`)
     }
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +47,7 @@ const Main: FC<mainComponent> = ({handleSearchingValue, handleSearchResults}: ma
                 if (event.key === 'Enter') {
                     handleSearchResults(input.value)
                     clearInpit()
-                    clearSlides(`${style.slide}`)
+                    // clearSlides(`${style.slide}`)
                 }
               });
         }

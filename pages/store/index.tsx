@@ -38,7 +38,7 @@ const StoreMainPage: FC = () => {
             <div className="col-lg-12">
                 <Header handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults} />
                 <Main handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults}/>
-                <Categories handleSearchResults={$handleFilterCategory} />
+                <Categories handleSearchResults={$handleFilterCategory} valuesArray={valuesArray}/>
                 <SearchResults valueSearch={searchingValue} results={searchResults} valuesArray={valuesArray}/>
                 <button onClick={add}>KLIK</button>
             </div>

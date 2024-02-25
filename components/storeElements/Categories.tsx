@@ -8,16 +8,16 @@ import style from '../../style/store.module.scss'
 import { DocumentData } from "firebase/firestore";
 
 type categoryComponent = {
-  handleSearchResults: (value: string) => void
+  handleSearchResults: (value: string) => void,
+  valuesArray: string[]
 }
 
-const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComponent) => {
+const Categories: FC<categoryComponent> = ({ handleSearchResults, valuesArray }: categoryComponent) => {
 
   const [categories, setCategories] = useState<DocumentData[]>([])
   const [elIndex, setElIndex] = useState<number[]>([])
   
   const getAllDocuments = Methods().$getAllDocuments
-  const valuesArray = Methods().valuesArray
   const getCategories = async () => {
     try {
       const category = await getAllDocuments('categories')
@@ -39,6 +39,11 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComp
       })
     }
   }
+  const clearActiveSlide = () => {
+    if(valuesArray.length === 1) {
+      setElIndex([])
+    }
+  }
   const handleMethods = (name: string, index: number) => {
     setElIndex((prevIndex: number[]) => {
       const newArray = [...prevIndex, index]
@@ -49,7 +54,7 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComp
   }
   
   const slides = categories.map((el: any, index: number) => (
-    <SwiperSlide className={`${style.slide} ${elIndex.includes(index) ? style.active : null}`} key={index} id={el.name} onClick={() => handleMethods(el.name, index)}>
+    <SwiperSlide className={`${style.slide} ${elIndex.includes(index) ? style.active : ''}`} key={index} id={el.name} onClick={() => handleMethods(el.name, index)}>
       <i className={`${el.icon} ${style.categoryIcon}`}></i>
       <h4>{el.name}</h4>
     </SwiperSlide>
@@ -58,6 +63,10 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults }: categoryComp
   useEffect(() => {
     getCategories()
   }, [])
+
+  useEffect(() => {
+    clearActiveSlide()
+  }, [valuesArray])
 
 
     return (
