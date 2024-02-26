@@ -12,7 +12,7 @@ type MultiWeatherData = {
 }
 
 export interface ServiceMultiWeatherContextProps {
-    dataMultiWeather: MultiWeatherData[] | null | string,
+    dataMultiWeather: MultiWeatherData[] | null | string| any,
     getMultiWeather: (lat:string, long:string) => void
 }
 

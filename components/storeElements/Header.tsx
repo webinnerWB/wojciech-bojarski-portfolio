@@ -1,8 +1,9 @@
-import React, { FC, useState, ChangeEvent, useRef, useEffect } from "react";
+import React, { FC, useState, ChangeEvent, useRef, useEffect, useContext } from "react";
 import Methods from "../services/DB/Methods";
 import { useRouter } from 'next/router';
 import Link from "next/link";
 import Script from 'next/script'
+import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 
 import style from '../../style/store.module.scss'
 
@@ -36,10 +37,13 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
             input.addEventListener('keypress', (event) => {
                 if (event.key === 'Enter') {
                     handleSearchResults(input.value)
+                    input.value = ''
                 }
               });
         }
     }, [])
+
+    const { productsArray }: ServiceProductsContextProps = useContext(ProductsContext)
 
     return(
         <>
@@ -77,7 +81,10 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
                                 ref={searchIntup}
                                 />
                             <i className={`fa-solid fa-magnifying-glass ${style.ico} ${isSearchVisible ? style.activeSearch : ''}`} onClick={toggleSearch}></i>
-                            <i className={`fa-solid fa-cart-shopping ${style.ico}`}></i>
+                            <div className={`${style.shoppingWraper}`}>
+                                <i className={`fa-solid fa-cart-shopping ${style.ico} ${userLogged ? style.m0 : ''}`}></i>
+                                { userLogged ? <span className={`${style.counter}`}>{productsArray.length}</span> : null }
+                            </div>
                             {!userLogged ? 
                                 <Link className={`${style.ico}`} href="/store/login">
                                     <i className={`fa-solid fa-user`}></i>

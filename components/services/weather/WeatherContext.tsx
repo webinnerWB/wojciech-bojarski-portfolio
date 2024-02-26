@@ -20,7 +20,7 @@ type WeatherData = {
 }
 
 export interface ServiceGetWeatherContextProps  {
-    data: WeatherData | null,
+    data: WeatherData | null | string | any,
     error404: boolean,
     handleCityName: ( value:string ) => void,
     getWeatherData: ( e: React.FormEvent<HTMLFormElement> ) => void

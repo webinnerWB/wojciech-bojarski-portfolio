@@ -5,7 +5,7 @@ import { Header } from '../../components/storeElements/Header'
 
 import style from '../../style/store.module.scss';
 
-const login: FC = () => {
+const Login: FC = () => {
     const { $handleSearchingValue, $handleSearchResults, $loginUser, $isUserLogged, searchResults, searchingValue} = Methods()
     const msgRef = useRef<HTMLSpanElement>(null) 
     const [userCredential, setUserCredential] = useState<any>({
@@ -93,4 +93,4 @@ const login: FC = () => {
     )
 }
 
-export default login
+export default Login

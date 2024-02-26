@@ -1,5 +1,4 @@
 import React, {
-    
     createContext,
     FC,
     useState,
@@ -14,7 +13,7 @@ type TimeZoneData = {
 }
 
 export interface ServiceTimeZoneContextProps  {
-    dataTimeZone: TimeZoneData | string | null,
+    dataTimeZone: TimeZoneData | string | null| any,
     getTimeZonaData: (lat:string, long:string) => void
 }
 

@@ -16,7 +16,6 @@ const Main: FC<mainComponent> = ({handleSearchingValue, handleSearchResults}: ma
         e.preventDefault()
         handleSearchResults(inputValue)
         clearInpit()
-        // clearSlides(`${style.slide}`)
     }
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -31,14 +30,6 @@ const Main: FC<mainComponent> = ({handleSearchingValue, handleSearchResults}: ma
             input.value = ''
         }
     }
-    const clearSlides = (slideClass: string) => {
-        const slidesElemtns = document.querySelectorAll(`.${slideClass}`)
-        slidesElemtns.forEach(el => {
-            if(el.classList.contains(`${style.active}`)){
-                el.classList.remove(`${style.active}`)
-            }
-        })
-    }
 
     useEffect(() => {
         const input = searchIntup.current
@@ -47,7 +38,6 @@ const Main: FC<mainComponent> = ({handleSearchingValue, handleSearchResults}: ma
                 if (event.key === 'Enter') {
                     handleSearchResults(input.value)
                     clearInpit()
-                    // clearSlides(`${style.slide}`)
                 }
               });
         }

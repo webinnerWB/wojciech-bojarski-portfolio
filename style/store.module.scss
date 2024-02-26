@@ -61,8 +61,7 @@
 }
 .iconWrapper {
     width: 100%;
-    display: block;
-    text-align: end;
+    display: contents;
     .animationInput {
         transition: opacity 0.3s ease-in-out; 
         opacity: 0; 
@@ -72,6 +71,24 @@
     }
     .activeSearch {
         color:  #333333;
+    }
+    .shoppingWraper {
+        position: relative;
+        .counter {
+            position: absolute;
+            bottom: 80%;
+            left: 80%;
+            width: 35px;
+            height: 20px;
+            border-radius: 35px;
+            background-color:rgb(243, 45, 45);
+            justify-content: center;
+            display: flex;
+            place-items: center;
+        }
+    }
+    .m0 {
+        margin-right: 0 !important;
     }
     .ico {
         font-size: 25px;
@@ -242,9 +259,28 @@
 .productWrapper {
     display: flex;
     justify-content: center;
+    padding: 70px 0;
     .product {
         margin-right: 50px;
+        position: relative;
         cursor: pointer;
+        &:hover .addWrapperButton {
+            opacity: 1;
+        }
+        .addWrapperButton {
+            position: absolute;
+            bottom: 17%;
+            left: 0;
+            height: 35%;
+            width: 100%;
+            background-color: #9f9f9fbd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 70px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+        }
         .poductImg {
             width: 200px;
             height: 200px;
@@ -253,6 +289,7 @@
         }
     }
 }
+
 
 .formWrapper {
     width: 60%;

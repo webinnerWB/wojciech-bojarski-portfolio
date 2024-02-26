@@ -2,7 +2,7 @@ import React, { useEffect, FC } from "react";
 import { Header } from '../../components/storeElements/Header'
 import Methods from '../../components/services/DB/Methods'
 
-const blog: FC = () => {
+const Blog: FC = () => {
     const { $handleSearchingValue, $handleSearchResults, searchResults, searchingValue} = Methods()
 
     useEffect(() => {
@@ -22,4 +22,4 @@ const blog: FC = () => {
     )
 }
 
-export default blog
+export default Blog

@@ -107,7 +107,7 @@ const WeatherMainPage: FC = () => {
 
         if(dataMultiWeather) {
             if(forecastDataArray.length === 0){
-                dataMultiWeather.forEach(el => {
+                dataMultiWeather.forEach((el: any) => {
                     setForecastDataArray(prev => [...prev, el])
                 })
             }
