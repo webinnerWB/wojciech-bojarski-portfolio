@@ -1,4 +1,4 @@
-import React, {useState, useEffect, FC, useRef, useContext } from "react";
+import React, {useState, useEffect, FC, useRef, useContext, RefObject } from "react";
 import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 
 import style from '../../style/store.module.scss'
@@ -11,11 +11,26 @@ type results = {
 }
 
 const SearchResults: FC<results> = ({ valueSearch, results, valuesArray }: results) => {
-    const searchResultsRef = useRef<HTMLDivElement | null>(null);
+    const searchResultsRef = useRef<HTMLDivElement>(null);
     const noResultsRef = useRef<HTMLDivElement | null>(null);
+    const span = useRef<HTMLSpanElement[] | null>([]);
     
     const { addProduct }: ServiceProductsContextProps = useContext(ProductsContext)
     
+    const addingAnimation = (index: number) => {
+      if(span.current?.[index]) {
+        span.current[index].style.animation = `${style.animateAdding} 0.5s ease-in`
+        setTimeout(() => {
+          span.current![index].removeAttribute('style')
+        }, 900)
+      }
+    }
+
+    const clickProductHandler = (result: object, index:number) => {
+      addProduct(result, index)
+      addingAnimation(index)
+    }
+
     useEffect(() => {
       if(results && searchResultsRef.current) {
         searchResultsRef.current.scrollIntoView({ behavior: 'smooth' })
@@ -36,17 +51,18 @@ const SearchResults: FC<results> = ({ valueSearch, results, valuesArray }: resul
           <>
             <h2 ref={searchResultsRef} className={style.searchTitle}>{valueSearch && activeCategories.length === 0 ? `Search results for: "${valueSearch}"` : `Search results for categories: "${activeCategories}"`}</h2>
             <div className={style.productWrapper}>
-              {results.map((result, index) => (
-                <div key={index} className={style.product} onClick={() => addProduct(result)}>
+              {results.map((result) => (
+                <div key={result.id} className={style.product} onClick={() => clickProductHandler(result, result.id)}>
                   <p>{result.name.map((namePart: string, nameIndex: number) => (
                     nameIndex === 0 ?
                         namePart.charAt(0).toUpperCase() + namePart.slice(1) :
                         namePart
                   )).join(' ')
                   }</p>
-                  <img src= {result.imgurl} className={style.poductImg}/>
+                  <img src={result.imgurl} className={style.productImg}/>
                   <p>{result.price}$</p>
                   <div className={`${style.addWrapperButton}`}>+</div>
+                  <span ref={el => (span.current![result.id] = el!)} className={`${style.addingAnimation}`}>1</span>
                 </div>
               ))}
             </div>

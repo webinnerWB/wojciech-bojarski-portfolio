@@ -76,6 +76,7 @@
         position: relative;
         .counter {
             position: absolute;
+            color: #ffffff;
             bottom: 80%;
             left: 80%;
             width: 35px;
@@ -110,6 +111,7 @@
         }
     }
     .ico:last-child {
+        text-decoration: none;
         margin-right: 0;
     }
 }
@@ -267,6 +269,29 @@
         &:hover .addWrapperButton {
             opacity: 1;
         }
+        // &:hover .addingAnimation {
+        //     animation: animateAdding 1s ease-in
+        // }
+        @keyframes animateAdding {
+            0% {
+                top: 50%;
+                opacity: 1;
+            }
+            25% {
+                top: 55%;
+            }
+            50% {
+                top: 65%;
+            }
+            75% {
+                top: 50%;
+                opacity: 0.6;
+            }
+            100% {
+                top: 20%;
+                opacity: 0;
+            }
+        }
         .addWrapperButton {
             position: absolute;
             bottom: 17%;
@@ -281,7 +306,22 @@
             opacity: 0;
             transition: opacity 0.8s ease;
         }
-        .poductImg {
+        .addingAnimation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            font-size: 20px;
+            background-color: rgb(243, 45, 45);
+            width: 25px;
+            height: 25px;
+            border-radius: 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+        }
+        .productImg {
             width: 200px;
             height: 200px;
             border-radius: 12px;
