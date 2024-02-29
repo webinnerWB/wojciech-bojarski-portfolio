@@ -417,3 +417,16 @@
     background: #1fca27;
     width: 40%;
 }
+
+.orderWrapper {
+    .productList {
+        .product {
+            .imgProduct {
+                width: 200px;
+                height: 200px;
+                border-radius: 12px;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}

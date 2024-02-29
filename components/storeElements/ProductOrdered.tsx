@@ -1,21 +1,52 @@
-import React, { useState, useEffect, FC } from "react";
+import React, { useState, useEffect, useContext, FC } from "react";
+import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 
-type productComponent = {
-    product: any,
-}
+import style from '../../style/store.module.scss'
+const ProductOrdered: FC = () => {
+    const [localStorageDataProducts, setLocalStorageDataProducts] = useState<any[]>([])
+    const [localstorageArrayWithoutRepetitions, setLocalstorageArrayWithoutRepetitions] = useState<any[]>([])
+    const { productsArray }:ServiceProductsContextProps = useContext(ProductsContext)
 
+    useEffect(() => {
+        setLocalStorageDataProducts([])
+        if(typeof window !== 'undefined' && window.localStorage){
+            Object.keys(localStorage).map((key) => {
+                const keyValue = Number(key)
+                if (!isNaN(keyValue)) {
+                    const localStorageProductValue = localStorage.getItem(key)
+                    if(localStorageProductValue) {
+                        const product = JSON.parse(localStorageProductValue)
+                        setLocalStorageDataProducts(prev => [...prev, product])
+                    }
+                }
+            })
+        }
+    }, [productsArray])
 
-const ProductOrdered: FC<productComponent> = ({ product }: productComponent) => {
+    let products = localStorageDataProducts.map((el, index) => (
+        <>
+            <tr key={index}>
+                <th scope="row">
+                    <div className={`d-lg-flex ${style.product}`}>
+                        <img className={`${style.imgProduct}`} src={el.imgurl} />
+                        <p>{el.name}</p>
+                    </div>
+                </th>
+                <td>{el.price}</td>
+                <td>{el.id}</td>
+                <td>{el.price}</td>
+            </tr>
+        </>
+    ))
     return (
-        <tr>
-            <th scope="row">
-                <div className="d-lg-flex">
-                    <img src={product.imgurl} />
-                    <p>{product.name}</p>
-                </div>
-            </th>
-            <td>{product.price}</td>
-        </tr>
+        <>
+            { localStorageDataProducts 
+            ? 
+            products
+            : 
+            <p>NO DATA</p> }      
+        </>
+        
     )
 }
 
