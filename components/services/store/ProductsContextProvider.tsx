@@ -8,7 +8,7 @@ import React, {
 
 export interface ServiceProductsContextProps  {
     productsArray: object[],
-    productsArrayLength: object[]
+    getProductsArray: object[]
     addProduct: (obj: object, index: number) => object[]
 }
 
@@ -20,7 +20,7 @@ export const ProductsContext = createContext<ServiceProductsContextProps>({} as 
 
 const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     const [productsArray, setProductsArray] = useState<object[]>([])
-    const [productsArrayLength, setProductsArrayLength] = useState<object[]>([])
+    const [getProductsArray, setGetProductsArray] = useState<object[]>([])
     const addProduct = (obj: object, index: number) => {
         const objAsString = JSON.stringify(obj)
         localStorage.setItem(`${index}${productsArray.length}4444988`, objAsString)
@@ -28,14 +28,14 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
         return productsArray
     }
     useEffect(() => {
-        setProductsArrayLength([])
+        setGetProductsArray([])
         if(localStorage.length > 0) {
             Object.keys(localStorage).map((key: any) => {
                 const keyValue = Number(key)
                 if(!isNaN(keyValue)) {
                     const product = localStorage.getItem(key)
                     if(product) {
-                        setProductsArrayLength(prevEl => [...prevEl, JSON.parse(product)])
+                        setGetProductsArray(prevEl => [...prevEl, JSON.parse(product)])
                     }
                 }
             })
@@ -43,7 +43,7 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     }, [productsArray])
     const contextValue: ServiceProductsContextProps = {
         productsArray,
-        productsArrayLength,
+        getProductsArray,
         addProduct
     }
 
