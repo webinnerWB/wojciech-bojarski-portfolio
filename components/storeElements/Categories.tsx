@@ -28,8 +28,8 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults, valuesArray }:
   }
 
   const categoryFilterHandler = ( value: string) => {
-    const value2: string = value.toLocaleLowerCase()
-    handleSearchResults(value2)
+    const categoryValue: string = value.toLocaleLowerCase()
+    handleSearchResults(categoryValue)
   }
   const removeCategoryFilter = (index: number) => {
     if(elIndex.includes(index)) {

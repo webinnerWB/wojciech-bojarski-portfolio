@@ -15,7 +15,7 @@ const SearchResults: FC<results> = ({ valueSearch, results, valuesArray }: resul
     const noResultsRef = useRef<HTMLDivElement | null>(null);
     const span = useRef<HTMLSpanElement[] | null>([]);
     
-    const { addProduct }: ServiceProductsContextProps = useContext(ProductsContext)
+    const { $addProduct }: ServiceProductsContextProps = useContext(ProductsContext)
     
     const addingAnimation = (index: number) => {
       if(span.current?.[index]) {
@@ -27,7 +27,7 @@ const SearchResults: FC<results> = ({ valueSearch, results, valuesArray }: resul
     }
 
     const clickProductHandler = (result: object, index:number) => {
-      addProduct(result, index)
+      $addProduct(result, index)
       addingAnimation(index)
     }
 

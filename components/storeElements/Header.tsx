@@ -81,7 +81,7 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
                                 ref={searchIntup}
                                 />
                             <i className={`fa-solid fa-magnifying-glass ${style.ico} ${isSearchVisible ? style.activeSearch : ''}`} onClick={toggleSearch}></i>
-                            { userLogged ?
+                            { userLogged && getProductsArray.length > 0 ?
                                 <Link  href="/store/order">
                                     <div className={`${style.shoppingWraper}`}>
                                         <i className={`fa-solid fa-cart-shopping ${style.ico} ${userLogged ? style.m0 : ''}`}></i>

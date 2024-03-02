@@ -2,7 +2,7 @@
     background-color: transparent !important;
     .container {
         border-bottom: 1px solid rgb(255 255 255 / 25%);
-        width: 95%;
+        width: 98%;
         padding: 20px;
     }
     .paw {
@@ -419,14 +419,46 @@
 }
 
 .orderWrapper {
+    .tableWrapper {
+        background: #282828;
+        margin-left: 1%;
+        padding: 40px 30px;
+        .title {
+            font-weight: 700;
+            margin-bottom: 40px;
+        }
+        .tableCustom {
+            width: 100%;
+        }
+        .th {
+            padding: 5px;
+            &.price {
+                min-width: 190px;
+            }
+        }
+        .td {
+            min-width: 100px;
+            text-align: center;
+            vertical-align: middle;
+        }
+    }
+    
     .productList {
         .product {
+            padding: 10px;
             .imgProduct {
-                width: 200px;
-                height: 200px;
+                width: 100px;
+                height: 100px;
                 border-radius: 12px;
                 margin-bottom: 10px;
             }
+            .name {
+                margin: 0 20px;
+                text-transform: capitalize;
+            }
         }
     }
+}
+.borderBottom {
+    border-bottom: 1px solid #3a3a3a;
 }

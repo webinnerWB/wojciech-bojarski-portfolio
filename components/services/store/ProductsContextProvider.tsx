@@ -8,8 +8,9 @@ import React, {
 
 export interface ServiceProductsContextProps  {
     productsArray: object[],
-    getProductsArray: object[]
-    addProduct: (obj: object, index: number) => object[]
+    getProductsArray: object[],
+    $updateCounter: (id: number) => void,
+    $addProduct: (obj: object, index: number) => object[]
 }
 
 type productsContext = {
@@ -20,12 +21,18 @@ export const ProductsContext = createContext<ServiceProductsContextProps>({} as 
 
 const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     const [productsArray, setProductsArray] = useState<object[]>([])
-    const [getProductsArray, setGetProductsArray] = useState<object[]>([])
-    const addProduct = (obj: object, index: number) => {
+    const [getProductsArray, setGetProductsArray] = useState<any[]>([])
+    const $addProduct = (obj: object, index: number) => {
         const objAsString = JSON.stringify(obj)
         localStorage.setItem(`${index}${productsArray.length}4444988`, objAsString)
         setProductsArray(prevEl => [...prevEl, obj])
         return productsArray
+    }
+    const $updateCounter = (id: number) => {
+        setGetProductsArray(prevEl => {
+            const newArray = prevEl.filter(el => el.id !== id)
+            return newArray
+        })
     }
     useEffect(() => {
         setGetProductsArray([])
@@ -44,7 +51,8 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     const contextValue: ServiceProductsContextProps = {
         productsArray,
         getProductsArray,
-        addProduct
+        $addProduct,
+        $updateCounter
     }
 
     return (
