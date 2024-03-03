@@ -12,14 +12,44 @@ const ProductOrdered: FC = () => {
     }
 
     const [localStorageDataProducts, setLocalStorageDataProducts] = useState<any[]>([])
-    const { productsArray, getProductsArray, $updateCounter }:ServiceProductsContextProps = useContext(ProductsContext)
+    const { productsArray, getProductsArray, $addProduct, $removeProduct, $updateCounter }:ServiceProductsContextProps = useContext(ProductsContext)
     const [quantityObjects, setQuantityObjects] = useState<QuantityItem[]>([])
     const [objectsID, setObjectsID] = useState<number[]>([])
     const [totalCost, setTotalCost] = useState<number>(0)
     const router = useRouter()
 
-    const removeProduct = (id: number) => {
-        $updateCounter(id)
+    const changeAmountHandler = (obj: any, index: number, action: 'increment' | 'decrement') => {
+        setQuantityObjects(prevElements => {
+            const updatedElemetns = prevElements.map((quantityElement, i) => {
+                if (i === index) {
+                    const newAmount = action === 'increment' ? quantityElement.amount + 1 : quantityElement.amount - 1
+                    if (newAmount === 0) {
+                        $removeProduct(obj, quantityElement.id);
+                        return null
+                    } else {
+                        if (action === 'decrement' && quantityElement.amount > 0) {
+                            $removeProduct(obj, quantityElement.id)
+                        } else if (action === 'increment' && quantityElement.amount > 0) {
+                            $addProduct(obj, index)
+                        }
+    
+                        return {
+                            ...quantityElement,
+                            amount: newAmount
+                        };
+                    }
+                }
+    
+                return quantityElement
+            })
+            const filterdElemetns = updatedElemetns.filter(el => el !== null) as QuantityItem[]
+            return filterdElemetns
+        });
+    };
+    
+    
+    const removeProducts = (obj: object, id: number) => {
+        $updateCounter(obj, id)
         setLocalStorageDataProducts(prevEl => {
             const newArrayLocalStorageDataProducts = prevEl.filter(currentEl => currentEl.id !== id)
             return newArrayLocalStorageDataProducts
@@ -40,6 +70,7 @@ const ProductOrdered: FC = () => {
                 }
             }
         })
+        console.log(`quantityObjectsREMOVE: `, quantityObjects)
         const arrayLength = localStorageDataProducts.length - 1
         if(arrayLength === 0) {
             router.push('/store')
@@ -103,10 +134,14 @@ const ProductOrdered: FC = () => {
                     <p className={`${style.name}`}>{el.name}</p>
                 </div>
             </th>
-            <td className={`${style.td}`}>{el.price}$</td>
-            <td className={`${style.td}`}>{quantityObjects[index] && el.id === quantityObjects[index].id && quantityObjects[index].amount}</td>
-            <td className={`${style.td}`}>{quantityObjects[index] && el.price * quantityObjects[index].amount}$</td>
-            <td onClick={() => removeProduct(el.id)}>x</td>
+            <td className={`${style.td}`}>{el.price} $</td>
+            <td className={`${style.td}`}>
+                <button className={`${style.amountBtn}`} onClick={() => changeAmountHandler(el, index, 'decrement')}>-</button>
+                    {quantityObjects[index] && el.id === quantityObjects[index].id && quantityObjects[index].amount}
+                <button className={`${style.amountBtn}`} onClick={() => changeAmountHandler(el, index, 'increment')}>+</button>
+            </td>
+            <td className={`${style.td}`}>{quantityObjects[index] && el.price * quantityObjects[index].amount} $</td>
+            <td onClick={() => removeProducts(el, el.id)}>x</td>
         </tr>
     ))
 
@@ -116,7 +151,7 @@ const ProductOrdered: FC = () => {
             ? 
             products
             : 
-            <p>NO DATA</p> }      
+            null }      
         </>
         
     )

@@ -3,14 +3,18 @@ import React, {
     useEffect,
     createContext,
     FC,
-    ReactNode
+    ReactNode,
+    Dispatch,
+    SetStateAction
 } from "react";
 
 export interface ServiceProductsContextProps  {
     productsArray: object[],
     getProductsArray: object[],
-    $updateCounter: (id: number) => void,
-    $addProduct: (obj: object, index: number) => object[]
+    $updateCounter: (obj: object, id: number) => void,
+    $addProduct: (obj: object, index: number) => object[],
+    setGetProductsArray: Dispatch<SetStateAction<any[]>>,
+    $removeProduct: (obj: object, index: number) => void,
 }
 
 type productsContext = {
@@ -22,18 +26,37 @@ export const ProductsContext = createContext<ServiceProductsContextProps>({} as 
 const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     const [productsArray, setProductsArray] = useState<object[]>([])
     const [getProductsArray, setGetProductsArray] = useState<any[]>([])
+
     const $addProduct = (obj: object, index: number) => {
         const objAsString = JSON.stringify(obj)
-        localStorage.setItem(`${index}${productsArray.length}4444988`, objAsString)
+        localStorage.setItem(`${index}${productsArray.length}`, objAsString)
         setProductsArray(prevEl => [...prevEl, obj])
         return productsArray
     }
-    const $updateCounter = (id: number) => {
-        setGetProductsArray(prevEl => {
-            const newArray = prevEl.filter(el => el.id !== id)
-            return newArray
-        })
+
+    const $removeProduct = (obj: object, id: number) => {
+        let removed = false
+        Object.keys(localStorage).forEach(localStorageElement => {
+            const isNumberKey = Number(localStorageElement);
+            if (!isNaN(isNumberKey)) {
+                const product = localStorage.getItem(localStorageElement);
+                if (product) {
+                    const productObj = JSON.parse(product);
+                    if (productObj.id === id && !removed) {
+                        localStorage.removeItem(localStorageElement);
+                        removed = true;
+                        setProductsArray(prevEl => [...prevEl, obj])
+                        return productsArray
+                    }
+                }
+            }
+        });
     }
+    const $updateCounter = (obj: object, id: number) => {
+        setProductsArray(prevEl => [...prevEl, obj])
+        return productsArray
+    }
+
     useEffect(() => {
         setGetProductsArray([])
         if(localStorage.length > 0) {
@@ -48,11 +71,14 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
             })
         }
     }, [productsArray])
+    
     const contextValue: ServiceProductsContextProps = {
         productsArray,
         getProductsArray,
+        $updateCounter,
         $addProduct,
-        $updateCounter
+        $removeProduct,
+        setGetProductsArray
     }
 
     return (

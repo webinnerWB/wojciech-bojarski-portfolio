@@ -269,9 +269,6 @@
         &:hover .addWrapperButton {
             opacity: 1;
         }
-        // &:hover .addingAnimation {
-        //     animation: animateAdding 1s ease-in
-        // }
         @keyframes animateAdding {
             0% {
                 top: 50%;
@@ -427,6 +424,24 @@
             font-weight: 700;
             margin-bottom: 40px;
         }
+        .backBtn {
+            border: 2px solid #ffffff;
+            background: transparent;
+            color: #ffffff;
+            border-radius: 25px;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-size: 20px;
+            padding: 15px;
+        }
+        .backBtn:hover {
+            transition: background-color 0.5s ease-in, font-weight 0.2s ease-in, color 0.5s ease-in, border 0.1s ease-in;
+            background-color: #ffffff;
+            color: #000000;
+            font-size: 20px;
+            font-weight: 900;
+            border: 2px solid #000000;
+        }
         .tableCustom {
             width: 100%;
         }
@@ -440,6 +455,7 @@
             min-width: 100px;
             text-align: center;
             vertical-align: middle;
+            font-size: 20px;
         }
     }
     
@@ -461,4 +477,11 @@
 }
 .borderBottom {
     border-bottom: 1px solid #3a3a3a;
+    .amountBtn {
+        background-color: transparent;
+        border: none;
+        color: #ffffff;
+        font-size: 25px;
+        width: 40px;
+    }
 }
