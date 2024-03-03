@@ -15,6 +15,7 @@ export interface ServiceProductsContextProps  {
     $addProduct: (obj: object, index: number) => object[],
     setGetProductsArray: Dispatch<SetStateAction<any[]>>,
     $removeProduct: (obj: object, index: number) => void,
+    shippingCost: number
 }
 
 type productsContext = {
@@ -26,6 +27,8 @@ export const ProductsContext = createContext<ServiceProductsContextProps>({} as 
 const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     const [productsArray, setProductsArray] = useState<object[]>([])
     const [getProductsArray, setGetProductsArray] = useState<any[]>([])
+    const [shippingCost, setShippingCost] = useState<number>(15)
+
 
     const $addProduct = (obj: object, index: number) => {
         const objAsString = JSON.stringify(obj)
@@ -78,6 +81,7 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
         $updateCounter,
         $addProduct,
         $removeProduct,
+        shippingCost,
         setGetProductsArray
     }
 

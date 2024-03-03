@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, FC, Fragment } from "react"
+import React, { useState, useEffect, useContext, FC } from "react"
 import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 import { useRouter } from "next/router"
 
@@ -12,7 +12,7 @@ const ProductOrdered: FC = () => {
     }
 
     const [localStorageDataProducts, setLocalStorageDataProducts] = useState<any[]>([])
-    const { productsArray, getProductsArray, $addProduct, $removeProduct, $updateCounter }:ServiceProductsContextProps = useContext(ProductsContext)
+    const { productsArray, getProductsArray, $addProduct, $removeProduct, $updateCounter, shippingCost }:ServiceProductsContextProps = useContext(ProductsContext)
     const [quantityObjects, setQuantityObjects] = useState<QuantityItem[]>([])
     const [objectsID, setObjectsID] = useState<number[]>([])
     const [totalCost, setTotalCost] = useState<number>(0)
@@ -70,7 +70,6 @@ const ProductOrdered: FC = () => {
                 }
             }
         })
-        console.log(`quantityObjectsREMOVE: `, quantityObjects)
         const arrayLength = localStorageDataProducts.length - 1
         if(arrayLength === 0) {
             router.push('/store')
@@ -122,8 +121,6 @@ const ProductOrdered: FC = () => {
             })
             setQuantityObjects(prevEl => [...prevEl, newItem])
         })        
-        console.log(`quantity: `, quantityObjects)
-        console.log(`localStorageDataProducts: `, localStorageDataProducts)
     }, [getProductsArray, localStorageDataProducts])
 
     let products = localStorageDataProducts.map((el, index) => (
@@ -152,6 +149,27 @@ const ProductOrdered: FC = () => {
             products
             : 
             null }      
+            <tr className={`${style.orderSumContainer}`}>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td className={`${style.text}`}>Subtotal:</td>
+                <td className={`${style.cost}`}>{Number(totalCost).toFixed(2)} $</td>
+            </tr>
+            <tr className={`${style.orderSumContainer}`}>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td className={`${style.borderBottom} ${style.text}`}>Shipping:</td>
+                <td className={`${style.borderBottom} ${style.cost}`}>{Number(shippingCost).toFixed(2)} $</td>
+            </tr>
+            <tr className={`${style.orderSumContainer}`}>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td className={`${style.text}`}>Total:</td>
+                <td className={`${style.cost}`}>{Number(shippingCost + totalCost).toFixed(2)} $</td>
+            </tr>
         </>
         
     )
