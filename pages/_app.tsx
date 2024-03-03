@@ -4,8 +4,8 @@ import TimeZoneContextProvider from '../components/services/weather/TimeZoneCont
 import MultiWeatherProvider from '../components/services/weather/MultiWeatherContext'
 import ProductsContextProvider from '../components/services/store/ProductsContextProvider'
 
-import Head from 'next/head';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import Head from 'next/head'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default function App({ Component, pageProps }: AppProps) {
     return(

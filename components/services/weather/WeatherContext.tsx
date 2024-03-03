@@ -4,7 +4,7 @@ import React,
     useState,
     FC,
     ReactNode
-} from "react";
+} from "react"
 
 type WeatherData = {
     data: string,
@@ -39,7 +39,7 @@ const WeatherContextProvider: FC<WeatherContextProviderProps> = ({
 }: WeatherContextProviderProps) => {
     const [city, setCity] = useState<string>('')
     const [error404, setError404] = useState<boolean>(false)
-    const [data, setData] = useState<WeatherData | null>(null);
+    const [data, setData] = useState<WeatherData | null>(null)
     
     const handleCityName = ( value: string ) => setCity(value)
 
@@ -90,13 +90,13 @@ const WeatherContextProvider: FC<WeatherContextProviderProps> = ({
         getWeatherData,
         getTimeFromTimeZone,
         getTimeFromTimeZoneWithDate
-    };
+    }
     
     return (
         <WeatherContext.Provider value={contextValue}>
             {children}
         </WeatherContext.Provider>
-    );
-};
+    )
+}
 
-export default WeatherContextProvider;
+export default WeatherContextProvider

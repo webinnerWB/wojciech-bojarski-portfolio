@@ -39,7 +39,7 @@ const Main: FC<mainComponent> = ({handleSearchingValue, handleSearchResults}: ma
                     handleSearchResults(input.value)
                     clearInpit()
                 }
-              });
+              })
         }
     }, [])
     return(

@@ -1,7 +1,7 @@
-import React, { FC, useState, ChangeEvent, useRef, useEffect, useContext } from "react";
-import Methods from "../services/DB/Methods";
-import { useRouter } from 'next/router';
-import Link from "next/link";
+import React, { FC, useState, ChangeEvent, useRef, useEffect, useContext } from "react"
+import Methods from "../services/DB/Methods"
+import { useRouter } from 'next/router'
+import Link from "next/link"
 import Script from 'next/script'
 import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 
@@ -14,7 +14,7 @@ type hederComponent = {
 
 export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchResults}: hederComponent) => {
     const currentPath = useRouter().pathname
-    const [isSearchVisible, setIsSearchVisible] = useState(false); 
+    const [isSearchVisible, setIsSearchVisible] = useState(false) 
     const searchIntup = useRef<HTMLInputElement|null>(null)
 
     const { $isUserLogged } = Methods()
@@ -22,8 +22,8 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
     const [userLogged, setUserLogged] = useState<boolean>(false)
 
     const toggleSearch = () => {
-        setIsSearchVisible(prevState => !prevState);
-    };
+        setIsSearchVisible(prevState => !prevState)
+    }
 
     useEffect(() => {
         $isUserLogged().then(isUserLoggedIn => {
@@ -39,7 +39,7 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
                     handleSearchResults(input.value)
                     input.value = ''
                 }
-              });
+              })
         }
     }, [])
 

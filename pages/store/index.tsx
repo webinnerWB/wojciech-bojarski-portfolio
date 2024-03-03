@@ -1,11 +1,11 @@
-import React, { FC, useState, useEffect, ChangeEvent } from "react";
+import React, { FC, useState, useEffect, ChangeEvent } from "react"
 import Methods from '../../components/services/DB/Methods'
 import { Header } from '../../components/storeElements/Header'
 import Main from '../../components/storeElements/Main'
 import Categories from '../../components/storeElements/Categories'
 import SearchResults from '../../components/storeElements/SearchResults'
 
-import style from '../../style/store.module.scss';
+import style from '../../style/store.module.scss'
 
 const StoreMainPage: FC = () => {
     // const addNewDocu = Methods().$addNewDocument
@@ -38,7 +38,7 @@ const StoreMainPage: FC = () => {
                 {/* <button onClick={add}>KLIK</button> */}
             </div>
         </>
-    );
-};
+    )
+}
 
-export default StoreMainPage;
+export default StoreMainPage

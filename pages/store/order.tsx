@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext, FC } from "react";
+import React, { useState, useEffect, useContext, FC } from "react"
 import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 import ProductOrdered from '../../components/storeElements/ProductOrdered'
 import { Header } from '../../components/storeElements/Header'
-import Link from "next/link";
-import Methods from "@/components/services/DB/Methods";
-import SearchResults from "@/components/storeElements/SearchResults";
+import Link from "next/link"
+import Methods from "@/components/services/DB/Methods"
+import SearchResults from "@/components/storeElements/SearchResults"
 
 import style from '../../style/store.module.scss'
 
@@ -21,7 +21,7 @@ const OrderPage: FC = () => {
             <Header handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults}/>
             {getProductsArray.length > 0 ?
             <div className="row d-lg-flex">
-                <div className="col-lg-5">
+                <div className="col-lg-7">
                     <div className={`${style.orderWrapper}`}>
                         <div className={`table-responsive ${style.tableWrapper}`}>
                             <h1 className={`${style.title}`}>Shopping cart</h1>
@@ -41,7 +41,7 @@ const OrderPage: FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-lg-7">
+                <div className="col-lg-5">
                     <div>
                         <p>
                             OTHER SIDE

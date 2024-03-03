@@ -6,7 +6,7 @@ import React, {
     ReactNode,
     Dispatch,
     SetStateAction
-} from "react";
+} from "react"
 
 export interface ServiceProductsContextProps  {
     productsArray: object[],
@@ -37,20 +37,20 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     const $removeProduct = (obj: object, id: number) => {
         let removed = false
         Object.keys(localStorage).forEach(localStorageElement => {
-            const isNumberKey = Number(localStorageElement);
+            const isNumberKey = Number(localStorageElement)
             if (!isNaN(isNumberKey)) {
-                const product = localStorage.getItem(localStorageElement);
+                const product = localStorage.getItem(localStorageElement)
                 if (product) {
-                    const productObj = JSON.parse(product);
+                    const productObj = JSON.parse(product)
                     if (productObj.id === id && !removed) {
-                        localStorage.removeItem(localStorageElement);
-                        removed = true;
+                        localStorage.removeItem(localStorageElement)
+                        removed = true
                         setProductsArray(prevEl => [...prevEl, obj])
                         return productsArray
                     }
                 }
             }
-        });
+        })
     }
     const $updateCounter = (obj: object, id: number) => {
         setProductsArray(prevEl => [...prevEl, obj])

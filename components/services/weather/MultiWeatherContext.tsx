@@ -3,7 +3,7 @@ import React, {
     createContext,
     useState,
     ReactNode
-} from "react";
+} from "react"
 
 type MultiWeatherData = {
     dataMultiWeather: string,

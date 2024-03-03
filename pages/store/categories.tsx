@@ -1,4 +1,4 @@
-import React, { useEffect, FC } from "react";
+import React, { useEffect, FC } from "react"
 import { Header } from '../../components/storeElements/Header'
 import Methods from '../../components/services/DB/Methods'
 

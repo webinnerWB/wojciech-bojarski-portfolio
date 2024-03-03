@@ -1,9 +1,9 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState, useRef, FC } from "react";
-import { useRouter } from "next/router";
+import React, { ChangeEvent, FormEvent, useEffect, useState, useRef, FC } from "react"
+import { useRouter } from "next/router"
 import Methods from '../../components/services/DB/Methods'
 import { Header } from '../../components/storeElements/Header'
 
-import style from '../../style/store.module.scss';
+import style from '../../style/store.module.scss'
 
 const Registration: FC = () => {
     const { $handleSearchingValue, $handleSearchResults, $registrationUser, $isUserLogged, searchResults, searchingValue} = Methods()

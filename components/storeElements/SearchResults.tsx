@@ -1,8 +1,8 @@
-import React, {useState, useEffect, FC, useRef, useContext, RefObject } from "react";
+import React, {useState, useEffect, FC, useRef, useContext, RefObject } from "react"
 import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 
 import style from '../../style/store.module.scss'
-import { DocumentData } from "firebase/firestore";
+import { DocumentData } from "firebase/firestore"
 
 type results = {
     valueSearch: string|null,
@@ -11,9 +11,9 @@ type results = {
 }
 
 const SearchResults: FC<results> = ({ valueSearch, results, valuesArray }: results) => {
-    const searchResultsRef = useRef<HTMLDivElement>(null);
-    const noResultsRef = useRef<HTMLDivElement | null>(null);
-    const span = useRef<HTMLSpanElement[] | null>([]);
+    const searchResultsRef = useRef<HTMLDivElement>(null)
+    const noResultsRef = useRef<HTMLDivElement | null>(null)
+    const span = useRef<HTMLSpanElement[] | null>([])
     
     const { $addProduct }: ServiceProductsContextProps = useContext(ProductsContext)
     
@@ -69,7 +69,7 @@ const SearchResults: FC<results> = ({ valueSearch, results, valuesArray }: resul
           </>
         ) : results === undefined ? <h3 className={style.noSearch} ref={noResultsRef}>No products match your criteria!</h3> : null}
       </>
-    );
-  };
+    )
+  }
 
 export default SearchResults

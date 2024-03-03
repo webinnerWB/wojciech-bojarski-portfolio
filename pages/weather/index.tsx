@@ -54,25 +54,25 @@ const WeatherMainPage: FC = () => {
                 arrayIconID = item.weather[0].id
                 icon = item.weather[0].icon
 
-                const matchedInfo = weatherInfo.find(el => arrayIconID === el.id);
+                const matchedInfo = weatherInfo.find(el => arrayIconID === el.id)
                 if (matchedInfo) {
                     if(((arrayIconID === 800) || (arrayIconID === 801) || (arrayIconID === 802) || (arrayIconID === 803)) && (icon.slice(-1) === 'n') && matchedInfo.n) {
-                        setImgForecastURL(prev => [...prev, matchedInfo.n]);
+                        setImgForecastURL(prev => [...prev, matchedInfo.n])
                     }else if(matchedInfo.img) {
-                        setImgForecastURL(prev => [...prev, matchedInfo.img]);
+                        setImgForecastURL(prev => [...prev, matchedInfo.img])
                         }
-                    setImgDescForecastURL(prev => [...prev, matchedInfo.description]);
+                    setImgDescForecastURL(prev => [...prev, matchedInfo.description])
                 }
             })
         }else{
-            const matchedInfo = weatherInfo.find(el => iconID === el.id);
+            const matchedInfo = weatherInfo.find(el => iconID === el.id)
             if (matchedInfo) {
                 if(((iconID === 800) || (iconID === 801) || (iconID === 802) || (iconID === 803)) && (icon === 'n') && matchedInfo.n) {
-                    setImgURL(matchedInfo.n);
+                    setImgURL(matchedInfo.n)
                 }else if(matchedInfo.img) {
-                    setImgURL(matchedInfo.img);
+                    setImgURL(matchedInfo.img)
                     }
-                setImgDesc(matchedInfo.description);
+                setImgDesc(matchedInfo.description)
             }
         }
     }
@@ -83,7 +83,7 @@ const WeatherMainPage: FC = () => {
         if (!error404 && data) {
             generateIcon(data.weather[0])
         }
-    }, [data, dataMultiWeather]);
+    }, [data, dataMultiWeather])
 
    
     useEffect(() => {
@@ -126,7 +126,7 @@ const WeatherMainPage: FC = () => {
             let day = date[0]
             let month = date[1]
             const year =date[2]
-            const currentDate = `${day}.${month}.${year}`;
+            const currentDate = `${day}.${month}.${year}`
             setCurrentDay(currentDate)
         }
     }, [data, dataTimeZone])
@@ -150,7 +150,7 @@ const WeatherMainPage: FC = () => {
     const FORECASTtoDay = forecastDataArray.filter(el => {
         const elDay = new Date(el.dt * 1000).toLocaleDateString()
         return  currentDay === elDay
-    });
+    })
     
     const FORECASTnext = forecastDataArray.slice(FORECASTtoDay.length)
 
@@ -163,7 +163,7 @@ const WeatherMainPage: FC = () => {
             temp={!error404 && data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(el.main.temp)}
             />
         </SwiperSlide>
-    ));
+    ))
 
     const multiWeatherForecastTemplateToDay = FORECASTtoDay.map((el, index) => (
         <SwiperSlide id={el.dt} key={`slide-${el.dt}`} onClick={() => showForecastDetails(el)}>
@@ -182,7 +182,7 @@ const WeatherMainPage: FC = () => {
             temp={!error404 && data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(el.main.temp)}
             />
         </SwiperSlide>
-    ));
+    ))
 
     const showForecastDetails = (el:any) => {
         setForecastDataInfo(el)
@@ -196,8 +196,8 @@ const WeatherMainPage: FC = () => {
 
             <form
                 onSubmit={(e) => {
-                    e.preventDefault();
-                    getWeatherData(e);
+                    e.preventDefault()
+                    getWeatherData(e)
                 }}>
                 <div className="form-group">
                     <input 

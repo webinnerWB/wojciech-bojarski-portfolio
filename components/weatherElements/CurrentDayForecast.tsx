@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC } from "react"
 
 import style from '../../style/weather.module.scss'
 
@@ -9,7 +9,7 @@ type forecastData = {
 }
 
 export const CurrentDayForecast: FC<forecastData> = ({time, temp, icon}: forecastData) => {
-    const altText = icon ? `${icon} icon` : undefined;
+    const altText = icon ? `${icon} icon` : undefined
     return (
         <div className={style.forecastCurrentDayWrapper}>
             <p className={style.p}>{time}</p>

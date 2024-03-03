@@ -12,7 +12,7 @@ type ForecastData = {
 }
 
 const WeatherForecast: FC<ForecastData> = ({day, icon, description, temp}: ForecastData) => {
-    const altText = icon ? `${icon} icon` : undefined;
+    const altText = icon ? `${icon} icon` : undefined
 
     return(
         <div className={`${style.forecastCurrentDayWrapper} ${style.swiperMb}`}>

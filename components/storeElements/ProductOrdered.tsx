@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext, FC, Fragment } from "react";
+import React, { useState, useEffect, useContext, FC, Fragment } from "react"
 import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
-import { useRouter } from "next/router";
+import { useRouter } from "next/router"
 
 import style from '../../style/store.module.scss'
 const ProductOrdered: FC = () => {
@@ -24,7 +24,7 @@ const ProductOrdered: FC = () => {
                 if (i === index) {
                     const newAmount = action === 'increment' ? quantityElement.amount + 1 : quantityElement.amount - 1
                     if (newAmount === 0) {
-                        $removeProduct(obj, quantityElement.id);
+                        $removeProduct(obj, quantityElement.id)
                         return null
                     } else {
                         if (action === 'decrement' && quantityElement.amount > 0) {
@@ -36,7 +36,7 @@ const ProductOrdered: FC = () => {
                         return {
                             ...quantityElement,
                             amount: newAmount
-                        };
+                        }
                     }
                 }
     
@@ -44,8 +44,8 @@ const ProductOrdered: FC = () => {
             })
             const filterdElemetns = updatedElemetns.filter(el => el !== null) as QuantityItem[]
             return filterdElemetns
-        });
-    };
+        })
+    }
     
     
     const removeProducts = (obj: object, id: number) => {
@@ -140,8 +140,8 @@ const ProductOrdered: FC = () => {
                     {quantityObjects[index] && el.id === quantityObjects[index].id && quantityObjects[index].amount}
                 <button className={`${style.amountBtn}`} onClick={() => changeAmountHandler(el, index, 'increment')}>+</button>
             </td>
-            <td className={`${style.td}`}>{quantityObjects[index] && el.price * quantityObjects[index].amount} $</td>
-            <td onClick={() => removeProducts(el, el.id)}>x</td>
+            <td className={`${style.td}`}>{quantityObjects[index] && Number((el.price * quantityObjects[index].amount).toFixed(2))} $</td>
+            <td onClick={() => removeProducts(el, el.id)} className={`${style.td} ${style.remove}`}>x</td>
         </tr>
     ))
 

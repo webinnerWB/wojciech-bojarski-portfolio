@@ -1,11 +1,11 @@
-import React, { useEffect, useState, FC } from "react";
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import React, { useEffect, useState, FC } from "react"
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Navigation, Pagination, Autoplay } from 'swiper/modules'
 import Methods from '../services/DB/Methods'
 
-import 'swiper/swiper-bundle.css';
+import 'swiper/swiper-bundle.css'
 import style from '../../style/store.module.scss'
-import { DocumentData } from "firebase/firestore";
+import { DocumentData } from "firebase/firestore"
 
 type categoryComponent = {
   handleSearchResults: (value: string) => void,
@@ -88,7 +88,7 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults, valuesArray }:
           {slides}
       </Swiper>
      </>
-    );
-  };
+    )
+  }
   
-  export default Categories;
+  export default Categories
