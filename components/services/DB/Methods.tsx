@@ -1,6 +1,6 @@
-import { addDoc, collection, getDocs, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where, QueryDocumentSnapshot } from 'firebase/firestore'
+import { addDoc, collection, getDocs, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where, QueryDocumentSnapshot, getDoc, doc } from 'firebase/firestore'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged  } from 'firebase/auth'
-import { getAuth } from 'firebase/auth'
+import { getAuth} from 'firebase/auth'
 import {firestore} from './FirebaseConfig'
 import React, { useState, ChangeEvent, useEffect } from "react"
 import { useRouter } from 'next/router' 
@@ -8,11 +8,25 @@ import { useRouter } from 'next/router'
 import soreStyle from '../../../style/store.module.scss'
 
 const Methods = () => {
+
+  interface UserData {
+    name: string | undefined,
+    surname: string | undefined,
+    email: string | undefined,
+    password: string | undefined,
+    street: string | undefined,
+    houseNumber: string | undefined,
+    city: string | undefined,
+    postalCode: string | undefined,
+    country: string | undefined,
+}
+
     const db = getFirestore(firestore)
     const router = useRouter()
     const [searchingValue, setSearchingValue] = useState<string>('')
     const [searchResults, setSearchRelusts] = useState<DocumentData[] | undefined>([])
     const [valuesArray, setValuesArray] = useState<string[]>([''])
+    const [user, setUser] = useState<UserData>()
 
     const $getAllDocuments = async (collectionName: string): Promise<QuerySnapshot> => {
         try {
@@ -105,7 +119,7 @@ const Methods = () => {
     const $addNewDocument = async (collectionR: string, document: object) => {
         try {
             const collectionRef: CollectionReference<DocumentData> =  collection(db, collectionR)
-            const docRef = await addDoc(collectionRef, document)
+            await addDoc(collectionRef, document)
                 .then(doc => {
                     console.log(`success `, doc.id)
                 })
@@ -126,13 +140,25 @@ const Methods = () => {
         const auth = getAuth(firestore)
     
         return new Promise((resolve, reject) => {
-            onAuthStateChanged(auth, user => {
+            onAuthStateChanged(auth, async user => {
                 if (user) {
+                  resolve(true)
+                  const userCollection = collection(db, 'users')
+                  const userQuery = query(userCollection, where('uuid', '==', user.uid))
+                  const userSnapshot = await getDocs(userQuery)
+                  // const userDoc = await getDoc(doc(userCollection, 'riiW9PpfJg8016fUFESS'))
+                  console.log(`user.uid: `, user.uid)
+
+                  if(!userSnapshot.empty){
+                    userSnapshot.forEach(doc => {
+                      setUser(doc.data() as UserData)
+                    })
                     console.log(`logged-in user: `, user)
-                    resolve(true)
+                  }
                 } else {
-                    console.log('user not logged in')
-                    resolve(false)
+                  console.log('user not logged in')
+                  resolve(false)
+                  setUser(undefined)
                 }
             }, err => {
                 console.error(`ERROR: `, err)
@@ -193,8 +219,7 @@ const Methods = () => {
     const $loginUser = async (formData: DocumentData, ref: HTMLSpanElement): Promise<void> => {
         try {
             const auth = getAuth(firestore)
-            const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password)
-            const user = userCredential.user
+            await signInWithEmailAndPassword(auth, formData.email, formData.password)
             router.push('/store')
         } catch (err: any) {
             console.error(`ERROR: `, err)
@@ -230,7 +255,8 @@ const Methods = () => {
         $handleFilterCategory,
         searchingValue,
         searchResults,
-        valuesArray
+        valuesArray,
+        user
     }
 }
 

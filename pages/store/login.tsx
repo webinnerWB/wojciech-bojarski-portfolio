@@ -1,14 +1,17 @@
-import React, { useEffect, FC, useState, useRef, ChangeEventHandler, ChangeEvent, FormEvent } from "react"
+import React, { useEffect, FC, useState, useRef, ChangeEvent, FormEvent } from "react"
 import { useRouter } from "next/router"
 import Methods from '../../components/services/DB/Methods'
 import { Header } from '../../components/storeElements/Header'
 
 import style from '../../style/store.module.scss'
-
+interface UserData {
+    email: string,
+    password: string,
+}
 const Login: FC = () => {
     const { $handleSearchingValue, $handleSearchResults, $loginUser, $isUserLogged, searchResults, searchingValue} = Methods()
     const msgRef = useRef<HTMLSpanElement>(null) 
-    const [userCredential, setUserCredential] = useState<any>({
+    const [userCredential, setUserCredential] = useState<UserData>({
         email: '',
         password: ''
     })

@@ -79,33 +79,33 @@ const ProductOrdered: FC = () => {
     useEffect(() => {
         setTotalCost(0)
         quantityObjects.forEach(obj => {
-            const singleProductCost = obj.amount * obj.price
-            singleProductCost.toFixed(2)
-            setTotalCost(prevCost => prevCost + singleProductCost)
+            const singleProductCost = (obj.amount * obj.price).toFixed(2)
+            setTotalCost(prevCost => prevCost + Number(singleProductCost))
         })
     }, [localStorageDataProducts, productsArray, quantityObjects, objectsID])
 
     useEffect(() => {
-        setLocalStorageDataProducts([])
-        setObjectsID([])
-        if(typeof window !== 'undefined' && window.localStorage){
-            Object.keys(localStorage).map((key) => {
-                const keyValue = Number(key)
+        setLocalStorageDataProducts((prevIndex: any[]) => {
+            let newObjectsID: number[] = [];
+    
+            Object.keys(localStorage).forEach((key) => {
+                const keyValue = Number(key);
                 if (!isNaN(keyValue)) {
-                    const localStorageProductValue = localStorage.getItem(key)
-                    if(localStorageProductValue) {
-                        const product = JSON.parse(localStorageProductValue)
-                        setObjectsID(prevEl => [...prevEl, product.id])
-                        setLocalStorageDataProducts((prevIndex: any[]) => {
-                            const newArray = prevIndex.filter(item => item.id !== product.id)
-                            return newArray
-                          })
-                        setLocalStorageDataProducts(prev => [...prev, product])
+                    const localStorageProductValue = localStorage.getItem(key);
+                    if (localStorageProductValue) {
+                        const product = JSON.parse(localStorageProductValue);
+    
+                        newObjectsID = [...newObjectsID, product.id];
+                        prevIndex = prevIndex.filter(item => item.id !== product.id);
+                        prevIndex = [...prevIndex, product];
                     }
                 }
-            })
-        }
-    }, [productsArray])
+            });
+    
+            setObjectsID(newObjectsID);
+            return prevIndex;
+        });
+    }, [productsArray]);
 
     useEffect(() => {
         localStorageDataProducts.forEach((product) => {
@@ -124,7 +124,7 @@ const ProductOrdered: FC = () => {
     }, [getProductsArray, localStorageDataProducts])
 
     let products = localStorageDataProducts.map((el, index) => (
-        <tr key={`${index}`} className={`${style.borderBottom}`}>
+        <tr  key={`${el.id}-${index}`} className={`${style.borderBottom}`}>
             <th scope="row" className={`${style.td}`}>    
                 <div className={`d-lg-flex align-items-lg-center ${style.product}`}>
                     <img className={`${style.imgProduct}`} src={el.imgurl} />

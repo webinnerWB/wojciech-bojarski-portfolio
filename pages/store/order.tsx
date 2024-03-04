@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, FC } from "react"
+import { User } from 'firebase/auth'
 import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 import ProductOrdered from '../../components/storeElements/ProductOrdered'
 import { Header } from '../../components/storeElements/Header'
@@ -9,12 +10,32 @@ import SearchResults from "@/components/storeElements/SearchResults"
 import style from '../../style/store.module.scss'
 
 const OrderPage: FC = () => {
+    interface RecipientData {
+        name: string,
+        surname: string,
+        email: string,
+        password: string,
+        street: string,
+        houseNumber: string,
+        city: string,
+        postalCode: string,
+        country: string,
+        customer: boolean
+    }
     const { getProductsArray }: ServiceProductsContextProps = useContext(ProductsContext)
-    const { searchingValue, searchResults, valuesArray, $handleSearchingValue, $handleSearchResults } = Methods()
+    const { searchingValue, searchResults, valuesArray, user, $handleSearchingValue, $handleSearchResults, $isUserLogged } = Methods()
+    const [recipientData, setRecipientData] = useState<RecipientData>()
 
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
         document.body.style.color = '#ffffff'
+        $isUserLogged().then(logged => {
+            if(logged) {
+                console.log(`useruser: `, user)
+            }else{
+                console.log(`useruser: null: `)
+            }
+        })
     }, [])
     return (
         <div className="col-lg-12">
@@ -42,10 +63,8 @@ const OrderPage: FC = () => {
                     </div>
                 </div>
                 <div className="col-lg-5">
-                    <div>
-                        <p>
-                            OTHER SIDE
-                        </p>
+                    <div className={`${style.formOrderWrapper}`}>
+                        <h2 className={`${style.title}`}>Recipient's data</h2>
                     </div>
                 </div>
             </div>

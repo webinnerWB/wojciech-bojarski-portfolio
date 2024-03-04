@@ -492,15 +492,26 @@
     }
 }
 .orderSumContainer {
-    .text {
-        font-size: 33px;
+        font-size: 22px;
         font-weight: 600;
+        text-align: center;
+    .text {
         padding: 20px 0 0 0;
     }
     .cost {
-        font-size: 33px;
-        font-weight: 600;
+        
         padding: 20px 0 0 0;
         width: 200px;
+    }
+}
+.formOrderWrapper {
+    background: #282828;
+    padding: 40px 30px;
+    border-radius: 25px;
+    width: 98%;
+    float: inline-start;
+    .title {
+        font-weight: 700;
+        margin-bottom: 40px;
     }
 }

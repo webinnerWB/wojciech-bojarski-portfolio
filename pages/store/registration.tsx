@@ -4,10 +4,22 @@ import Methods from '../../components/services/DB/Methods'
 import { Header } from '../../components/storeElements/Header'
 
 import style from '../../style/store.module.scss'
-
+interface UserData {
+    name: string,
+    surname: string,
+    email: string,
+    password: string,
+    street: string,
+    houseNumber: string,
+    city: string,
+    postalCode: string,
+    country: string,
+    customer: boolean,
+    [key: string]: string | boolean
+}
 const Registration: FC = () => {
     const { $handleSearchingValue, $handleSearchResults, $registrationUser, $isUserLogged, searchResults, searchingValue} = Methods()
-    const [registrationFormData, setRegistrationFormData] = useState<any>({
+    const [registrationFormData, setRegistrationFormData] = useState<UserData>({
         name: '',
         surname: '',
         email: '',
