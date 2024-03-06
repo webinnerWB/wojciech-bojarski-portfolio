@@ -10,8 +10,8 @@ import style from '../../style/store.module.scss'
 const StoreMainPage: FC = () => {
     // const addNewDocu = Methods().$addNewDocument
     const { $handleSearchingValue, $handleSearchResults, 
-        $isUserLogged, $handleFilterCategory, 
-        searchResults, searchingValue, valuesArray} = Methods()
+            $handleFilterCategory, searchResults, 
+            searchingValue, valuesArray} = Methods()
 
 
     // const add = () => {
@@ -25,7 +25,6 @@ const StoreMainPage: FC = () => {
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
         document.body.style.color = '#ffffff'
-        $isUserLogged()
     }, [])
 
     return (

@@ -76,7 +76,7 @@ const Categories: FC<categoryComponent> = ({ handleSearchResults, valuesArray }:
         modules={[Navigation, Pagination, Autoplay]}
         spaceBetween={50}
         loop={true}
-        // autoplay={{ delay: 3000 }}
+        autoplay={{ delay: 3000 }}
         breakpoints={{
             1219: {slidesPerView: 5},
             600: {slidesPerView: 3},

@@ -63,33 +63,38 @@ const Login: FC = () => {
                 <Header handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults} />
                 <h1 className={`${style.titleCategories}`}>Sign in</h1>
                 <span ref={msgRef} className={`${style.formMsg}`}></span>
-                <div className={`${style.formWrapper}`}>
-                    <form onSubmit={subbmitLoggin}>
-                        <div className={`row ${style.formInputWrapper}`}>
-                            <div className={`col-lg-12`}>
-                                <input 
-                                    type="email" 
-                                    className={`form-control ${style.input} ${style.input} ${style.login}
-                                    ${formSubmit  && userCredential.email === '' ? style.inputError : null}`} 
-                                    placeholder="Email" 
-                                    name="email" 
-                                    value={userCredential.email}
-                                    onChange={handleChange}
-                                    />
-                            
-                                <input 
-                                    type="password" 
-                                    className={`form-control ${style.input} ${style.input} ${style.login}
-                                    ${formSubmit  && userCredential.password === '' ? style.inputError : null}`} 
-                                    placeholder="Password" 
-                                    name="password" 
-                                    value={userCredential.password}
-                                    onChange={handleChange}
-                                    />
-                            </div>
+                <div className={`${style.formWrapper} ${style.login}`}>
+                <form onSubmit={subbmitLoggin}>
+                    <div className={`row ${style.formInputWrapper}`}>
+                        <div className={`col-lg-12`}>
+                            <label className={`${style.label}`} htmlFor="email">Email</label>
+                            <input 
+                                id="email"
+                                type="email" 
+                                className={`form-control ${style.input} ${style.login}
+                                ${formSubmit && userCredential.email === '' ? style.inputError : null}`} 
+                                name="email" 
+                                value={userCredential.email}
+                                onChange={handleChange}
+                            />
                         </div>
-                        <button type="submit" className={`btn btn-light ${style.formButton}`}>Submit</button>
-                    </form>
+                    </div>
+                    <div className={`row ${style.formInputWrapper}`}>
+                        <div className={`col-lg-12 mt-3`}>
+                            <label className={`${style.label}`} htmlFor="password">Password</label>
+                            <input 
+                                id="password"
+                                type="password" 
+                                className={`form-control ${style.input} ${style.login}
+                                ${formSubmit && userCredential.password === '' ? style.inputError : null}`} 
+                                name="password" 
+                                value={userCredential.password}
+                                onChange={handleChange}
+                            />
+                        </div>
+                    </div>
+                    <button type="submit" className={`btn btn-light ${style.formButton}`}>Submit</button>
+                </form>
                 </div>
             </div>
         </>

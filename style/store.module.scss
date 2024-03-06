@@ -77,8 +77,8 @@
         .counter {
             position: absolute;
             color: #ffffff;
-            bottom: 80%;
-            left: 80%;
+            bottom: 103%;
+            left: 15%;
             width: 35px;
             height: 20px;
             border-radius: 35px;
@@ -329,51 +329,75 @@
 
 
 .formWrapper {
-    width: 60%;
-    display: block;
-    margin: auto;
-    padding: 0 40px;
-    @media screen and (max-width: 1180px) {
-        width: 80%;
-    }
-    @media screen and (max-width: 600px) {
-        width: 100%;
+    // width: 60%;
+    // display: block;
+    // margin: auto;
+    // padding: 0 40px;
+    &.registration, &.login {
+        background: #282828;
+        padding: 40px 30px;
+        width: 25%;
+        display: block;
+        border-radius: 25px;
+        margin: auto;
+
+        @media screen and (max-width: 1180px) {
+            width: 80%;
+        }
+        @media screen and (max-width: 600px) {
+            width: 100%;
+        }
     }
     .formInputWrapper {
+        .label {
+            font-size: 20px;
+            font-weight: 700;
+        }
         .input {
-            margin: 10px 0;
-            height: 65px;
-            font-weight: 800;
-            font-size: 19px;
-            color: #000000;
-            border: 0;
-            &.login{
-                width: 50%;
-                margin: 20px auto;
-                @media screen and (max-width: 940px) {
-                    width: 70%;
-                }
-                @media screen and (max-width: 600px) {
-                    width: 100%;
-                }
-            }
+            background: transparent;
+            color: #ffffff;
+            border: none;
+            border-bottom: 1px solid #3a3a3a;
+            height: 45px;
+            outline: none;
+            box-shadow: none;
+            padding: 0;
+            border-radius: 0;
+            font-size: 18px;
+            
+            // color: #000000;
+            // border: 0;
+            // &.login{
+            //     width: 50%;
+            //     margin: 20px auto;
+            //     @media screen and (max-width: 940px) {
+            //         width: 70%;
+            //     }
+            //     @media screen and (max-width: 600px) {
+            //         width: 100%;
+            //     }
+            // }
+        }
+        .input::placeholder{
+            color: #ffffff;
+            font-size: 14px;
         }
         .inputError {
-            margin: 10px 0;
-            height: 65px;
-            font-weight: 800;
+            height: 45px;
             font-size: 19px;
             color: #ca1f1f;
-            border: 2px solid #ca1f1f;
+            border-bottom: 1px solid #ca1f1f;
         }
     }
     .formButton {
-        width: 170px;
-        display: block;
-        height: 65px;
-        margin: 25px auto;
-        font-weight: 800;
-        font-size: 19px;
+        background: rgb(28, 28, 28);
+        border-color: rgb(28, 28, 28);
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 600;
+        margin-top: 50px;
+        width: 100%;
+        padding: 11px;
     }
 }
 @keyframes showMsg {
@@ -408,10 +432,10 @@
 
 
 .error {
-    background: #ca1f1f;
+    color: #ca1f1f;
 }
 .success {
-    background: #1fca27;
+    color: #1fca27;
     width: 40%;
 }
 
@@ -421,6 +445,8 @@
         margin-left: 2%;
         padding: 40px 30px;
         border-radius: 25px;
+        margin-top: 70px;
+        margin-bottom: 70px;
         .title {
             font-weight: 700;
             margin-bottom: 40px;
@@ -509,9 +535,48 @@
     padding: 40px 30px;
     border-radius: 25px;
     width: 98%;
+    margin-top: 70px;
+    margin-bottom: 70px;
+    float: inline-start;
+    .title {
+        font-weight: 700;
+    }
+}
+
+.selectAccountWrapper {
+    display: flex;
+    place-content: space-around;
+    flex-direction: column;
+    margin: auto;
+    height: 800px;
+    background: #282828;
+    padding: 40px 30px;
+    border-radius: 25px;
+    width: 98%;
     float: inline-start;
     .title {
         font-weight: 700;
         margin-bottom: 40px;
+        text-align: center;
+    }
+    .backBtn {
+        border: 2px solid #ffffff;
+        background: transparent;
+        color: #ffffff;
+        border-radius: 25px;
+        width: 100%;
+        text-transform: uppercase;
+        font-weight: 700;
+        font-size: 20px;
+        padding: 15px;
+    }
+    .backBtn:hover {
+        transition: background-color 0.5s ease-in, font-weight 0.2s ease-in, color 0.5s ease-in, border 0.1s ease-in;
+        background-color: #ffffff;
+        color: #000000;
+        font-size: 20px;
+        font-weight: 900;
+        border: 2px solid #000000;
     }
 }
+

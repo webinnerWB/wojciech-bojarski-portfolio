@@ -64,18 +64,12 @@ const Methods = () => {
         try {
           const toLowerCaseName = value.toLowerCase()
           if(valuesArray.length > 1 && valuesArray.includes(toLowerCaseName)) {
-            console.log(`jest`)
             setValuesArray(prevEl => {
               return prevEl.filter(el => el !== toLowerCaseName)
             })
           }else{
-            console.log(`nie ma`)
             setValuesArray(prevEl => {return [...prevEl, toLowerCaseName]})
           }
-          
-          console.log(`value: w metodzie1: `, value)
-          console.log(`valuesArray w metodzie1: `, valuesArray)
-          
         } catch (err) {
           console.error(`Error: `, err)
           throw err
@@ -130,7 +124,6 @@ const Methods = () => {
     }
 
     const $handleSearchingValue = (e: ChangeEvent<HTMLInputElement>) => {
-        console.log(e.target.value)
         setValuesArray([''])
         setSearchingValue(e.target.value)
         return searchingValue
@@ -146,17 +139,12 @@ const Methods = () => {
                   const userCollection = collection(db, 'users')
                   const userQuery = query(userCollection, where('uuid', '==', user.uid))
                   const userSnapshot = await getDocs(userQuery)
-                  // const userDoc = await getDoc(doc(userCollection, 'riiW9PpfJg8016fUFESS'))
-                  console.log(`user.uid: `, user.uid)
-
                   if(!userSnapshot.empty){
                     userSnapshot.forEach(doc => {
                       setUser(doc.data() as UserData)
                     })
-                    console.log(`logged-in user: `, user)
                   }
                 } else {
-                  console.log('user not logged in')
                   resolve(false)
                   setUser(undefined)
                 }
@@ -166,6 +154,9 @@ const Methods = () => {
             })
         })
     }
+    useEffect(() => {
+      $isUserLogged()
+    }, [])
 
     const $registrationUser = async (formData: DocumentData, ref: HTMLSpanElement):Promise<void> => {
         try {
@@ -181,13 +172,13 @@ const Methods = () => {
                 uuid: user.uid,
                 ...userData
             })
-
+            ref.scrollIntoView({ behavior: 'smooth' })
             ref.innerHTML = 'Registration was successful, you will be automatically logged into your account immediately.'
             ref.classList.add(`${soreStyle.showFormMsg}`, `${soreStyle.success}`)
                 setTimeout(() => {
                     ref.classList.remove(`${soreStyle.showFormMsg}`, `${soreStyle.success}`)
                     router.push('/store')
-                }, 10000)
+                }, 3500)
         } catch (err: any) {
             console.error(`ERROR: `, err)
         
@@ -195,19 +186,21 @@ const Methods = () => {
               const errorCode: string = err.code
         
               if (errorCode === 'auth/weak-password') {
-                console.log('The password is too weak!')
-                ref.innerHTML = 'The password is too weak!'
-                ref.classList.add(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
-                setTimeout(() => {
-                    ref.classList.remove(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
-                }, 10000)
+                  console.error('The password is too weak!')
+                  ref.scrollIntoView({ behavior: 'smooth' })
+                  ref.innerHTML = 'The password is too weak!'
+                  ref.classList.add(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
+                  setTimeout(() => {
+                      ref.classList.remove(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
+                  }, 10000)
               } else if(errorCode === 'auth/email-already-in-use') {
-                console.error('E-mail address has already been used')
-                ref.innerHTML = 'E-mail address has already been used '
-                ref.classList.add(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
-                setTimeout(() => {
-                    ref.classList.remove(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
-                }, 10000)
+                  ref.scrollIntoView({ behavior: 'smooth' })
+                  console.error('E-mail address has already been used')
+                  ref.innerHTML = 'E-mail address has already been used '
+                  ref.classList.add(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
+                  setTimeout(() => {
+                      ref.classList.remove(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
+                  }, 10000)
               } else {
                 console.error(errorCode)
               }
