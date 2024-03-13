@@ -15,6 +15,7 @@ export interface ServiceProductsContextProps  {
     $addProduct: (obj: object, index: number) => object[],
     setGetProductsArray: Dispatch<SetStateAction<object[]>>,
     $removeProduct: (obj: object, index: number) => void,
+    $removeProducts: (obj: object, index: number) => void,
     shippingCost: number,
     orderingProducts: object[]
     $SetOrder: (obj: object) => void
@@ -61,6 +62,22 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
             }
         })
     }
+    const $removeProducts = (obj: object, id: number) => {
+        Object.keys(localStorage).forEach(localStorageElement => {
+            const isNumberKey = Number(localStorageElement)
+            if (!isNaN(isNumberKey)) {
+                const product = localStorage.getItem(localStorageElement)
+                if (product) {
+                    const productObj = JSON.parse(product)
+                    if (productObj.id === id) {
+                        localStorage.removeItem(localStorageElement)
+                        setProductsArray(prevEl => [...prevEl, obj])
+                        return productsArray
+                    }
+                }
+            }
+        })
+    }
     const $updateCounter = (obj: object, id: number) => {
         setProductsArray(prevEl => [...prevEl, obj])
         return productsArray
@@ -87,6 +104,7 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
         $updateCounter,
         $addProduct,
         $removeProduct,
+        $removeProducts,
         shippingCost,
         setGetProductsArray,
         orderingProducts,
