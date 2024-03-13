@@ -10,15 +10,14 @@ import React, {
 
 export interface ServiceProductsContextProps  {
     productsArray: object[],
-    getProductsArray: object[],
-    $updateCounter: (obj: object, id: number) => void,
+    getCounter: object[],
     $addProduct: (obj: object, index: number) => object[],
-    setGetProductsArray: Dispatch<SetStateAction<object[]>>,
+    setGetCounter: Dispatch<SetStateAction<object[]>>,
     $removeProduct: (obj: object, index: number) => void,
-    $removeProducts: (obj: object, index: number) => void,
     shippingCost: number,
     orderingProducts: object[]
-    $SetOrder: (obj: object) => void
+    $SetOrder: (obj: object) => void,
+    $removeProducts: (obj: object, index: number) => void
 }
 
 type productsContext = {
@@ -29,7 +28,7 @@ export const ProductsContext = createContext<ServiceProductsContextProps>({} as 
 
 const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     const [productsArray, setProductsArray] = useState<object[]>([])
-    const [getProductsArray, setGetProductsArray] = useState<object[]>([])
+    const [getCounter, setGetCounter] = useState<object[]>([])
     const [orderingProducts, setOrderingProducts] = useState<object[]>([])
     const [shippingCost, setShippingCost] = useState<number>(15)
 
@@ -46,14 +45,14 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
 
     const $removeProduct = (obj: object, id: number) => {
         let removed = false
-        Object.keys(localStorage).forEach(localStorageElement => {
-            const isNumberKey = Number(localStorageElement)
+        Object.keys(localStorage).forEach(key => {
+            const isNumberKey = Number(key)
             if (!isNaN(isNumberKey)) {
-                const product = localStorage.getItem(localStorageElement)
+                const product = localStorage.getItem(key)
                 if (product) {
                     const productObj = JSON.parse(product)
                     if (productObj.id === id && !removed) {
-                        localStorage.removeItem(localStorageElement)
+                        localStorage.removeItem(key)
                         removed = true
                         setProductsArray(prevEl => [...prevEl, obj])
                         return productsArray
@@ -62,15 +61,16 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
             }
         })
     }
+
     const $removeProducts = (obj: object, id: number) => {
-        Object.keys(localStorage).forEach(localStorageElement => {
-            const isNumberKey = Number(localStorageElement)
+        Object.keys(localStorage).forEach(key => {
+            const isNumberKey = Number(key)
             if (!isNaN(isNumberKey)) {
-                const product = localStorage.getItem(localStorageElement)
+                const product = localStorage.getItem(key)
                 if (product) {
                     const productObj = JSON.parse(product)
                     if (productObj.id === id) {
-                        localStorage.removeItem(localStorageElement)
+                        localStorage.removeItem(key)
                         setProductsArray(prevEl => [...prevEl, obj])
                         return productsArray
                     }
@@ -78,20 +78,16 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
             }
         })
     }
-    const $updateCounter = (obj: object, id: number) => {
-        setProductsArray(prevEl => [...prevEl, obj])
-        return productsArray
-    }
 
     useEffect(() => {
-        setGetProductsArray([])
+        setGetCounter([])
         if(localStorage.length > 0) {
-            Object.keys(localStorage).map((key: any) => {
-                const keyValue = Number(key)
-                if(!isNaN(keyValue)) {
+            Object.keys(localStorage).map(key => {
+                const isNumberKey = Number(key)
+                if(!isNaN(isNumberKey)) {
                     const product = localStorage.getItem(key)
                     if(product) {
-                        setGetProductsArray(prevEl => [...prevEl, JSON.parse(product)])
+                        setGetCounter(prevEl => [...prevEl, JSON.parse(product)])
                     }
                 }
             })
@@ -100,15 +96,14 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     
     const contextValue: ServiceProductsContextProps = {
         productsArray,
-        getProductsArray,
-        $updateCounter,
+        getCounter,
         $addProduct,
         $removeProduct,
-        $removeProducts,
         shippingCost,
-        setGetProductsArray,
+        setGetCounter,
         orderingProducts,
-        $SetOrder
+        $SetOrder,
+        $removeProducts
     }
 
     return (

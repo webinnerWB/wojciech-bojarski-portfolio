@@ -43,7 +43,7 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
         }
     }, [])
 
-    const { getProductsArray }: ServiceProductsContextProps = useContext(ProductsContext)
+    const { getCounter }: ServiceProductsContextProps = useContext(ProductsContext)
 
     return(
         <>
@@ -84,7 +84,7 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
                             <Link  href="/store/order">
                                 <div className={`${style.shoppingWraper}`}>
                                     <i className={`fa-solid fa-cart-shopping ${style.ico} ${userLogged ? style.m0 : ''}`}></i>
-                                    <span className={`${style.counter}`}>{getProductsArray.length}</span> 
+                                    <span className={`${style.counter}`}>{getCounter.length}</span> 
                                 </div>
                             </Link>
                             {!userLogged ? 

@@ -14,11 +14,51 @@ const ProductOrdered: FC = () => {
 
     const { productsArray, shippingCost, $addProduct, $removeProduct, $removeProducts }:ServiceProductsContextProps = useContext(ProductsContext)
     const [order, setOrder] = useState<Order[]>([])
+    const [totalCost, setTotatCost] = useState<number>(0)
     const [removeProduct, setRemoveProduct] = useState(false)
+    const [disabledButton, setDisabledButton] = useState(false)
+
+    const updateOrder = () =>  {
+        setOrder([])
+        Object.keys(localStorage).forEach(key => {
+            const isNumberKey = Number(key)
+            if (!isNaN(isNumberKey)) {
+                const product = localStorage.getItem(key)
+                if (product) {
+                    const objectProduct = JSON.parse(product)
+                    
+                    setOrder(prev => {
+                        const product = prev.findIndex(item => item.id === objectProduct.id)
+                        if (product !== -1) {
+                            const updatedProducts = [...prev]
+                            updatedProducts[product] = {
+                                ...updatedProducts[product],
+                                amount: updatedProducts[product].amount + 1
+                            };
+                            return updatedProducts
+                        } else {
+                            return [...prev, {
+                                id: objectProduct.id,
+                                amount: 1,
+                                price: objectProduct.price,
+                                name: objectProduct.name,
+                                imgurl: objectProduct.imgurl
+                            }]
+                        }
+                    })
+                }
+            }
+        })
+    }
+
+    const removeProducts = (obj: Order) => {
+        $removeProducts(obj, obj.id)
+        updateOrder()
+    }
+
 
     const changeAmountHandler = (obj: Order,  action: 'increment' | 'decrement') => {
-        console.log(`obj: `, obj.id)
-        console.log(`order: `, order)
+        setDisabledButton(true)
         if(action === 'increment') {
             setOrder(prev => {
                 const product = prev.findIndex(el => el.id === obj.id)
@@ -52,41 +92,11 @@ const ProductOrdered: FC = () => {
             $removeProduct(obj, obj.id)
             
         }
+        setTimeout(() => {
+            setDisabledButton(false)
+        }, 300)
     }
 
-    const updateOrder = () =>  {
-        setOrder([])
-        Object.keys(localStorage).forEach(key => {
-            const isNumberKey = Number(key)
-            if (!isNaN(isNumberKey)) {
-                const product = localStorage.getItem(key)
-                if (product) {
-                    const objectProduct = JSON.parse(product)
-                    
-                    setOrder(prev => {
-                        const product = prev.findIndex(item => item.id === objectProduct.id)
-                        if (product !== -1) {
-                            const updatedProducts = [...prev]
-                            updatedProducts[product] = {
-                                ...updatedProducts[product],
-                                amount: updatedProducts[product].amount + 1
-                            };
-                            console.log('useEffect')
-                            return updatedProducts
-                        } else {
-                            return [...prev, {
-                                id: objectProduct.id,
-                                amount: 1,
-                                price: objectProduct.price,
-                                name: objectProduct.name,
-                                imgurl: objectProduct.imgurl
-                            }]
-                        }
-                    })
-                }
-            }
-        })
-    }
     useEffect(() => {
         updateOrder()
     }, [])
@@ -96,6 +106,35 @@ const ProductOrdered: FC = () => {
             updateOrder()
         }
     }, [removeProduct])
+
+    useEffect(() => {
+        setTotatCost(0)
+        order.map(product => {
+            setTotatCost(prev => prev + (product.amount * product.price))
+        })
+    }, [order])
+
+    useEffect(() => {
+        const IDs: number[] = []
+        Object.keys(localStorage).forEach(key => {
+            const isNumberKey = Number(key)
+            if(!isNaN(isNumberKey)) {
+                const elementKey = localStorage.getItem(key)
+                if(elementKey){
+                    const product = JSON.parse(elementKey)
+                    IDs.push(product.id)
+                }
+            }
+        })
+        order.forEach(el => {
+            const indexFound = IDs.findIndex(i => i === el.id)
+
+            if(indexFound !== -1) {
+                updateOrder()                
+            }
+        })
+    }, [productsArray])
+
   
     let products = order.map((el, index) => (
         <tr  key={`${el.id}-${index}`} className={`${style.borderBottom}`}>
@@ -109,15 +148,17 @@ const ProductOrdered: FC = () => {
             <td className={`${style.td}`}>
                 <button className={`${style.amountBtn}`} 
                 onClick={() => changeAmountHandler(el, 'decrement')}
+                disabled={disabledButton}
                 >-</button>
                     {el.amount}
                 <button className={`${style.amountBtn}`} 
                 onClick={() => changeAmountHandler(el, 'increment')}
+                disabled={disabledButton}
                 >+</button>
             </td>
-            <td className={`${style.td}`}>- $</td>
+            <td className={`${style.td}`}>{Number(el.amount * el.price).toFixed(2)} $</td>
             <td 
-            onClick={() => $removeProducts(el, el.id)}
+            onClick={() => removeProducts(el)}
              className={`${style.td} ${style.remove}`}>x</td>
         </tr>
     ))
@@ -135,8 +176,7 @@ const ProductOrdered: FC = () => {
                 <td></td>
                 <td className={`${style.text}`}>Subtotal:</td>
                 <td className={`${style.cost}`}>
-                {/* {Number(totalCost).toFixed(2)} */}
-                 $</td>
+                {Number(totalCost).toFixed(2)} $</td>
             </tr>
             <tr className={`${style.orderSumContainer}`}>
                 <td></td>
@@ -151,8 +191,7 @@ const ProductOrdered: FC = () => {
                 <td></td>
                 <td className={`${style.text}`}>Total:</td>
                 <td className={`${style.cost}`}>
-                {/* {Number(shippingCost + totalCost).toFixed(2)} */}
-                 $</td>
+                {Number(shippingCost + totalCost).toFixed(2)} $</td>
             </tr>
         </>
         

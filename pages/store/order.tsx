@@ -11,7 +11,7 @@ import style from '../../style/store.module.scss'
 
 const OrderPage: FC = () => {
 
-    const { getProductsArray }: ServiceProductsContextProps = useContext(ProductsContext)
+    const { getCounter }: ServiceProductsContextProps = useContext(ProductsContext)
     const { searchingValue, searchResults, valuesArray, user, $handleSearchingValue, $handleSearchResults } = Methods()
 
     useEffect(() => {
@@ -21,7 +21,7 @@ const OrderPage: FC = () => {
     return (
         <div className="col-lg-12">
             <Header handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults}/>
-            {getProductsArray.length > 0 ?
+            {getCounter.length > 0 ?
             <div className="row d-lg-flex">
                 <div className="col-lg-2"></div>
                 <div className="col-lg-5">
