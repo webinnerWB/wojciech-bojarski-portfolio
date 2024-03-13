@@ -488,6 +488,10 @@
             min-width: 50px;
             cursor: pointer;
             }
+            &.remove:hover {
+                color: #696464
+            }
+
         }
     }
     
