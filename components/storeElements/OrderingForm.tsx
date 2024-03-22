@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useContext, FC, useRef, FormEvent, ChangeEvent} from "react"
 import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
-// import { MD5 } from 'crypto-js'
+import { MD5 } from 'crypto-js'
 
 import style from '../../style/store.module.scss'
 import Methods from "../services/DB/Methods"
@@ -83,36 +83,36 @@ const OrderingForm: FC = () => {
         }
     }, [user])
 
-    // const handleSubmitPayment = async (e: FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault();
-    //     const email = 'test@wb.com'
+    const handleSubmitPayment = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const email = 'test@wb.com'
 
-    //     const signature = MD5(`${process.env.NEXT_PUBLIC_POSID}${totalCostContext}${email}${process.env.NEXT_PUBLIC_MD5KEY}`).toString();
-    //     try {
-    //       // Wyślij żądanie do API PayU
-    //       const response = await fetch('https://secure.snd.payu.com/api/v2_1/orders', {
-    //         method: 'POST',
-    //         headers: {
-    //           'Content-Type': 'application/json',
-    //           'Authorization': `Bearer ${signature}`
-    //         },
-    //         body: JSON.stringify({
-    //           // Dane płatności
-    //           amount: totalCostContext,
-    //           currencyCode: 'PLN',
-    //           description: 'Opis zamówienia',
-    //           // Dodatkowe dane odbiorcy, które mogą być potrzebne przy płatności
-    //         //   ...recipientData
-    //         })
-    //       });
+        const signature = MD5(`${process.env.NEXT_PUBLIC_POSID}${totalCostContext}${email}${process.env.NEXT_PUBLIC_MD5KEY}`).toString();
+        try {
+          // Wyślij żądanie do API PayU
+          const response = await fetch('https://secure.snd.payu.com/api/v2_1/orders', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${signature}`
+            },
+            body: JSON.stringify({
+              // Dane płatności
+              amount: totalCostContext,
+              currencyCode: 'PLN',
+              description: 'Opis zamówienia',
+              // Dodatkowe dane odbiorcy, które mogą być potrzebne przy płatności
+            //   ...recipientData
+            })
+          });
     
-    //       const responseData = await response.json();
-    //       console.log('Response Success:', responseData);
-    //       // Tutaj możesz obsłużyć odpowiedź zwrotną z PayU
-    //     } catch (error) {
-    //       console.error('Error:', error);
-    //     }
-    //   };
+          const responseData = await response.json();
+          console.log('Response Success:', responseData);
+          // Tutaj możesz obsłużyć odpowiedź zwrotną z PayU
+        } catch (error) {
+          console.error('Error:', error);
+        }
+      };
     
     return (
         <>
@@ -120,7 +120,7 @@ const OrderingForm: FC = () => {
                 <h2 className={`${style.title}`}>Recipient's data</h2>
                 <span ref={msgRef} className={`${style.formMsg}`}></span>
                 <div className={`${style.formWrapper}`}>
-                    <form>
+                    <form onSubmit={handleSubmitPayment}>
                         <div className={`row ${style.formInputWrapper}`}>
                             <div className={`col-lg-6`}>
                                 <label className={`${style.label}`} htmlFor="name">Name</label>
