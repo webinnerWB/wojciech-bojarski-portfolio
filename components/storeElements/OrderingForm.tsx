@@ -88,30 +88,30 @@ const OrderingForm: FC = () => {
         const email = 'test@wb.com'
 
         const signature = MD5(`${process.env.NEXT_PUBLIC_POSID}${totalCostContext}${email}${process.env.NEXT_PUBLIC_MD5KEY}`).toString();
-        try {
-          // Wyślij żądanie do API PayU
-          const response = await fetch('https://secure.snd.payu.com/api/v2_1/orders', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${signature}`
-            },
-            body: JSON.stringify({
-              // Dane płatności
-              amount: totalCostContext,
-              currencyCode: 'PLN',
-              description: 'Opis zamówienia',
-              // Dodatkowe dane odbiorcy, które mogą być potrzebne przy płatności
-            //   ...recipientData
-            })
-          });
+        // try {
+        //   // Wyślij żądanie do API PayU
+        //   const response = await fetch('https://secure.snd.payu.com/api/v2_1/orders', {
+        //     method: 'POST',
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //       'Authorization': `Bearer ${signature}`
+        //     },
+        //     body: JSON.stringify({
+        //       // Dane płatności
+        //       amount: totalCostContext,
+        //       currencyCode: 'PLN',
+        //       description: 'Opis zamówienia',
+        //       // Dodatkowe dane odbiorcy, które mogą być potrzebne przy płatności
+        //     //   ...recipientData
+        //     })
+        //   });
     
-          const responseData = await response.json();
-          console.log('Response Success:', responseData);
-          // Tutaj możesz obsłużyć odpowiedź zwrotną z PayU
-        } catch (error) {
-          console.error('Error:', error);
-        }
+        //   const responseData = await response.json();
+        //   console.log('Response Success:', responseData);
+        //   // Tutaj możesz obsłużyć odpowiedź zwrotną z PayU
+        // } catch (error) {
+        //   console.error('Error:', error);
+        // }
       };
     
     return (
