@@ -15,8 +15,10 @@ export interface ServiceProductsContextProps  {
     setGetCounter: Dispatch<SetStateAction<object[]>>,
     $removeProduct: (obj: object, index: number) => void,
     shippingCost: number,
+    totalCostContext: number,
     orderingProducts: object[]
     $SetOrder: (obj: object) => void,
+    $SetTotalCost: (obj: number) => void,
     $removeProducts: (obj: object, index: number) => void
 }
 
@@ -29,12 +31,21 @@ export const ProductsContext = createContext<ServiceProductsContextProps>({} as 
 const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     const [productsArray, setProductsArray] = useState<object[]>([])
     const [getCounter, setGetCounter] = useState<object[]>([])
+    const [totalCostContext, setTotatCostContext] = useState<number>(0)
     const [orderingProducts, setOrderingProducts] = useState<object[]>([])
     const [shippingCost, setShippingCost] = useState<number>(15)
 
+    const $SetTotalCost = (cost: number) => {
+        const converterTotalCost = Math.round(cost * 100)
+        setTotatCostContext(converterTotalCost)
+    }
     const $SetOrder = (obj: object) => {
         setOrderingProducts([obj])
     }
+
+    useEffect(() => {
+        console.log(`orderingProducts123123213: `, orderingProducts)
+    }, [orderingProducts])
 
     const $addProduct = (obj: object, index: number) => {
         const objAsString = JSON.stringify(obj)
@@ -96,6 +107,7 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     
     const contextValue: ServiceProductsContextProps = {
         productsArray,
+        totalCostContext,
         getCounter,
         $addProduct,
         $removeProduct,
@@ -103,6 +115,7 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
         setGetCounter,
         orderingProducts,
         $SetOrder,
+        $SetTotalCost,
         $removeProducts
     }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, FC } from "react"
+import React, { useState, useEffect, useContext, FC, FormEvent } from "react"
 import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 
 import style from '../../style/store.module.scss'
@@ -12,14 +12,13 @@ const ProductOrdered: FC = () => {
         imgurl: string
     }
 
-    const { productsArray, shippingCost, $addProduct, $removeProduct, $removeProducts }:ServiceProductsContextProps = useContext(ProductsContext)
+    const { shippingCost, $addProduct, $removeProduct, $removeProducts, $SetOrder, $SetTotalCost }:ServiceProductsContextProps = useContext(ProductsContext)
     const [order, setOrder] = useState<Order[]>([])
     const [totalCost, setTotatCost] = useState<number>(0)
     const [removeProduct, setRemoveProduct] = useState(false)
     const [disabledButton, setDisabledButton] = useState(false)
 
     const updateOrder = () =>  {
-        setOrder([])
         Object.keys(localStorage).forEach(key => {
             const isNumberKey = Number(key)
             if (!isNaN(isNumberKey)) {
@@ -30,7 +29,7 @@ const ProductOrdered: FC = () => {
                     setOrder(prev => {
                         const product = prev.findIndex(item => item.id === objectProduct.id)
                         if (product !== -1) {
-                            const updatedProducts = [...prev]
+                            let updatedProducts = [...prev]
                             updatedProducts[product] = {
                                 ...updatedProducts[product],
                                 amount: updatedProducts[product].amount + 1
@@ -52,8 +51,10 @@ const ProductOrdered: FC = () => {
     }
 
     const removeProducts = (obj: Order) => {
+        setOrder([])
         $removeProducts(obj, obj.id)
         updateOrder()
+        $SetOrder(order)
     }
 
 
@@ -90,7 +91,6 @@ const ProductOrdered: FC = () => {
                 return updatedProducts
             })
             $removeProduct(obj, obj.id)
-            
         }
         setTimeout(() => {
             setDisabledButton(false)
@@ -99,11 +99,14 @@ const ProductOrdered: FC = () => {
 
     useEffect(() => {
         updateOrder()
+        $SetOrder(order)
     }, [])
 
     useEffect(() => {
         if(removeProduct){
+            setOrder([])
             updateOrder()
+            $SetOrder(order)
         }
     }, [removeProduct])
 
@@ -113,28 +116,9 @@ const ProductOrdered: FC = () => {
             setTotatCost(prev => prev + (product.amount * product.price))
         })
     }, [order])
-
     useEffect(() => {
-        const IDs: number[] = []
-        Object.keys(localStorage).forEach(key => {
-            const isNumberKey = Number(key)
-            if(!isNaN(isNumberKey)) {
-                const elementKey = localStorage.getItem(key)
-                if(elementKey){
-                    const product = JSON.parse(elementKey)
-                    IDs.push(product.id)
-                }
-            }
-        })
-        order.forEach(el => {
-            const indexFound = IDs.findIndex(i => i === el.id)
-
-            if(indexFound !== -1) {
-                updateOrder()                
-            }
-        })
-    }, [productsArray])
-
+        $SetTotalCost(totalCost)
+    }, [totalCost])
   
     let products = order.map((el, index) => (
         <tr  key={`${el.id}-${index}`} className={`${style.borderBottom}`}>
