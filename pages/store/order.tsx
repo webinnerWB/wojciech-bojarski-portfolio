@@ -21,7 +21,7 @@ const OrderPage: FC = () => {
     return (
         <div className="col-lg-12">
             <Header handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults}/>
-            {getCounter.length > 0 ?
+            {getCounter && getCounter.length > 0 ?
             <div className="row d-lg-flex">
                 <div className="col-lg-2"></div>
                 <div className="col-lg-5">
