@@ -19,7 +19,7 @@ export interface ServiceProductsContextProps  {
     orderingProducts: object[]
     $SetOrder: (obj: object) => void,
     $SetTotalCost: (obj: number) => void,
-    $removeProducts: (obj: object, index: number) => void
+    $removeProducts: (obj: object, index: number) => void,
 }
 
 type productsContext = {
@@ -104,6 +104,8 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
             })
         }
     }, [productsArray])
+
+   
     
     const contextValue: ServiceProductsContextProps = {
         productsArray,
@@ -116,7 +118,7 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
         orderingProducts,
         $SetOrder,
         $SetTotalCost,
-        $removeProducts
+        $removeProducts,
     }
 
     return (
