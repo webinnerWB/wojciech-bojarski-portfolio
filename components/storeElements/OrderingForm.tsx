@@ -19,7 +19,7 @@ interface RecipientData {
 const OrderingForm: FC = () => {
 const routing = useRouter()
 
-    const { orderingProducts, totalCostContext }:ServiceProductsContextProps = useContext(ProductsContext)
+    const { orderForPayu, totalCostContext }:ServiceProductsContextProps = useContext(ProductsContext)
     const [recipientData, setRecipientData] = useState<RecipientData>({
         name: '',
         surname: '',
@@ -84,20 +84,31 @@ const routing = useRouter()
         }
     }, [user])
 
+    
     const handleSubmitPayment = async (e: FormEvent<HTMLFormElement>) => {
+        const totalAmount = totalCostContext
+        const products = orderForPayu
         e.preventDefault();
-            try {
-                const response = await fetch('http://localhost:3000/api/payuOrder', {
-                    method: 'POST'
-                })
-                console.log(`dataPAYu: `, response.status)
-                const jsonResponse = await response.json()
-                if(jsonResponse.data.redirectUri) {
-                    routing.push(jsonResponse.data.redirectUri)
+            if(totalCostContext && orderForPayu){
+                try {
+                    const response = await fetch('http://localhost:3000/api/payuOrder', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            totalAmount, products
+                        })
+                    })
+                    console.log(`dataPAYu: `, response.status)
+                    const jsonResponse = await response.json()
+                    if(jsonResponse.data.redirectUri) {
+                        routing.push(jsonResponse.data.redirectUri)
+                    }
+                    console.log(`dataPAYu: `, jsonResponse)
+                } catch(err) {
+                    console.error(`Error: `, err)
                 }
-                console.log(`dataPAYu: `, jsonResponse)
-            } catch(err) {
-                console.error(`Error: `, err)
             }
       }
     

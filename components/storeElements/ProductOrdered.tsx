@@ -12,7 +12,7 @@ const ProductOrdered: FC = () => {
         imgurl: string
     }
 
-    const { shippingCost, $addProduct, $removeProduct, $removeProducts, $SetOrder, $SetTotalCost }:ServiceProductsContextProps = useContext(ProductsContext)
+    const { shippingCost, $addProduct, $removeProduct, $removeProducts, $SetOrder, $setOrderForPayu, $SetTotalCost }:ServiceProductsContextProps = useContext(ProductsContext)
     const [order, setOrder] = useState<Order[]>([])
     const [totalCost, setTotatCost] = useState<number>(0)
     const [removeProduct, setRemoveProduct] = useState(false)
@@ -55,6 +55,7 @@ const ProductOrdered: FC = () => {
         $removeProducts(obj, obj.id)
         updateOrder()
         $SetOrder(order)
+        $setOrderForPayu()
     }
 
 
@@ -100,6 +101,7 @@ const ProductOrdered: FC = () => {
     useEffect(() => {
         updateOrder()
         $SetOrder(order)
+        $setOrderForPayu()
     }, [])
 
     useEffect(() => {
@@ -107,6 +109,7 @@ const ProductOrdered: FC = () => {
             setOrder([])
             updateOrder()
             $SetOrder(order)
+            $setOrderForPayu()
         }
     }, [removeProduct])
 
@@ -115,6 +118,7 @@ const ProductOrdered: FC = () => {
         order.map(product => {
             setTotatCost(prev => prev + (product.amount * product.price))
         })
+        console.log(`order: `, order)
     }, [order])
     useEffect(() => {
         $SetTotalCost(totalCost)

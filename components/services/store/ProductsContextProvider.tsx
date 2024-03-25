@@ -18,8 +18,16 @@ export interface ServiceProductsContextProps  {
     totalCostContext: number,
     orderingProducts: object[]
     $SetOrder: (obj: object) => void,
+    $setOrderForPayu: () => void,
     $SetTotalCost: (obj: number) => void,
     $removeProducts: (obj: object, index: number) => void,
+    orderForPayu: payuOrder[],
+}
+
+interface payuOrder {
+    name: string,
+    unitPrice: string,
+    quantity: string
 }
 
 type productsContext = {
@@ -33,6 +41,7 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     const [getCounter, setGetCounter] = useState<object[]>([])
     const [totalCostContext, setTotatCostContext] = useState<number>(0)
     const [orderingProducts, setOrderingProducts] = useState<object[]>([])
+    const [orderForPayu, setOrderForPayu] = useState<payuOrder[]>([])
     const [shippingCost, setShippingCost] = useState<number>(15)
 
     const $SetTotalCost = (cost: number) => {
@@ -41,6 +50,19 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     }
     const $SetOrder = (obj: object) => {
         setOrderingProducts([obj])
+    }
+    const $setOrderForPayu = () => {
+        if(orderingProducts) {
+            orderingProducts.forEach((el: any) => {
+                setOrderForPayu(prev => {
+                    return [...prev, {
+                        name: el.name,
+                        unitPrice: el.price,
+                        quantity: el.amount
+                    }]
+                })
+            })
+        }
     }
 
     useEffect(() => {
@@ -117,8 +139,10 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
         setGetCounter,
         orderingProducts,
         $SetOrder,
+        $setOrderForPayu,
         $SetTotalCost,
         $removeProducts,
+        orderForPayu
     }
 
     return (
