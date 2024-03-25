@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useContext, FC, useRef, FormEvent, ChangeEvent} from "react"
 import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
-
+import { useRouter } from "next/router"
 import style from '../../style/store.module.scss'
 import Methods from "../services/DB/Methods"
 
@@ -17,6 +17,8 @@ interface RecipientData {
 }
 
 const OrderingForm: FC = () => {
+const routing = useRouter()
+
     const { orderingProducts, totalCostContext }:ServiceProductsContextProps = useContext(ProductsContext)
     const [recipientData, setRecipientData] = useState<RecipientData>({
         name: '',
@@ -89,8 +91,11 @@ const OrderingForm: FC = () => {
                     method: 'POST'
                 })
                 console.log(`dataPAYu: `, response.status)
-                const data = await response.json()
-                console.log(`dataPAYu: `, data)
+                const jsonResponse = await response.json()
+                if(jsonResponse.data.redirectUri) {
+                    routing.push(jsonResponse.data.redirectUri)
+                }
+                console.log(`dataPAYu: `, jsonResponse)
             } catch(err) {
                 console.error(`Error: `, err)
             }
