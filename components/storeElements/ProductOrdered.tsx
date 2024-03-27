@@ -12,7 +12,7 @@ const ProductOrdered: FC = () => {
         imgurl: string
     }
 
-    const { shippingCost, $addProduct, $removeProduct, $removeProducts, $SetOrder, $setOrderForPayu, $SetTotalCost }:ServiceProductsContextProps = useContext(ProductsContext)
+    const { shippingCost, $addProduct, $removeProduct, $removeProducts,  $setOrderForPayu, $SetTotalCost, $SetOrder }:ServiceProductsContextProps = useContext(ProductsContext)
     const [order, setOrder] = useState<Order[]>([])
     const [totalCost, setTotatCost] = useState<number>(0)
     const [removeProduct, setRemoveProduct] = useState(false)
@@ -54,8 +54,6 @@ const ProductOrdered: FC = () => {
         setOrder([])
         $removeProducts(obj, obj.id)
         updateOrder()
-        $SetOrder(order)
-        $setOrderForPayu()
     }
 
 
@@ -76,7 +74,6 @@ const ProductOrdered: FC = () => {
             $addProduct(obj, obj.id)
         }else{
             setOrder(prev => {
-                
                 const product = prev.findIndex(el => el.id === obj.id)
                 const updatedProducts = [...prev]
                 if(product !== -1){
@@ -100,16 +97,14 @@ const ProductOrdered: FC = () => {
 
     useEffect(() => {
         updateOrder()
+        $setOrderForPayu(order)
         $SetOrder(order)
-        $setOrderForPayu()
     }, [])
 
     useEffect(() => {
         if(removeProduct){
             setOrder([])
             updateOrder()
-            $SetOrder(order)
-            $setOrderForPayu()
         }
     }, [removeProduct])
 
@@ -118,10 +113,12 @@ const ProductOrdered: FC = () => {
         order.map(product => {
             setTotatCost(prev => prev + (product.amount * product.price))
         })
-        console.log(`order: `, order)
+        
     }, [order])
     useEffect(() => {
         $SetTotalCost(totalCost)
+        $setOrderForPayu(order)
+        $SetOrder(order)
     }, [totalCost])
   
     let products = order.map((el, index) => (
@@ -132,7 +129,7 @@ const ProductOrdered: FC = () => {
                     <p className={`${style.name}`}>{el.name}</p>
                 </div>
             </th>
-            <td className={`${style.td}`}>{el.price} $</td>
+            <td className={`${style.td}`}>{el.price} PLN</td>
             <td className={`${style.td}`}>
                 <button className={`${style.amountBtn}`} 
                 onClick={() => changeAmountHandler(el, 'decrement')}
@@ -144,7 +141,7 @@ const ProductOrdered: FC = () => {
                 disabled={disabledButton}
                 >+</button>
             </td>
-            <td className={`${style.td}`}>{Number(el.amount * el.price).toFixed(2)} $</td>
+            <td className={`${style.td}`}>{Number(el.amount * el.price).toFixed(2)} PLN</td>
             <td 
             onClick={() => removeProducts(el)}
              className={`${style.td} ${style.remove}`}>x</td>
@@ -164,14 +161,14 @@ const ProductOrdered: FC = () => {
                 <td></td>
                 <td className={`${style.text}`}>Subtotal:</td>
                 <td className={`${style.cost}`}>
-                {Number(totalCost).toFixed(2)} $</td>
+                {Number(totalCost).toFixed(2)} PLN</td>
             </tr>
             <tr className={`${style.orderSumContainer}`}>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td className={`${style.borderBottom} ${style.text}`}>Shipping:</td>
-                <td className={`${style.borderBottom} ${style.cost}`}>{Number(shippingCost).toFixed(2)} $</td>
+                <td className={`${style.borderBottom} ${style.cost}`}>{Number(shippingCost).toFixed(2)} PLN</td>
             </tr>
             <tr className={`${style.orderSumContainer}`}>
                 <td></td>
@@ -179,7 +176,7 @@ const ProductOrdered: FC = () => {
                 <td></td>
                 <td className={`${style.text}`}>Total:</td>
                 <td className={`${style.cost}`}>
-                {Number(shippingCost + totalCost).toFixed(2)} $</td>
+                {Number(shippingCost + totalCost).toFixed(2)} PLN</td>
             </tr>
         </>
         

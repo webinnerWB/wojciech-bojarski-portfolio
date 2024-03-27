@@ -5,6 +5,7 @@ import style from '../../style/store.module.scss'
 import Methods from "../services/DB/Methods"
 
 interface RecipientData {
+    uuid: string,
     name: string,
     surname: string,
     email: string,
@@ -19,8 +20,9 @@ interface RecipientData {
 const OrderingForm: FC = () => {
 const routing = useRouter()
 
-    const { orderForPayu, totalCostContext }:ServiceProductsContextProps = useContext(ProductsContext)
+    const { orderForPayu, totalCostContext, orderingProducts }:ServiceProductsContextProps = useContext(ProductsContext)
     const [recipientData, setRecipientData] = useState<RecipientData>({
+        uuid: '',
         name: '',
         surname: '',
         email: '',
@@ -32,8 +34,8 @@ const routing = useRouter()
     })
     const [formSubmit, setFormSubmit] = useState<boolean>(false)
     const [formCompletedError, setFormCompletedError] = useState<boolean>(false)
-    
-    const { user } = Methods()
+
+    const { user,  $addNewDocument } = Methods()
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target
@@ -68,8 +70,9 @@ const routing = useRouter()
         document.body.style.backgroundColor = '#161616'
         document.body.style.color = '#ffffff'
         if(user){
-            const { name, surname, email, street, houseNumber, city, postalCode, country } = user as unknown as RecipientData
+            const { uuid, name, surname, email, street, houseNumber, city, postalCode, country } = user as unknown as RecipientData
             setRecipientData({
+                uuid,
                 name,
                 surname,
                 email,
@@ -79,8 +82,6 @@ const routing = useRouter()
                 postalCode,
                 country,
             })
-            console.log(`recispienstwsDastsa2: `, recipientData)
-            
         }
     }, [user])
 
@@ -100,12 +101,36 @@ const routing = useRouter()
                             totalAmount, products
                         })
                     })
-                    console.log(`dataPAYu: `, response.status)
                     const jsonResponse = await response.json()
-                    if(jsonResponse.data.redirectUri) {
-                        routing.push(jsonResponse.data.redirectUri)
+                    localStorage.setItem('orderIdPayu', jsonResponse.data.orderId)
+                    if(jsonResponse.data.status.statusCode === 'SUCCESS') {
+                        if(user) {
+                            const { uuid, email } = user
+                            $addNewDocument('order', {
+                                uuid,
+                                email,
+                                orderId: jsonResponse.data.orderId,
+                                totalAmount,
+                                products: [...orderingProducts],
+                                status: 'pending payment'
+                            })
+                        }else{
+                            $addNewDocument('order', {
+                                uuid: '-',
+                                email: '-',
+                                orderId: jsonResponse.data.orderId,
+                                totalAmount,
+                                products: [...orderingProducts],
+                                status: 'pending payment'
+                            })
+                        }
+                        
                     }
-                    console.log(`dataPAYu: `, jsonResponse)
+                    setTimeout(() => {
+                        if(jsonResponse.data.redirectUri) {
+                            routing.push(jsonResponse.data.redirectUri)
+                        }
+                    }, 4000)
                 } catch(err) {
                     console.error(`Error: `, err)
                 }

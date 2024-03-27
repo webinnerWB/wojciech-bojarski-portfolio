@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 
 const $generationAccessToken = async() => {
     try {
-        const response = await fetch('http://localhost:3000/api/payuToken', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/payuToken`, {
           method: 'POST',
         })
     
@@ -39,12 +39,13 @@ export default async function handlerOrder(req: NextApiRequest, res: NextApiResp
                             'Authorization': `Bearer ${accessToken}`,
                         },
                         body: JSON.stringify({
-                            continueUrl: 'http://localhost:3000/store/payment',
+                            notifyUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/api/payuGetOrderStatus`,
+                            continueUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/store/payment`,
                             totalAmount,
                             customerIp: `${IP}`,
                             merchantPosId: process.env.NEXT_PUBLIC_POSID || '',
                             currencyCode: 'PLN',
-                            description: 'Zamówienie Testowe',
+                            description: 'Order',
                             products
                         }),
                         redirect: 'manual'
@@ -54,7 +55,6 @@ export default async function handlerOrder(req: NextApiRequest, res: NextApiResp
                         console.log(`DATA: `, data)
                         res.json({ data })
                     }else{
-                        console.log(`response: `, response.status)
                         res.status(response.status)
                         throw new Error('Failed to create order');
                     }

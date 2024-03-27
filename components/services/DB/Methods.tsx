@@ -10,6 +10,7 @@ import soreStyle from '../../../style/store.module.scss'
 const Methods = () => {
 
   interface UserData {
+    uuid: string | undefined,
     name: string | undefined,
     surname: string | undefined,
     email: string | undefined,

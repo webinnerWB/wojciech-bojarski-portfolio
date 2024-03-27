@@ -13,7 +13,6 @@ const OrderingDetails: FC = () => {
 
     const createAccountHandler = () => {
         setCreateAccount(prevState => !prevState)
-        console.log(createAccount)
     }
 
     useEffect(() => {

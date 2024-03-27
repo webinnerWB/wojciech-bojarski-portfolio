@@ -17,8 +17,8 @@ export interface ServiceProductsContextProps  {
     shippingCost: number,
     totalCostContext: number,
     orderingProducts: object[]
-    $SetOrder: (obj: object) => void,
-    $setOrderForPayu: () => void,
+    $SetOrder: (obj: any) => void,
+    $setOrderForPayu: (obj: any) => void,
     $SetTotalCost: (obj: number) => void,
     $removeProducts: (obj: object, index: number) => void,
     orderForPayu: payuOrder[],
@@ -29,7 +29,12 @@ interface payuOrder {
     unitPrice: string,
     quantity: string
 }
-
+interface Order {
+    name: string,
+    unitPrice: string,
+    quantity: string,
+    imgUrl: string,
+}
 type productsContext = {
     children: ReactNode
 }
@@ -40,7 +45,7 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
     const [productsArray, setProductsArray] = useState<object[]>([])
     const [getCounter, setGetCounter] = useState<object[]>([])
     const [totalCostContext, setTotatCostContext] = useState<number>(0)
-    const [orderingProducts, setOrderingProducts] = useState<object[]>([])
+    const [orderingProducts, setOrderingProducts] = useState<Order[]>([])
     const [orderForPayu, setOrderForPayu] = useState<payuOrder[]>([])
     const [shippingCost, setShippingCost] = useState<number>(15)
 
@@ -48,26 +53,33 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
         const converterTotalCost = Math.round(cost * 100)
         setTotatCostContext(converterTotalCost)
     }
-    const $SetOrder = (obj: object) => {
-        setOrderingProducts([obj])
-    }
-    const $setOrderForPayu = () => {
-        if(orderingProducts) {
-            orderingProducts.forEach((el: any) => {
-                setOrderForPayu(prev => {
-                    return [...prev, {
-                        name: el.name,
-                        unitPrice: el.price,
-                        quantity: el.amount
-                    }]
-                })
+    const $SetOrder = (obj: any) => {
+        obj.forEach((el: any) => {
+            setOrderingProducts(prev => {
+                return [...prev, {
+                    name: el.name.join('').replace(',', ''),
+                    unitPrice: el.price,
+                    quantity: el.amount,
+                    imgUrl: el.imgurl
+                }]
             })
-        }
+        })
     }
-
-    useEffect(() => {
-        console.log(`orderingProducts123123213: `, orderingProducts)
-    }, [orderingProducts])
+    const $setOrderForPayu = (obj: any) => {
+        obj.forEach((el: any) => {
+            const price = el.price * 100
+            const stringPrice = price.toFixed(0).toString()
+            const name = el.name.join('').replace(',', '')
+            const amount = el.amount.toString()
+            setOrderForPayu(prev => {
+                return [...prev, {
+                    name: name,
+                    unitPrice: stringPrice,
+                    quantity: amount
+                }]
+            })
+        })
+    }
 
     const $addProduct = (obj: object, index: number) => {
         const objAsString = JSON.stringify(obj)
