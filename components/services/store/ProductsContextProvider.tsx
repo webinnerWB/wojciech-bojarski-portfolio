@@ -38,7 +38,6 @@ interface Order {
 type productsContext = {
     children: ReactNode
 }
-
 export const ProductsContext = createContext<ServiceProductsContextProps>({} as ServiceProductsContextProps)
 
 const ProductsContextProvider: FC<productsContext> = ({ children }) => {

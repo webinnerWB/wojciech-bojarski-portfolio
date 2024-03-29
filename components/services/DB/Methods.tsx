@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where, QueryDocumentSnapshot, getDoc, doc } from 'firebase/firestore'
+import { addDoc, collection, getDocs, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where, QueryDocumentSnapshot, getDoc, doc, updateDoc } from 'firebase/firestore'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged  } from 'firebase/auth'
 import { getAuth} from 'firebase/auth'
 import {firestore} from './FirebaseConfig'
@@ -110,6 +110,41 @@ const Methods = () => {
           throw err
         }
       }
+
+    const $getFieldValue = async (collectionR: string, id: string, searchingField: string) => {
+      let ob = {}
+      try {
+        const collectionRef: CollectionReference = collection(db, collectionR)
+        const queryRef = query(collectionRef, where(searchingField, '==', id))
+        const docRef = await getDocs(queryRef)
+        if(!docRef.empty) {
+          docRef.forEach(el => {
+            console.log(`el.data(): `, el.data())
+            ob = el.data()
+          })
+        }
+        return ob
+      } catch(err) {
+        console.error(`Error: `, err)
+      }
+    }
+      
+    const $updateFieldInDocument = async (collectionR: string, searchingField: string, searchingFiledValue: string, newValue: string, fieldToUpdate: string) => {
+      try {
+        const collectionRef: CollectionReference = collection(db, collectionR)
+        const queryRef = query(collectionRef, where(searchingField, '==', searchingFiledValue))
+        const docsRef = await getDocs(queryRef)
+        if(!docsRef.empty) {
+          const doc = docsRef.docs[0]
+          await updateDoc(doc.ref, {[fieldToUpdate]: newValue})
+          console.log(`Field: ${fieldToUpdate} has been successfully updated`)
+        } else {
+          console.error(`Field: ${fieldToUpdate} not found`)
+        }
+      } catch(err) {
+        console.error(`Error: `, err)
+      }
+    }
 
     const $addNewDocument = async (collectionR: string, document: object) => {
         try {
@@ -247,6 +282,8 @@ const Methods = () => {
         $isUserLogged,
         $loginUser,
         $handleFilterCategory,
+        $updateFieldInDocument,
+        $getFieldValue,
         searchingValue,
         searchResults,
         valuesArray,

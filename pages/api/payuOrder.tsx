@@ -64,5 +64,8 @@ export default async function handlerOrder(req: NextApiRequest, res: NextApiResp
                 console.error(`Error: `, err)
                 res.json({error: `${err}`})
             }
+        }else {
+          res.setHeader('Allow', ['POST'])
+          res.status(405).json({ error: `Method ${req.method} Not Allowed` })
         }
 }

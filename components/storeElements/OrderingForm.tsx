@@ -20,7 +20,7 @@ interface RecipientData {
 const OrderingForm: FC = () => {
 const routing = useRouter()
 
-    const { orderForPayu, totalCostContext, orderingProducts }:ServiceProductsContextProps = useContext(ProductsContext)
+    const { orderForPayu, totalCostContext, orderingProducts, shippingCost }:ServiceProductsContextProps = useContext(ProductsContext)
     const [recipientData, setRecipientData] = useState<RecipientData>({
         uuid: '',
         name: '',
@@ -87,7 +87,7 @@ const routing = useRouter()
 
     
     const handleSubmitPayment = async (e: FormEvent<HTMLFormElement>) => {
-        const totalAmount = totalCostContext
+        const totalAmount = totalCostContext + (shippingCost*100)
         const products = orderForPayu
         e.preventDefault();
             if(totalCostContext && orderForPayu){
@@ -113,7 +113,13 @@ const routing = useRouter()
                                 totalAmount,
                                 products: [...orderingProducts],
                                 status: 'pending payment'
-                            })
+                            }).then(() => {
+                                if (jsonResponse.data.redirectUri) {
+                                    routing.push(jsonResponse.data.redirectUri)
+                                }
+                            }).catch(err => {
+                                console.error(`Error: `, err)
+                            });
                         }else{
                             $addNewDocument('order', {
                                 uuid: '-',
@@ -122,15 +128,15 @@ const routing = useRouter()
                                 totalAmount,
                                 products: [...orderingProducts],
                                 status: 'pending payment'
-                            })
+                            }).then(() => {
+                                if (jsonResponse.data.redirectUri) {
+                                    routing.push(jsonResponse.data.redirectUri)
+                                }
+                            }).catch(err => {
+                                console.error(`Error: `, err)
+                            });
                         }
-                        
                     }
-                    setTimeout(() => {
-                        if(jsonResponse.data.redirectUri) {
-                            routing.push(jsonResponse.data.redirectUri)
-                        }
-                    }, 4000)
                 } catch(err) {
                     console.error(`Error: `, err)
                 }
