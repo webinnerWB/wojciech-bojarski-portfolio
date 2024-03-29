@@ -4,13 +4,12 @@ import Link from "next/link"
 import style from '../../style/store.module.scss'
 
 type SucessPaiment = {
-    orderId: string,
     amount: number,
     products: any[],
     status: string,
 }
 
-const SucessPaiment: FC<SucessPaiment> = ({ orderId, amount, products, status }: SucessPaiment) => {
+const SucessPaiment: FC<SucessPaiment> = ({ amount, products, status }: SucessPaiment) => {
 
     
 
@@ -34,12 +33,18 @@ const SucessPaiment: FC<SucessPaiment> = ({ orderId, amount, products, status }:
     ))
     
     return (
-       <>
-            <h1>Payment status: {status}</h1>
-            <p>Payment was successful, you can return to the home page</p>
-            <h2>OrderID: {orderId}</h2>
-            <h2>Total amount: {amount/100} PLN</h2>
-            <h2>Products:</h2>
+      <div className={style.paymentInfoWrapper}>
+        <div className={style.info}>
+            <h1>Payment status: {status}</h1><br/>
+            <h2>Thank you for your purchase. <br/>Payment was successful, you can return to the home page</h2><br/>
+            <h4>Total amount: {amount/100} PLN</h4>
+            <br/>
+            <Link href='/store'>
+                <button className={`${style.backBtn} ${style.payment}`}>Back to shop</button>
+            </Link>
+        </div>
+        <div className={`table-responsive ${style.tableWrapper}`}>
+            <h2>Products</h2>
             <table className={`${style.tableCustom}`}>
                 <thead>
                     <tr className={`${style.borderBottom}`}>
@@ -53,7 +58,8 @@ const SucessPaiment: FC<SucessPaiment> = ({ orderId, amount, products, status }:
                     {productsList}
                 </tbody>
             </table>
-       </>
+        </div>
+      </div>
     )
 }
 

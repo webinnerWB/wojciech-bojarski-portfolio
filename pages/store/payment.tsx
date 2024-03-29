@@ -2,6 +2,7 @@ import React, { useState, useEffect, FC } from "react"
 import Methods from "@/components/services/DB/Methods"
 
 import SucessPaiment from '../../components/storeElements/SuccessPaiment'
+import ErrorPaiment from '../../components/storeElements/ErrorPaiment'
 
 const Payment: FC = () => {
     const [payment, setPayment] = useState<boolean>(false)
@@ -40,8 +41,10 @@ const Payment: FC = () => {
                     }
                 })
                 const data = await response.json()
-                if(data.status.statusCode === 'SUCCESS') {
+                if(data){
                     setDataReq(data)
+                }
+                if(data.status.statusCode === 'SUCCESS') {
                     $updateFieldInDocument('order', 'orderId', `${orderID}`, `Paid`, 'status')
                     console.log(`data123131321: `, data)
                 }else {
@@ -73,7 +76,9 @@ const Payment: FC = () => {
 
     return(
         <div className="col-lg-12">
-            {dataReq && dataReqProducts && <SucessPaiment orderId={dataReq.orders[0].orderId} amount={dataReq.orders[0].payMethod.amount} products={dataReqProducts.products} status={dataReq.orders[0].status} />}
+            {dataReqProducts && dataReq 
+            ? <SucessPaiment amount={dataReq.orders[0].payMethod.amount} products={dataReqProducts.products} status={dataReq.orders[0].status} /> 
+            : <ErrorPaiment status={dataReq && dataReq.status.statusCode} />}
         </div>
     )
 }
