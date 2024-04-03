@@ -1,5 +1,6 @@
-import React, { useState, useEffect, FC } from "react"
+import React, { useState, useEffect, useContext, FC } from "react"
 import Methods from "@/components/services/DB/Methods"
+import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 
 import SucessPaiment from '../../components/storeElements/SuccessPaiment'
 import ErrorPaiment from '../../components/storeElements/ErrorPaiment'
@@ -10,6 +11,15 @@ const Payment: FC = () => {
     const [dataReqProducts, setDataReqProducts] = useState<any>()
 
     const { $updateFieldInDocument, $getFieldValue } = Methods()
+
+    const { $clearAfterPayment }:ServiceProductsContextProps = useContext(ProductsContext)
+
+    const clearCartShop = () => {
+        Object.keys(localStorage).map(el => {
+            localStorage.removeItem(el)
+        })
+        $clearAfterPayment()
+    }
 
     useEffect(() => {
         const orderID = localStorage.getItem('orderIdPayu')
@@ -28,6 +38,7 @@ const Payment: FC = () => {
 
     useEffect(() => {
         console.log(`dataReqProducts: `, dataReqProducts)
+        clearCartShop()
     }, [dataReqProducts])
 
     const retrieveAnOrder = async () => {

@@ -585,14 +585,14 @@ border-bottom: 1px solid #3a3a3a;
     background: transparent;
     color: #ffffff;
     border-radius: 25px;
-    width: 100%;
+    width: 180px;
     text-transform: uppercase;
     font-weight: 700;
     font-size: 20px;
     padding: 15px;
-    &.payment {
-        width: 180px;
-    }
+    // &.payment {
+    //     width: 180px;
+    // }
 }
 .backBtn:hover {
     transition: background-color 0.5s ease-in, font-weight 0.2s ease-in, color 0.5s ease-in, border 0.1s ease-in;
@@ -600,5 +600,6 @@ border-bottom: 1px solid #3a3a3a;
     color: #000000;
     font-size: 20px;
     font-weight: 900;
+    width: 185px;
     border: 2px solid #000000;
 }

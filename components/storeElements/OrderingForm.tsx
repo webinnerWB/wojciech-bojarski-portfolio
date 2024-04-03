@@ -32,7 +32,7 @@ const routing = useRouter()
         postalCode: '',
         country: ''
     })
-    const [formSubmit, setFormSubmit] = useState<boolean>(false)
+    
     const [formCompletedError, setFormCompletedError] = useState<boolean>(false)
 
     const { user,  $addNewDocument } = Methods()
@@ -60,11 +60,6 @@ const routing = useRouter()
 
     const msgRef = useRef<HTMLSpanElement>(null) 
 
-    // const subbmitRegistration = (e: FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault()
-    //     setFormSubmit(true)
-    //     setFormCompletedError(false)
-    // }
 
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
@@ -87,9 +82,12 @@ const routing = useRouter()
 
     
     const handleSubmitPayment = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if(isFormValid()) {
+
         const totalAmount = totalCostContext + (shippingCost*100)
         const products = orderForPayu
-        e.preventDefault();
             if(totalCostContext && orderForPayu){
                 try {
                     const response = await fetch('http://localhost:3000/api/payuOrder', {
@@ -141,7 +139,8 @@ const routing = useRouter()
                     console.error(`Error: `, err)
                 }
             }
-      }
+        }
+    }
     
     return (
         <>
@@ -156,7 +155,7 @@ const routing = useRouter()
                                 <input 
                                     type="text" 
                                     className={`form-control ${style.input} 
-                                    ${formSubmit && formCompletedError && recipientData.name === '' ? style.inputError : null}`} 
+                                    ${formCompletedError && recipientData.name === '' ? style.inputError : null}`} 
                                     id="name"
                                     name="name" 
                                     value={recipientData.name}
@@ -169,7 +168,7 @@ const routing = useRouter()
                                     type="text" 
                                     id="surname"
                                     className={`form-control ${style.input} ${style.input} 
-                                    ${formSubmit && formCompletedError && recipientData.surname === '' ? style.inputError : null}`} 
+                                    ${formCompletedError && recipientData.surname === '' ? style.inputError : null}`} 
                                     name="surname" 
                                     value={recipientData.surname}
                                     onChange={handleChange}
@@ -183,7 +182,7 @@ const routing = useRouter()
                                     id="email"
                                     type="email" 
                                     className={`form-control ${style.input} ${style.input} 
-                                    ${formSubmit && formCompletedError && recipientData.email === '' ? style.inputError : null}`} 
+                                    ${formCompletedError && recipientData.email === '' ? style.inputError : null}`} 
                                     name="email" 
                                     value={recipientData.email}
                                     onChange={handleChange}
@@ -197,7 +196,7 @@ const routing = useRouter()
                                     id="street"
                                     type="text" 
                                     className={`form-control ${style.input} ${style.input} 
-                                    ${formSubmit && formCompletedError && recipientData.street === '' ? style.inputError : null}`} 
+                                    ${formCompletedError && recipientData.street === '' ? style.inputError : null}`} 
                                     name="street" 
                                     value={recipientData.street}
                                     onChange={handleChange}
@@ -211,7 +210,7 @@ const routing = useRouter()
                                     id="city"
                                     type="text" 
                                     className={`form-control ${style.input} ${style.input} 
-                                    ${formSubmit && formCompletedError && recipientData.city === '' ? style.inputError : null}`} 
+                                    ${formCompletedError && recipientData.city === '' ? style.inputError : null}`} 
                                     name="city" 
                                     value={recipientData.city}
                                     onChange={handleChange}
@@ -225,7 +224,7 @@ const routing = useRouter()
                                     id="houseNumber"
                                     type="text" 
                                     className={`form-control ${style.input} ${style.input} 
-                                    ${formSubmit && formCompletedError && recipientData.houseNumber === '' ? style.inputError : null}`} 
+                                    ${formCompletedError && recipientData.houseNumber === '' ? style.inputError : null}`} 
                                     name="houseNumber" 
                                     value={recipientData.houseNumber}
                                     onChange={handleChange}
@@ -240,7 +239,7 @@ const routing = useRouter()
                                     placeholder="00-000"
                                     type="text" 
                                     className={`form-control ${style.input} ${style.input} 
-                                    ${formSubmit && formCompletedError && recipientData.postalCode === '' ? style.inputError : null}`} 
+                                    ${formCompletedError && recipientData.postalCode === '' ? style.inputError : null}`} 
                                     name="postalCode" 
                                     value={recipientData.postalCode}
                                     onChange={handleChange}
@@ -254,7 +253,7 @@ const routing = useRouter()
                                     type="text" 
                                     id="country"
                                     className={`form-control ${style.input} ${style.input} 
-                                    ${formSubmit && formCompletedError && recipientData.country === '' ? style.inputError : null}`} 
+                                    ${ formCompletedError && recipientData.country === '' ? style.inputError : null}`} 
                                     name="country" 
                                     value={recipientData.country}
                                     onChange={handleChange}

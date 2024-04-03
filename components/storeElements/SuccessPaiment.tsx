@@ -1,5 +1,6 @@
-import React, {useEffect, useState, FC} from "react"
+import React, {useEffect, useState, useContext, FC} from "react"
 import Link from "next/link"
+import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 
 import style from '../../style/store.module.scss'
 
@@ -11,7 +12,7 @@ type SucessPaiment = {
 
 const SucessPaiment: FC<SucessPaiment> = ({ amount, products, status }: SucessPaiment) => {
 
-    
+    const { shippingCost }:ServiceProductsContextProps = useContext(ProductsContext)    
 
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
@@ -37,7 +38,6 @@ const SucessPaiment: FC<SucessPaiment> = ({ amount, products, status }: SucessPa
         <div className={style.info}>
             <h1>Payment status: {status}</h1><br/>
             <h2>Thank you for your purchase. <br/>Payment was successful, you can return to the home page</h2><br/>
-            <h4>Total amount: {amount/100} PLN</h4>
             <br/>
             <Link href='/store'>
                 <button className={`${style.backBtn} ${style.payment}`}>Back to shop</button>
@@ -56,6 +56,18 @@ const SucessPaiment: FC<SucessPaiment> = ({ amount, products, status }: SucessPa
                 </thead>
                 <tbody className={`${style.productList}`}>
                     {productsList}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td  className={`${style.td}`}>Shipping: {shippingCost} PLN</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td  className={`${style.td}`}>Total amount: {amount/100} PLN</td>
+                    </tr>
                 </tbody>
             </table>
         </div>

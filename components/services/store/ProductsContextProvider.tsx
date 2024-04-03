@@ -22,6 +22,7 @@ export interface ServiceProductsContextProps  {
     $SetTotalCost: (obj: number) => void,
     $removeProducts: (obj: object, index: number) => void,
     orderForPayu: payuOrder[],
+    $clearAfterPayment: () => void
 }
 
 interface payuOrder {
@@ -39,8 +40,8 @@ type productsContext = {
     children: ReactNode
 }
 export const ProductsContext = createContext<ServiceProductsContextProps>({} as ServiceProductsContextProps)
-
 const ProductsContextProvider: FC<productsContext> = ({ children }) => {
+
     const [productsArray, setProductsArray] = useState<object[]>([])
     const [getCounter, setGetCounter] = useState<object[]>([])
     const [totalCostContext, setTotatCostContext] = useState<number>(0)
@@ -53,6 +54,7 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
         setTotatCostContext(converterTotalCost)
     }
     const $SetOrder = (obj: any) => {
+        setOrderingProducts([])
         obj.forEach((el: any) => {
             setOrderingProducts(prev => {
                 return [...prev, {
@@ -106,6 +108,14 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
         })
     }
 
+    const $clearAfterPayment = () => {
+        setProductsArray([])
+        setGetCounter([])
+        setOrderingProducts([])
+        setOrderForPayu([])
+        setTotatCostContext(0)
+    }
+
     const $removeProducts = (obj: object, id: number) => {
         Object.keys(localStorage).forEach(key => {
             const isNumberKey = Number(key)
@@ -153,7 +163,8 @@ const ProductsContextProvider: FC<productsContext> = ({ children }) => {
         $setOrderForPayu,
         $SetTotalCost,
         $removeProducts,
-        orderForPayu
+        orderForPayu,
+        $clearAfterPayment
     }
 
     return (
