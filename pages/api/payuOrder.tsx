@@ -57,7 +57,7 @@ export default async function handlerOrder(req: NextApiRequest, res: NextApiResp
                     }else{
                         res.status(response.status)
                         throw new Error('Failed to create order');
-                    }
+                      }
 
                    }
             } catch(err) {

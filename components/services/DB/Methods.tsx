@@ -10,16 +10,16 @@ import soreStyle from '../../../style/store.module.scss'
 const Methods = () => {
 
   interface UserData {
-    uuid: string | undefined,
-    name: string | undefined,
-    surname: string | undefined,
-    email: string | undefined,
-    password: string | undefined,
-    street: string | undefined,
-    houseNumber: string | undefined,
-    city: string | undefined,
-    postalCode: string | undefined,
-    country: string | undefined,
+    uuid: string,
+    name: string,
+    surname: string,
+    email: string,
+    password: string,
+    street: string,
+    houseNumber: string,
+    city: string,
+    postalCode: string,
+    country: string,
 }
 
     const db = getFirestore(firestore)
@@ -110,12 +110,29 @@ const Methods = () => {
           throw err
         }
       }
+      const $getDocsByFieldValue = async (collectionR: string, value: string, searchingField: string) => {
+        let ob: DocumentData[] = []
+        try {
+          const collectionRef: CollectionReference = collection(db, collectionR)
+          const queryRef = query(collectionRef, where(searchingField, '==', value))
+          const docRef = await getDocs(queryRef)
+          if(!docRef.empty) {
+            docRef.forEach(el => {
+              console.log(`el.data(): `, el.data())
+              ob.push(el.data())
+            })
+          }
+          return ob
+        } catch(err) {
+          console.error(`Error: `, err)
+        }
+      }
 
-    const $getFieldValue = async (collectionR: string, id: string, searchingField: string) => {
+    const $getDocByFieldValue = async (collectionR: string, value: string, searchingField: string) => {
       let ob = {}
       try {
         const collectionRef: CollectionReference = collection(db, collectionR)
-        const queryRef = query(collectionRef, where(searchingField, '==', id))
+        const queryRef = query(collectionRef, where(searchingField, '==', value))
         const docRef = await getDocs(queryRef)
         if(!docRef.empty) {
           docRef.forEach(el => {
@@ -283,7 +300,8 @@ const Methods = () => {
         $loginUser,
         $handleFilterCategory,
         $updateFieldInDocument,
-        $getFieldValue,
+        $getDocsByFieldValue,
+        $getDocByFieldValue,
         searchingValue,
         searchResults,
         valuesArray,

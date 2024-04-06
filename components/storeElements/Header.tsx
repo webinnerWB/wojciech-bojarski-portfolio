@@ -17,21 +17,13 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
     const [isSearchVisible, setIsSearchVisible] = useState(false) 
     const searchIntup = useRef<HTMLInputElement|null>(null)
 
-    const { $isUserLogged } = Methods()
-
-    const [userLogged, setUserLogged] = useState<boolean>(false)
+    const { user } = Methods()
 
     const toggleSearch = () => {
         setIsSearchVisible(prevState => !prevState)
     }
 
     useEffect(() => {
-        $isUserLogged().then(isUserLoggedIn => {
-            setUserLogged(isUserLoggedIn)
-        }).catch( err => {
-            setUserLogged(false)
-            console.error(`ERROR: `, err)
-        })
         const input = searchIntup.current
         if(input) {
             input.addEventListener('keypress', (event) => {
@@ -72,6 +64,13 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
                                     <span>BLOG</span>
                                 </Link>
                             </li>
+                            {user ? 
+                                <li className="nav-item">
+                                    <Link className={`nav-link ${ '/store/orders' === currentPath ? style.active : style.navLink }`} href="/store/orders">
+                                        <span>Orders</span>
+                                    </Link>
+                                </li>
+                            : null}
                         </ul>
                         <div className={`${style.iconWrapper}`}>
                             <input 
@@ -83,16 +82,16 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
                             <i className={`fa-solid fa-magnifying-glass ${style.ico} ${isSearchVisible ? style.activeSearch : ''}`} onClick={toggleSearch}></i>
                             <Link  href="/store/order">
                                 <div className={`${style.shoppingWraper}`}>
-                                    <i className={`fa-solid fa-cart-shopping ${style.ico} ${userLogged ? style.m0 : ''}`}></i>
+                                    <i className={`fa-solid fa-cart-shopping ${style.ico} ${user ? style.m0 : ''}`}></i>
                                     <span className={`${style.counter}`}>{getCounter.length}</span> 
                                 </div>
                             </Link>
-                            {!userLogged ? 
+                            {!user ? 
                                 <Link className={`${style.ico}`} href="/store/login">
                                     <i className={`fa-solid fa-user`}></i>
                                 </Link>
                             : null}
-                            {!userLogged ? 
+                            {!user ? 
                                 <Link className={`${style.ico}`} href="/store/registration">
                                     <i className={`fa-solid fa-user-pen`}></i>
                                 </Link>

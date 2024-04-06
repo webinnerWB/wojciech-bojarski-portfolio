@@ -10,7 +10,7 @@ const Payment: FC = () => {
     const [dataReq, setDataReq] = useState<any>()
     const [dataReqProducts, setDataReqProducts] = useState<any>()
 
-    const { $updateFieldInDocument, $getFieldValue } = Methods()
+    const { $updateFieldInDocument, $getDocByFieldValue } = Methods()
 
     const { $clearAfterPayment }:ServiceProductsContextProps = useContext(ProductsContext)
 
@@ -29,7 +29,7 @@ const Payment: FC = () => {
         getNotifyPayu(baseUrl)
         retrieveAnOrder()
         if(orderID){
-            $getFieldValue('order', orderID, 'orderId')
+            $getDocByFieldValue('order', orderID, 'orderId')
                 .then((ob) => {
                         setDataReqProducts(ob)
                 })

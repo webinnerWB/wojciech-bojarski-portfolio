@@ -22,7 +22,7 @@ const routing = useRouter()
 
     const { orderForPayu, totalCostContext, orderingProducts, shippingCost }:ServiceProductsContextProps = useContext(ProductsContext)
     const [recipientData, setRecipientData] = useState<RecipientData>({
-        uuid: '',
+        uuid: '-',
         name: '',
         surname: '',
         email: '',
@@ -83,11 +83,13 @@ const routing = useRouter()
     
     const handleSubmitPayment = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        console.log(`11idzie`)
+        console.log(`${isFormValid()}`)
 
         if(isFormValid()) {
 
-        const totalAmount = totalCostContext + (shippingCost*100)
-        const products = orderForPayu
+            const totalAmount = totalCostContext + (shippingCost*100)
+            const products = orderForPayu
             if(totalCostContext && orderForPayu){
                 try {
                     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/payuOrder`, {
