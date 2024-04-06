@@ -90,7 +90,7 @@ const routing = useRouter()
         const products = orderForPayu
             if(totalCostContext && orderForPayu){
                 try {
-                    const response = await fetch('http://localhost:3000/api/payuOrder', {
+                    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/payuOrder`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
