@@ -1,9 +1,11 @@
 import React, { useEffect, useState, useContext, FC, ReactNode } from "react"
 import { Header } from '../../components/storeElements/Header'
 import SearchResults from '../../components/storeElements/SearchResults'
+import Pagination from '../../components/storeElements/Pagination'
 import Methods from '../../components/services/DB/Methods'
 
 import style from '../../style/store.module.scss'
+import OrderPage from "./order"
 
 type Product = {
     length: number | undefined
@@ -28,8 +30,16 @@ const Orders: FC = () => {
     const { $handleSearchingValue, $handleSearchResults, $getDocsByFieldValue, searchResults, searchingValue, valuesArray, user } = Methods()
 
     const [orders, setOrders] = useState<Order[]>([])
+    const [itemsPerPage, setItemsPerPage] = useState<number>(5)
+    const [currentPage, setCurrentPage] = useState<number>(1)
 
-    const listOrders = orders.map((order: Order, index: number) => (
+    const lastOrderIndex = currentPage * itemsPerPage
+    const firstOrderIndex = lastOrderIndex - itemsPerPage
+    const currentOrders = orders.slice(firstOrderIndex, lastOrderIndex) 
+
+    const paginate = (num: number) => setCurrentPage(num)
+
+    const listOrders = currentOrders.map((order: Order, index: number) => (
         <React.Fragment key={`${index}`}>
             {order.products.map((product: Product, productIndex: number) => (
                 <tr key={`${index}-${productIndex}`} className={`${style.borderBottom}`}>
@@ -94,7 +104,12 @@ const Orders: FC = () => {
                             </table>
                         </div>
                     </div>
-                    
+                    <Pagination 
+                        itemsPerPage={itemsPerPage}
+                        tootalOrders={orders.length}
+                        paginate={paginate}
+                        currentPage={currentPage}
+                    />
                 </div>
             </div>
             <SearchResults valueSearch={searchingValue} results={searchResults} valuesArray={valuesArray}/>
