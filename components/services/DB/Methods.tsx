@@ -118,7 +118,7 @@ const Methods = () => {
           const docRef = await getDocs(queryRef)
           if(!docRef.empty) {
             docRef.forEach(el => {
-              console.log(`el.data(): `, el.data())
+              // console.log(`el.data(): `, el.data())
               ob.push(el.data())
             })
           }
