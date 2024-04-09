@@ -109,6 +109,9 @@
             font-size: 17px;
             margin-right: 10px;
         }
+        &.logOut {
+            margin-left: 35px;
+        }
     }
     .ico:last-child {
         text-decoration: none;
@@ -446,6 +449,9 @@
     border-radius: 25px;
     margin-top: 70px;
     margin-bottom: 70px;
+    &.orderPage {
+        margin-right: 2%;
+    }
     .title {
         font-weight: 700;
         margin-bottom: 40px;
@@ -589,9 +595,6 @@ border-bottom: 1px solid #3a3a3a;
     font-weight: 700;
     font-size: 20px;
     padding: 15px;
-    // &.payment {
-    //     width: 180px;
-    // }
 }
 .backBtn:hover {
     transition: background-color 0.5s ease-in, font-weight 0.2s ease-in, color 0.5s ease-in, border 0.1s ease-in;
@@ -601,4 +604,44 @@ border-bottom: 1px solid #3a3a3a;
     font-weight: 900;
     width: 185px;
     border: 2px solid #000000;
+}
+
+.paginationWrapper {
+    display: flex;
+    justify-content: center;
+    margin: 50px 0;
+    .pagination {
+        border: 2px solid #ffffff;
+        color: #ffffff;
+        text-decoration: none;
+        background: transparent;
+        border-radius: 12px;
+        align-content: center;
+        text-align: center;
+        width: 40px;
+        height: 40px;
+        margin-right: 10px;
+        text-transform: uppercase;
+        font-weight: 400;
+        font-size: 12px;
+        &:hover {
+            transition: background-color 0.5s ease-in, font-weight 0.2s ease-in, color 0.5s ease-in, border 0.1s ease-in;
+            background-color: #ffffff;
+            color: #000000;
+            font-size: 20px;
+            font-weight: 900;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #000000;
+        }
+    }
+    .active {
+        background-color: #ffffff;
+        color: #000000;
+        font-size: 20px;
+        font-weight: 900;
+        width: 40px;
+        height: 40px;
+        border: 2px solid #000000;
+    }
 }

@@ -1,5 +1,6 @@
 import React, { FC } from "react"
-
+import Link from "next/link"
+import style from '../../style/store.module.scss'
 type Pagination = {
     itemsPerPage: number
     tootalOrders: number
@@ -13,13 +14,13 @@ const Pagination: FC<Pagination> = ({ itemsPerPage, tootalOrders, paginate, curr
         pagesCount.push(i)
     }
     return (
-        <>
-            {pagesCount.map(num => (
-                <a onClick={() => paginate(num)} href="#">
+        <div className={style.paginationWrapper}>
+            {pagesCount.map((num, i) => (
+                <Link key={i} className={`${style.pagination} ${num === currentPage ? style.active : null}`} onClick={() => paginate(num)} href="#">
                     {num}
-                </a>
+                </Link>
             ))}
-        </>
+        </div>
     )
 }
 

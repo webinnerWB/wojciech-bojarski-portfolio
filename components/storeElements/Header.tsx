@@ -17,7 +17,7 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
     const [isSearchVisible, setIsSearchVisible] = useState(false) 
     const searchIntup = useRef<HTMLInputElement|null>(null)
 
-    const { user } = Methods()
+    const { user, $logOut } = Methods()
 
     const toggleSearch = () => {
         setIsSearchVisible(prevState => !prevState)
@@ -94,6 +94,11 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
                             {!user ? 
                                 <Link className={`${style.ico}`} href="/store/registration">
                                     <i className={`fa-solid fa-user-pen`}></i>
+                                </Link>
+                            : null}
+                            {user ? 
+                                <Link className={`${style.ico} ${style.logOut}`} href="#" onClick={$logOut}>
+                                    <i className={`fa-solid fa-arrow-right-from-bracket`}></i>
                                 </Link>
                             : null}
                         </div>

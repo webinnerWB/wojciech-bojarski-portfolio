@@ -1,11 +1,10 @@
-import React, { useEffect, useState, useContext, FC, ReactNode } from "react"
+import React, { useEffect, useState, FC, ReactNode } from "react"
 import { Header } from '../../components/storeElements/Header'
 import SearchResults from '../../components/storeElements/SearchResults'
 import Pagination from '../../components/storeElements/Pagination'
 import Methods from '../../components/services/DB/Methods'
 
 import style from '../../style/store.module.scss'
-import OrderPage from "./order"
 
 type Product = {
     length: number | undefined
@@ -75,18 +74,13 @@ const Orders: FC = () => {
         }
     }, [user])
 
-    useEffect(() => {
-        console.log(`orders: `, orders)
-
-    }, [orders])
-
     return (
         <div className="col-lg-12">
             <Header handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults} />
             <div className="row">
                 <div className="col-lg-12">
-                    <div className={`${style.orderWrapper}`}>
-                        <div className={`table-responsive ${style.tableWrapper}`}>
+                    <div>
+                        <div className={`table-responsive ${style.tableWrapper} ${style.orderPage}`}>
                             <h1 className={`${style.title}`}>Your orders:</h1>
                             <table className={`${style.tableCustom}`}>
                                 <thead>

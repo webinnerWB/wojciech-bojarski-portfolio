@@ -1,5 +1,5 @@
 import { addDoc, collection, getDocs, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where, QueryDocumentSnapshot, getDoc, doc, updateDoc } from 'firebase/firestore'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged  } from 'firebase/auth'
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut,   } from 'firebase/auth'
 import { getAuth} from 'firebase/auth'
 import {firestore} from './FirebaseConfig'
 import React, { useState, ChangeEvent, useEffect } from "react"
@@ -288,6 +288,15 @@ const Methods = () => {
           }
     }
 
+    const $logOut = async () => {
+      try {
+        const auth = getAuth(firestore)
+        await signOut(auth)
+        router.push('/store')
+      } catch(err) {
+        console.error(`Error: `, err)
+      }
+    }
 
     return {
         $getAllDocuments,
@@ -302,6 +311,7 @@ const Methods = () => {
         $updateFieldInDocument,
         $getDocsByFieldValue,
         $getDocByFieldValue,
+        $logOut,
         searchingValue,
         searchResults,
         valuesArray,
