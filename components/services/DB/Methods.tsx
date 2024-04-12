@@ -20,6 +20,7 @@ const Methods = () => {
     city: string,
     postalCode: string,
     country: string,
+    customer: boolean
 }
 
     const db = getFirestore(firestore)
@@ -118,7 +119,6 @@ const Methods = () => {
           const docRef = await getDocs(queryRef)
           if(!docRef.empty) {
             docRef.forEach(el => {
-              // console.log(`el.data(): `, el.data())
               ob.push(el.data())
             })
           }
@@ -136,7 +136,6 @@ const Methods = () => {
         const docRef = await getDocs(queryRef)
         if(!docRef.empty) {
           docRef.forEach(el => {
-            console.log(`el.data(): `, el.data())
             ob = el.data()
           })
         }

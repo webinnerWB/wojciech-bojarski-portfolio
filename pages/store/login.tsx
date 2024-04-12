@@ -30,8 +30,6 @@ const Login: FC = () => {
         e.preventDefault()
         setFormSubmit(true)
         if(msgRef.current){
-            console.log(userCredential.email)
-            console.log(userCredential.password)
             $loginUser(userCredential, msgRef.current)
         }
     }
@@ -52,10 +50,6 @@ const Login: FC = () => {
             routing.push('/store')
         }
     }, [userLogged])
-
-    useEffect(() => {
-        console.log(searchResults)
-    }, [searchResults])
 
     return (
         <>

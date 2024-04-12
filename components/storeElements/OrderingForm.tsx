@@ -83,8 +83,6 @@ const routing = useRouter()
     
     const handleSubmitPayment = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(`11idzie`)
-        console.log(`${isFormValid()}`)
 
         if(isFormValid()) {
 

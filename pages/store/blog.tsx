@@ -6,10 +6,6 @@ const Blog: FC = () => {
     const { $handleSearchingValue, $handleSearchResults, searchResults, searchingValue} = Methods()
 
     useEffect(() => {
-        console.log(searchResults)
-    }, [searchResults])
-
-    useEffect(() => {
         document.body.style.backgroundColor = '#161616'
         document.body.style.color = '#ffffff'
     }, [])

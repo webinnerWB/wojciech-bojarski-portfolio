@@ -7,7 +7,6 @@ const $generationAccessToken = async() => {
         })
     
         const data = await response.json()
-        console.log('TOKEN: ', data.access_token)
         return data.access_token
       } catch (err) {
         console.error('Error: ', err)
@@ -52,7 +51,6 @@ export default async function handlerOrder(req: NextApiRequest, res: NextApiResp
                     })
                     if (response.status === 302) {
                         const data = await response.json()
-                        console.log(`DATA: `, data)
                         res.json({ data })
                     }else{
                         res.status(response.status)

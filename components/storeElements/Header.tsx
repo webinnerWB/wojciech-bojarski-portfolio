@@ -51,20 +51,22 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
                         <ul className="navbar-nav">
                             <li className="nav-item">
                                 <Link className={`nav-link ${'/store' === currentPath ? style.active : style.navLink}`} href="/store">
-                                    <span>HOME</span>
+                                    <span>STORE</span>
                                 </Link>
                             </li>
-                            <li className="nav-item">
-                                <Link className={`nav-link ${ '/store/categories' === currentPath ? style.active : style.navLink }`} href="/store/categories">
-                                    <span>CATEGORIES</span>
-                                </Link>
-                            </li>
+                            {user && user.customer === false ?
+                                <li className="nav-item">
+                                    <Link className={`nav-link ${ '/store/categories' === currentPath ? style.active : style.navLink }`} href="/store/categories">
+                                        <span>CATEGORIES</span>
+                                    </Link>
+                                </li>
+                            : null }
                             <li className="nav-item">
                                 <Link className={`nav-link ${ '/store/blog' === currentPath ? style.active : style.navLink }`} href="/store/blog">
                                     <span>BLOG</span>
                                 </Link>
                             </li>
-                            {user ? 
+                            {user && user.customer ? 
                                 <li className="nav-item">
                                     <Link className={`nav-link ${ '/store/orders' === currentPath ? style.active : style.navLink }`} href="/store/orders">
                                         <span>Orders</span>

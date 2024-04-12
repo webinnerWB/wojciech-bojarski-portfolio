@@ -62,8 +62,6 @@ const Registration: FC = () => {
         e.preventDefault()
         setFormSubmit(true)
         setFormCompletedError(false)
-        console.log(`ide`)
-
         if(isFormValid() && msgRef.current) {
             $registrationUser(registrationFormData, msgRef.current)
         }

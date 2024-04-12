@@ -37,7 +37,6 @@ const Payment: FC = () => {
     }, [])
 
     useEffect(() => {
-        console.log(`dataReqProducts: `, dataReqProducts)
         clearCartShop()
     }, [dataReqProducts])
 
@@ -57,7 +56,6 @@ const Payment: FC = () => {
                 }
                 if(data.status.statusCode === 'SUCCESS') {
                     $updateFieldInDocument('order', 'orderId', `${orderID}`, `Paid`, 'status')
-                    console.log(`data123131321: `, data)
                 }else {
                     console.error(`Error: `, data)
                 }
