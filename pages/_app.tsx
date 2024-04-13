@@ -12,6 +12,8 @@ export default function App({ Component, pageProps }: AppProps) {
         <>
             <Head>
                 <title>Portfolio Wojciech Bojarski</title>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
             </Head>
             <div className='container-fluid'>
                 <div className='row'>
@@ -26,6 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
                     </WeatherContextProvider>
                 </div>
             </div>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
         </>
     )
 }

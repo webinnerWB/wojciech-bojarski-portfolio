@@ -208,7 +208,6 @@ const WeatherMainPage: FC = () => {
                         placeholder="Search for locations"
                         onChange={(e) => handleCityName(e.target.value)}
                         />
-                    {/* <button type="submit" className="btn btn-primary">Send</button> */}
                 </div>
             </form>
             {error404 ? (

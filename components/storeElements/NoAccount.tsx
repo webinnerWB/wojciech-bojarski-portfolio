@@ -21,12 +21,12 @@ const NoAccount: FC<NoAccountComponent> = ({ createAccountHandler }: NoAccountCo
             <div className="text-center">
                 <h2 className={`${style.title}`}>Do you not have an account?</h2>
                 <Link href='/store/registration'>
-                    <button className={`${style.backBtn}`}>Sign in</button>
+                    <button className={`${style.defaultBtn}`}>Sign in</button>
                 </Link> 
             </div>
             <div className="text-center">
                 <h2 className={`${style.title}`}>Continue without creating an account</h2>
-                <button className={`${style.backBtn}`} onClick={createAccountHandler}>Continue</button>
+                <button className={`${style.defaultBtn}`} onClick={createAccountHandler}>Continue</button>
             </div>
        </div>
     )

@@ -332,11 +332,7 @@
 
 
 .formWrapper {
-    // width: 60%;
-    // display: block;
-    // margin: auto;
-    // padding: 0 40px;
-    &.registration, &.login {
+    &.registration, &.login, &.category {
         background: #282828;
         padding: 40px 30px;
         width: 25%;
@@ -367,19 +363,6 @@
             padding: 0;
             border-radius: 0;
             font-size: 18px;
-            
-            // color: #000000;
-            // border: 0;
-            // &.login{
-            //     width: 50%;
-            //     margin: 20px auto;
-            //     @media screen and (max-width: 940px) {
-            //         width: 70%;
-            //     }
-            //     @media screen and (max-width: 600px) {
-            //         width: 100%;
-            //     }
-            // }
         }
         .input::placeholder{
             color: #ffffff;
@@ -456,24 +439,24 @@
         font-weight: 700;
         margin-bottom: 40px;
     }
-    .backBtn {
-        border: 2px solid #ffffff;
-        background: transparent;
-        color: #ffffff;
-        border-radius: 25px;
-        text-transform: uppercase;
-        font-weight: 700;
-        font-size: 20px;
-        padding: 15px;
-    }
-    .backBtn:hover {
-        transition: background-color 0.5s ease-in, font-weight 0.2s ease-in, color 0.5s ease-in, border 0.1s ease-in;
-        background-color: #ffffff;
-        color: #000000;
-        font-size: 20px;
-        font-weight: 900;
-        border: 2px solid #000000;
-    }
+    // .backBtn {
+    //     border: 2px solid #ffffff;
+    //     background: transparent;
+    //     color: #ffffff;
+    //     border-radius: 25px;
+    //     text-transform: uppercase;
+    //     font-weight: 700;
+    //     font-size: 20px;
+    //     padding: 15px;
+    // }
+    // .backBtn:hover {
+    //     transition: background-color 0.5s ease-in, font-weight 0.2s ease-in, color 0.5s ease-in, border 0.1s ease-in;
+    //     background-color: #ffffff;
+    //     color: #000000;
+    //     font-size: 20px;
+    //     font-weight: 900;
+    //     border: 2px solid #000000;
+    // }
     .tableCustom {
         width: 100%;
     }
@@ -585,7 +568,7 @@ border-bottom: 1px solid #3a3a3a;
     }
 }
 
-.backBtn {
+.defaultBtn {
     border: 2px solid #ffffff;
     background: transparent;
     color: #ffffff;
@@ -595,8 +578,23 @@ border-bottom: 1px solid #3a3a3a;
     font-weight: 700;
     font-size: 20px;
     padding: 15px;
+    &.category {
+        width: 280px;
+        margin: auto;
+        display: block;
+    }
+    &.btnEdit {
+        width: 100px;
+        padding: 2px;
+        margin: 0 15px;
+    }
+    &.btnDelete {
+        width: 100px;
+        padding: 2px;
+        background-color: #792a3f;
+    }
 }
-.backBtn:hover {
+.defaultBtn:hover {
     transition: background-color 0.5s ease-in, font-weight 0.2s ease-in, color 0.5s ease-in, border 0.1s ease-in;
     background-color: #ffffff;
     color: #000000;
@@ -604,6 +602,20 @@ border-bottom: 1px solid #3a3a3a;
     font-weight: 900;
     width: 185px;
     border: 2px solid #000000;
+    &.category {
+        width: 280px;
+    }
+    &.btnEdit {
+        width: 100px;
+        padding: 2px;
+        margin-right:15px;
+    }
+    &.btnDelete {
+        background-color: #d7194b;
+        color: #ffffff;
+        width: 100px;
+        padding: 2px;
+    }
 }
 
 .paginationWrapper {
@@ -644,4 +656,56 @@ border-bottom: 1px solid #3a3a3a;
         height: 40px;
         border: 2px solid #000000;
     }
+}
+
+.categoriesListWrapper {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    .wrapperCell {
+        width: 300px;
+        display: flex;
+        align-items: center;
+        @media screen and (max-width: 991px){
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+    }
+    .wrapperBtn {
+        display: flex;
+        align-items: center;
+        @media screen and (max-width: 991px){
+            justify-content: center;
+        }
+    }
+    .title {
+        font-size: 50px;
+    }
+    .categoryWrapper {
+        cursor: pointer;
+        font-size: 33px;
+        .name {
+            margin-bottom: 0;
+            margin-right: 20px;
+        }
+    }
+}
+.modalCloseBtn {
+    margin: 0;
+    width: 20px;
+    height: 20px;
+    float: inline-end;
+    color: #ffffff;
+    font-size: 33px;
+    background-color: transparent;
+    border: none;
+}
+.modalBody {
+    background-color: #282828;
+    border-radius: 20px;
+}
+
+.modal-content {
+    background-color: transparent !important;
 }

@@ -40,7 +40,7 @@ const SucessPaiment: FC<SucessPaiment> = ({ amount, products, status }: SucessPa
             <h2>Thank you for your purchase. <br/>Payment was successful, you can return to the home page</h2><br/>
             <br/>
             <Link href='/store'>
-                <button className={`${style.backBtn} ${style.payment}`}>Back to shop</button>
+                <button className={`${style.defaultBtn} ${style.payment}`}>Back to shop</button>
             </Link>
         </div>
         <div className={`table-responsive ${style.tableWrapper}`}>

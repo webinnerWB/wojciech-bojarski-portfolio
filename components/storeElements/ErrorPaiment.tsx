@@ -20,7 +20,7 @@ const ErrorPaiment: FC<ErrorPaiment> = ({ status }: ErrorPaiment) => {
             <h1>Payment status: {status}</h1><br/>
             <h2>Paymant failed</h2><br/>
             <Link href='/store'>
-                <button className={`${style.backBtn} ${style.payment}`}>Back to shop</button>
+                <button className={`${style.defaultBtn} ${style.payment}`}>Back to shop</button>
             </Link>
         </div>
       </div>

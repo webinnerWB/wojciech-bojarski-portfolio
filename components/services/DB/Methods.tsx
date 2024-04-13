@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where, QueryDocumentSnapshot, getDoc, doc, updateDoc } from 'firebase/firestore'
+import { addDoc, collection, getDocs, getFirestore, DocumentData, QuerySnapshot, CollectionReference, query, where, QueryDocumentSnapshot, getDoc, doc, updateDoc, deleteDoc } from 'firebase/firestore'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut,   } from 'firebase/auth'
 import { getAuth} from 'firebase/auth'
 import {firestore} from './FirebaseConfig'
@@ -127,6 +127,24 @@ const Methods = () => {
           console.error(`Error: `, err)
         }
       }
+
+    const $removeDocument = async (collectionR: string, value: string, searchingField: string) => {
+      try{
+        const collectionReff: CollectionReference = collection(db, collectionR)
+        const queryREf = query(collectionReff, where(searchingField, '==', value))
+        const docRef = await getDocs(queryREf)
+        if(!docRef.empty) {
+          docRef.forEach(el => {
+              deleteDoc(el.ref)
+              console.log('Document successfully deleted!');
+          })
+        } else {
+          console.log('No documents found matching the query.');
+        }
+      }catch(err) {
+        console.error(`Error: `, err)
+      }
+    }
 
     const $getDocByFieldValue = async (collectionR: string, value: string, searchingField: string) => {
       let ob = {}
@@ -311,6 +329,7 @@ const Methods = () => {
         $getDocsByFieldValue,
         $getDocByFieldValue,
         $logOut,
+        $removeDocument,
         searchingValue,
         searchResults,
         valuesArray,

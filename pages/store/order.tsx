@@ -56,7 +56,7 @@ const OrderPage: FC = () => {
                 <div className={`table-responsive ${style.tableWrapper} text-center`}>
                     <h1 className={`${style.title}`}>Shopping cart is empty</h1>
                     <Link href='/store'>
-                        <button className={`${style.backBtn}`}>Back to shop</button>
+                        <button className={`${style.defaultBtn}`}>Back to shop</button>
                     </Link>
                 </div>
             </div> }
