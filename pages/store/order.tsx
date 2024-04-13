@@ -12,7 +12,7 @@ import style from '../../style/store.module.scss'
 const OrderPage: FC = () => {
 
     const { getCounter }: ServiceProductsContextProps = useContext(ProductsContext)
-    const { searchingValue, searchResults, valuesArray, user, $handleSearchingValue, $handleSearchResults } = Methods()
+    const { searchingValue, searchResults, valuesArray, $handleSearchingValue, $handleSearchResults } = Methods()
 
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
