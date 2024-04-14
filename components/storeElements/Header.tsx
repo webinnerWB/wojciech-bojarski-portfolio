@@ -61,11 +61,13 @@ export const Header: FC<hederComponent> = ({handleSearchingValue, handleSearchRe
                                     </Link>
                                 </li>
                             : null }
-                            <li className="nav-item">
-                                <Link className={`nav-link ${ '/store/blog' === currentPath ? style.active : style.navLink }`} href="/store/blog">
-                                    <span>BLOG</span>
-                                </Link>
-                            </li>
+                            {user && user.customer === false ?
+                                <li className="nav-item">
+                                    <Link className={`nav-link ${ '/store/products' === currentPath ? style.active : style.navLink }`} href="/store/products">
+                                        <span>PRODUCTS</span>
+                                    </Link>
+                                </li>
+                            : null }
                             {user && user.customer ? 
                                 <li className="nav-item">
                                     <Link className={`nav-link ${ '/store/orders' === currentPath ? style.active : style.navLink }`} href="/store/orders">

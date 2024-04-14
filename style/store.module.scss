@@ -435,6 +435,14 @@
     &.orderPage {
         margin-right: 2%;
     }
+    &.orderPageAdmin {
+        background: transparent;
+        margin-left: unset;
+        padding: unset;
+        border-radius: unset;
+        margin-top: unset;
+        margin-bottom: unset;
+    }
     .title {
         font-weight: 700;
         margin-bottom: 40px;
@@ -460,6 +468,9 @@
     .tableCustom {
         width: 100%;
     }
+    .tableProductAdmin {
+        min-width: 1200px;
+    }
     .th {
         padding: 5px;
         &.price {
@@ -479,7 +490,6 @@
         &.remove:hover {
             color: #696464
         }
-
     }
 }
 
@@ -667,14 +677,24 @@ border-bottom: 1px solid #3a3a3a;
         width: 300px;
         display: flex;
         align-items: center;
+        &.products {
+            width: auto;
+        }
         @media screen and (max-width: 991px){
             justify-content: center;
+            margin-bottom: 10px;
+        }
+        img {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
             margin-bottom: 10px;
         }
     }
     .wrapperBtn {
         display: flex;
         align-items: center;
+        justify-content: center;
         @media screen and (max-width: 991px){
             justify-content: center;
         }
@@ -683,11 +703,14 @@ border-bottom: 1px solid #3a3a3a;
         font-size: 50px;
     }
     .categoryWrapper {
-        cursor: pointer;
         font-size: 33px;
-        .name {
+        .text {
             margin-bottom: 0;
+            margin-left: 20px;
+        }
+        .text:first-child {
             margin-right: 20px;
+            margin-left: 0;
         }
     }
 }

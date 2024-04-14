@@ -12,24 +12,38 @@ type Category = {
     [key: string]: string
 }
 
-const Categories: FC = () => {
+type Products = {
+    name: string,
+    imgurl: string,
+    price: number,
+    id: number,
+    quantity: number,
+    category: Category[],
+    [key: string]: string | number | Category[]
+}
+
+const Products: FC = () => {
     const [formValid, setFormValid] = useState<boolean>(false)
     const [edit, setEdit] = useState<boolean>(false)
     const [searchingFiledValue, setSearchingFiledValue] = useState<string>('')
-    const [categories, setCategories] = useState<Category[]>([])
-    const [category, setCategory] = useState<Category>({
+    const [products, setProducts] = useState<Products[]>([])
+    const [product, setProduct] = useState<Products>({
         name: '',
-        icon: ''
+        imgurl: '',
+        quantity: 0,
+        price: 0,
+        id: 0,
+        category: []
     })
 
     const [showModal, setShowModal] = useState<boolean>(false)
 
     const { $getAllDocuments, $updateFieldInDocument, $handleSearchingValue, $removeDocument, $handleSearchResults, $addNewDocument, searchResults, valuesArray, searchingValue } = Methods()
 
-    const getAllCategories = async () => {
+    const getAllProducts = async () => {
         try {
-            const categories = await $getAllDocuments('categories')
-            setCategories(categories.docs.map(el => el.data() as Category))
+            const products = await $getAllDocuments('products')
+            setProducts(products.docs.map(el => el.data() as Products))
         } catch (err) {
             console.error(`Error: `, err)
         }
@@ -37,16 +51,16 @@ const Categories: FC = () => {
 
     const changehandler = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
-        setCategory({
-            ...category,
+        setProduct({
+            ...product,
             [name]: value
         })
     }
 
     const isFormValid = () => {
         setFormValid(false)
-        for (const key in category) {
-            if (category[key] === '') {
+        for (const key in product) {
+            if (product[key] === '') {
                 setFormValid(true)
                 return false
             }
@@ -57,57 +71,72 @@ const Categories: FC = () => {
     const submitHandler = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         if (isFormValid() && !edit) {
-            $addNewDocument('categories', category)
+            $addNewDocument('products', product)
                 .then(() => {
-                    getAllCategories()
+                    getAllProducts()
                     handleClose()
                 })
         }else if(isFormValid() && edit) {
-            $updateFieldInDocument('categories', 'name', searchingFiledValue, category.name, 'name')
-            $updateFieldInDocument('categories', 'name', searchingFiledValue, category.icon, 'icon')
+            $updateFieldInDocument('products', 'id', searchingFiledValue, product.name, 'name')
+            $updateFieldInDocument('products', 'id', searchingFiledValue, product.name, 'icon')
                 .then(() => {
-                    getAllCategories()
+                    getAllProducts()
                     handleClose()
                 })
 
         }
     }
 
-    const clickHandler = (category: Category, action: string) => {
+    const clickHandler = (product: Products, action: string) => {
         if (action === 'edit') {
-            setCategory({
-                name: category.name,
-                icon: category.icon
-            })
-            setSearchingFiledValue(category.name)
+            // setProduct({
+            //     name: product.name,
+            //     icon: product.icon
+            // })
+            setSearchingFiledValue(product.name)
             setShowModal(true)
             setEdit(true)
         }else{
-            $removeDocument('categories', category.name, 'name')
+            $removeDocument('products', product.name, 'id')
                 .then(() => {
-                    getAllCategories()
+                    getAllProducts()
                 })
         }
     }
     const handleClose = () => {
         setShowModal(false)
-        setCategory({
-            name: '',
-            icon: ''
-        })
+        // setProduct({
+        //     name: '',
+        //     icon: ''
+        // })
     }
 
-    const categoriesList = categories.map(el => (
-        <div key={el.name} className={`d-lg-flex align-items-lg-center ${style.categoryWrapper} mb-4`}>
-            <div className={`${style.wrapperCell}`}>
-                <i className={`${el.icon}`}></i>
-                <p className={`${style.text}`}>{el.name}</p>
-            </div>
-            <div className={`${style.wrapperBtn}`}>
-                <button type="button" className={`btn btn-light ${style.btnEdit} ${style.defaultBtn}`} onClick={() => clickHandler(el, 'edit')}>Edit</button>
-                <button type="button" className={`btn btn-light ${style.btnDelete} ${style.defaultBtn}`} onClick={() => clickHandler(el, 'delete')}>Delete</button>
-            </div>
-        </div>
+    const productsList = products.map(el => (
+        <tr key={el.id} className={`${style.categoryWrapper}`}>
+            <th className={`${style.td}`} scope="row">{el.id}</th>
+            <td className={`${style.td}`}>
+                <div className={`${style.wrapperCell} ${style.products}`}>
+                    <img className={`${style.img} mr-5`} src={`${el.imgurl}`} alt={`${el.name}`} />
+                    <p className={`${style.text}`}>{el.name}</p>
+                </div> 
+            </td>
+            <td className={`${style.td}`}>
+                <div className={`${style.wrapperCell} ${style.products}`}>
+                    <p className={`${style.text}`}>{el.quantity}</p>
+                </div> 
+            </td>
+            <td className={`${style.td}`}>
+                <div className={`${style.wrapperCell} ${style.products}`}>
+                    <p className={`${style.text}`}>{el.price} PLN</p>
+                </div> 
+            </td>
+            <td className={`${style.td}`}>
+                <div className={`${style.wrapperBtn}`}>
+                    <button type="button" className={`btn btn-light ${style.btnEdit} ${style.defaultBtn}`} onClick={() => clickHandler(el, 'edit')}>Edit</button>
+                    <button type="button" className={`btn btn-light ${style.btnDelete} ${style.defaultBtn}`} onClick={() => clickHandler(el, 'delete')}>Delete</button>
+                </div> 
+            </td>
+        </tr>
     ))
 
     useEffect(() => {
@@ -120,7 +149,7 @@ const Categories: FC = () => {
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
         document.body.style.color = '#ffffff'
-        getAllCategories()
+        getAllProducts()
     }, [])
 
     return (
@@ -139,8 +168,8 @@ const Categories: FC = () => {
                                         <input
                                             type="text"
                                             name='icon'
-                                            value={category.icon}
-                                            className={`form-control ${style.input} ${formValid && category.icon === '' ? style.inputError : null}`}
+                                            value={product.name}
+                                            className={`form-control ${style.input} ${formValid && product.icon === '' ? style.inputError : null}`}
                                             id="icon"
                                             placeholder="e.g. fa-solid fa-icons"
                                             onChange={changehandler}
@@ -151,8 +180,8 @@ const Categories: FC = () => {
                                         <input
                                             type="text"
                                             name="name"
-                                            value={category.name}
-                                            className={`form-control ${style.input} ${formValid && category.name === '' ? style.inputError : null}`}
+                                            value={product.name}
+                                            className={`form-control ${style.input} ${formValid && product.name === '' ? style.inputError : null}`}
                                             id="name"
                                             placeholder="Name"
                                             onChange={changehandler}
@@ -166,10 +195,23 @@ const Categories: FC = () => {
                 </div>
             </div>
             <div className="row">
-                <div className={`col-lg-12 ${style.categoriesListWrapper}`}>
+                <div className={`col-lg-12 ${style.categoriesListWrapper} table-responsive ${style.tableWrapper} ${style.orderPageAdmin}`}>
                     <h2 className={`${style.title}`}>Category list:</h2>
                     <br />
-                    {categories && categoriesList}
+                    <table className={`${style.tableProductAdmin}`}>
+                        <thead className={`${style.tableCustom}`}>
+                            <tr  className={`${style.borderBottom}`}>
+                                <th className={`${style.th} text-center`} scope="col">ID</th>
+                                <th className={`${style.th}`} scope="col">Product</th>
+                                <th className={`${style.th}`} scope="col">Quantity</th>
+                                <th className={`${style.th}`} scope="col">Price</th>
+                                <th className={`${style.th} text-center`} scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {products && productsList}
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <SearchResults valueSearch={searchingValue} results={searchResults} valuesArray={valuesArray} />
@@ -177,4 +219,4 @@ const Categories: FC = () => {
     )
 }
 
-export default Categories
+export default Products
