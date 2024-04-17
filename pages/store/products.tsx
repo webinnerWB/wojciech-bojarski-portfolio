@@ -2,43 +2,43 @@ import React, { useState, useEffect, FC, ChangeEvent, FormEvent } from "react"
 import { Header } from '../../components/storeElements/Header'
 import Methods from '../../components/services/DB/Methods'
 import SearchResults from "@/components/storeElements/SearchResults"
-import { Modal, Button } from 'react-bootstrap'
+import { Modal, Button, Dropdown, Form } from 'react-bootstrap'
 
 import style from '../../style/store.module.scss'
 
-type Category = {
-    name: string,
-    icon: string,
-    [key: string]: string
-}
+// type Category = {
+//     name: string,
+//     [key: string]: string
+// }
 
 type Products = {
     name: string,
     imgurl: string,
-    price: number,
+    price: string,
     id: number,
-    quantity: number,
-    category: Category[],
-    [key: string]: string | number | Category[]
+    quantity: string,
+    category: string[],
+    [key: string]: string | number| string[]
 }
 
 const Products: FC = () => {
     const [formValid, setFormValid] = useState<boolean>(false)
     const [edit, setEdit] = useState<boolean>(false)
+    const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
     const [searchingFiledValue, setSearchingFiledValue] = useState<string>('')
     const [products, setProducts] = useState<Products[]>([])
     const [product, setProduct] = useState<Products>({
         name: '',
         imgurl: '',
-        quantity: 0,
-        price: 0,
         id: 0,
-        category: []
+        quantity: '',
+        price: '',
+        category: selectedOptions
     })
 
     const [showModal, setShowModal] = useState<boolean>(false)
 
-    const { $getAllDocuments, $updateFieldInDocument, $handleSearchingValue, $removeDocument, $handleSearchResults, $addNewDocument, searchResults, valuesArray, searchingValue } = Methods()
+    const { $getAllDocuments, $updateDocument, $handleSearchingValue, $removeDocument, $handleSearchResults, $addNewDocument, searchResults, valuesArray, searchingValue } = Methods()
 
     const getAllProducts = async () => {
         try {
@@ -50,11 +50,22 @@ const Products: FC = () => {
     }
 
     const changehandler = (e: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target
+        e.stopPropagation()
+        const { name, value, checked } = e.target
         setProduct({
             ...product,
-            [name]: value
+            [name]: value,
+            id: products.length + 1,
+            category: checked ? [...selectedOptions, name] : selectedOptions.filter(el => el !== name)
         })
+            setSelectedOptions(prevState => {
+                if (checked) {
+                    return [...prevState, name];
+                } else {
+                    return prevState.filter(el => el !== name);
+                }
+            })
+        console.log(`selectedOptions: `, selectedOptions)
     }
 
     const isFormValid = () => {
@@ -69,6 +80,7 @@ const Products: FC = () => {
     }
 
     const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+        console.log(`products: `, products)
         e.preventDefault()
         if (isFormValid() && !edit) {
             $addNewDocument('products', product)
@@ -77,8 +89,8 @@ const Products: FC = () => {
                     handleClose()
                 })
         }else if(isFormValid() && edit) {
-            $updateFieldInDocument('products', 'id', searchingFiledValue, product.name, 'name')
-            $updateFieldInDocument('products', 'id', searchingFiledValue, product.name, 'icon')
+            
+            $updateDocument('products', 'id', '$id', product)
                 .then(() => {
                     getAllProducts()
                     handleClose()
@@ -97,7 +109,7 @@ const Products: FC = () => {
             setShowModal(true)
             setEdit(true)
         }else{
-            $removeDocument('products', product.name, 'id')
+            $removeDocument('products', product.id, 'id')
                 .then(() => {
                     getAllProducts()
                 })
@@ -118,6 +130,11 @@ const Products: FC = () => {
                 <div className={`${style.wrapperCell} ${style.products}`}>
                     <img className={`${style.img} mr-5`} src={`${el.imgurl}`} alt={`${el.name}`} />
                     <p className={`${style.text}`}>{el.name}</p>
+                </div> 
+            </td>
+            <td className={`${style.td}`}>
+                <div className={`${style.wrapperCell} ${style.products}`}>
+                    <p className={`${style.text}`}>{el.category.join(', ')}</p>
                 </div> 
             </td>
             <td className={`${style.td}`}>
@@ -157,36 +174,87 @@ const Products: FC = () => {
             <Header handleSearchingValue={$handleSearchingValue} handleSearchResults={$handleSearchResults} />
             <div className="row">
                 <div className={`col-lg-12  ${style.formWrapper} ${style.category} mt-5 mb-5`}>
-                    <Button className={`btn ${style.defaultBtn} ${style.category}`} onClick={() => setShowModal(true)}>Add new category:</Button>
+                    <Button className={`btn ${style.defaultBtn} ${style.category}`} onClick={() => setShowModal(true)}>Add new product:</Button>
                     <Modal show={showModal} onHide={handleClose}>
                         <Modal.Body className={`${style.modalBody}`}>
                         <button type="button" className={`${style.modalCloseBtn}`} onClick={() => setShowModal(false)}>X</button>
                             <div className={`col-lg-12  ${style.formWrapper} mt-5 mb-5`}>
                                 <form onSubmit={submitHandler}>
                                     <div className={`form-group ${style.formInputWrapper}`}>
-                                        <label className={`${style.label}`} htmlFor="icon">Icon</label>
+                                        <label className={`${style.label}`} htmlFor="icon">Name</label>
                                         <input
                                             type="text"
-                                            name='icon'
+                                            name='name'
                                             value={product.name}
-                                            className={`form-control ${style.input} ${formValid && product.icon === '' ? style.inputError : null}`}
-                                            id="icon"
-                                            placeholder="e.g. fa-solid fa-icons"
+                                            className={`form-control ${style.input} ${formValid && product.name === '' ? style.inputError : null}`}
+                                            id="name"
                                             onChange={changehandler}
                                         />
                                     </div>
                                     <div className={`form-group ${style.formInputWrapper} mt-3`}>
-                                        <label className={`${style.label}`} htmlFor="name">Categories name</label>
+                                        <label className={`${style.label}`} htmlFor="name">Url</label>
                                         <input
                                             type="text"
-                                            name="name"
-                                            value={product.name}
-                                            className={`form-control ${style.input} ${formValid && product.name === '' ? style.inputError : null}`}
-                                            id="name"
-                                            placeholder="Name"
+                                            name="imgurl"
+                                            value={product.imgurl}
+                                            className={`form-control ${style.input} ${formValid && product.imgurl === '' ? style.inputError : null}`}
+                                            id="imgurl"
                                             onChange={changehandler}
                                         />
                                     </div>
+                                    <div className={`form-group ${style.formInputWrapper} mt-3`}>
+                                        <label className={`${style.label}`} htmlFor="name">Quantity</label>
+                                        <input
+                                            type="text"
+                                            name="quantity"
+                                            value={product.quantity}
+                                            className={`form-control ${style.input} ${formValid && product.quantity === '' ? style.inputError : null}`}
+                                            id="quantity"
+                                            onChange={changehandler}
+                                        />
+                                    </div>
+                                    <div className={`form-group ${style.formInputWrapper} mt-3`}>
+                                        <label className={`${style.label}`} htmlFor="name">Price</label>
+                                        <input
+                                            type="text"
+                                            name="price"
+                                            value={product.price}
+                                            className={`form-control ${style.input} ${formValid && product.price === '' ? style.inputError : null}`}
+                                            id="price"
+                                            onChange={changehandler}
+                                        />
+                                    </div>
+                                    <Dropdown>
+                                        <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                                        Wybierz opcje
+                                        </Dropdown.Toggle>
+                                        <Dropdown.Menu>
+                                            <Form.Check
+                                            type="checkbox"
+                                            id="option1"
+                                            label="Opcja 1"
+                                            name="option1"
+                                            checked={selectedOptions.includes("option1")}
+                                            onChange={changehandler}
+                                            />
+                                            <Form.Check
+                                            type="checkbox"
+                                            id="option2"
+                                            label="Opcja 2"
+                                            name="option2"
+                                            checked={selectedOptions.includes("option2")}
+                                            onChange={changehandler}
+                                            />
+                                            <Form.Check
+                                            type="checkbox"
+                                            id="option3"
+                                            label="Opcja 3"
+                                            name="option3"
+                                            checked={selectedOptions.includes("option3")}
+                                            onChange={changehandler}
+                                            />
+                                        </Dropdown.Menu>
+                                    </Dropdown>
                                     <button type="submit" className={`btn btn-light ${style.formButton}`}>Add</button>
                                 </form>
                             </div>
@@ -196,13 +264,14 @@ const Products: FC = () => {
             </div>
             <div className="row">
                 <div className={`col-lg-12 ${style.categoriesListWrapper} table-responsive ${style.tableWrapper} ${style.orderPageAdmin}`}>
-                    <h2 className={`${style.title}`}>Category list:</h2>
+                    <h2 className={`${style.title}`}>Products list:</h2>
                     <br />
                     <table className={`${style.tableProductAdmin}`}>
                         <thead className={`${style.tableCustom}`}>
                             <tr  className={`${style.borderBottom}`}>
                                 <th className={`${style.th} text-center`} scope="col">ID</th>
                                 <th className={`${style.th}`} scope="col">Product</th>
+                                <th className={`${style.th}`} scope="col">Category</th>
                                 <th className={`${style.th}`} scope="col">Quantity</th>
                                 <th className={`${style.th}`} scope="col">Price</th>
                                 <th className={`${style.th} text-center`} scope="col">Action</th>

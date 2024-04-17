@@ -128,7 +128,7 @@ const Methods = () => {
         }
       }
 
-    const $removeDocument = async (collectionR: string, value: string, searchingField: string) => {
+    const $removeDocument = async (collectionR: string, value: string|number, searchingField: string) => {
       try{
         const collectionReff: CollectionReference = collection(db, collectionR)
         const queryREf = query(collectionReff, where(searchingField, '==', value))
@@ -180,6 +180,24 @@ const Methods = () => {
       }
     }
 
+    const $updateDocument = async (collectionR: string, searchingField: string, searchingFiledValue: string, obj: any) => {
+      try {
+        const collectionRef: CollectionReference = collection(db, collectionR)
+        const queryRef = query(collectionRef, where(searchingField, '==', searchingFiledValue))
+        const docsRef = await getDocs(queryRef)
+        if(!docsRef.empty) {
+          const doc = docsRef.docs[0]
+          await updateDoc(doc.ref, obj)
+          console.log(`Document has been successfully updated`)
+        } else {
+          console.error(`Document not found`)
+        }
+      } catch(err) {
+        console.error(`Error: `, err)
+      }
+    }
+
+    
     const $addNewDocument = async (collectionR: string, document: object) => {
         try {
             const collectionRef: CollectionReference<DocumentData> =  collection(db, collectionR)
@@ -330,6 +348,7 @@ const Methods = () => {
         $getDocByFieldValue,
         $logOut,
         $removeDocument,
+        $updateDocument,
         searchingValue,
         searchResults,
         valuesArray,
