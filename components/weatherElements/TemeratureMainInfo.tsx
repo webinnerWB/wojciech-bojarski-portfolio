@@ -25,7 +25,7 @@ const TemperatureMainInfo: FC<temperatureData> = ({ temp, name, iconURL,imgDesc 
                         <h1 className={style.margin0}>{`Weather in ${name}`}</h1>
                         <span className={style.info}>{`Weather: ${imgDesc}`}</span>
                     </div>
-                    <p className={`${style.temp} ${style.margin0}` }>{`Temperature: ${temp}`}<span>&#x2103</span></p>
+                    <p className={`${style.temp} ${style.margin0}` }>{`Temperature: ${temp}`}<span>℃</span></p>
                 </div>
                 
                 {iconURL ? <img src={`../../${iconURL}`} className={style.weatherIcon} alt={altText}/> : null }

@@ -157,7 +157,8 @@ const WeatherMainPage: FC = () => {
     const multiWeatherForecastTemplateNextDay = FORECASTnext.map((el, index) => (
         <SwiperSlide id={el.dt} key={`slide-${el.dt}`} onClick={() => showForecastDetails(el)}>
             <WeatherForecast 
-            day={!error404 && data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && getTimeFromTimeZoneWithDate(dataTimeZone.timezone, data.sys.country, el.dt)}
+            fullDay={!error404 && data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && getTimeFromTimeZoneWithDate(dataTimeZone.timezone, data.sys.country, el.dt)}
+            day={!error404 && data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && el.dt}
             icon={!error404 && dataMultiWeather && imgForecastURL[FORECASTtoDay.length + index]}
             description={!error404 && dataMultiWeather && imgDescForecastURL[FORECASTtoDay.length + index]}
             temp={!error404 && data && dataMultiWeather && dataTimeZone && forecastDataArray.length > 0 && Math.floor(el.main.temp)}

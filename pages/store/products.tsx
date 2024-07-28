@@ -43,7 +43,9 @@ const Products: FC = () => {
     const getAllProducts = async () => {
         try {
             const products = await $getAllDocuments('products')
-            setProducts(products.docs.map(el => el.data() as Products))
+            const productsList = products.docs.map(el => el.data() as Products)
+            const sortedProductsList = productsList.sort((a, b) => b.id - a.id)
+            setProducts(sortedProductsList)
         } catch (err) {
             console.error(`Error: `, err)
         }
@@ -58,14 +60,13 @@ const Products: FC = () => {
             id: products.length + 1,
             category: checked ? [...selectedOptions, name] : selectedOptions.filter(el => el !== name)
         })
-            setSelectedOptions(prevState => {
-                if (checked) {
-                    return [...prevState, name];
-                } else {
-                    return prevState.filter(el => el !== name);
-                }
-            })
-        console.log(`selectedOptions: `, selectedOptions)
+        setSelectedOptions(prevState => {
+            if (checked) {
+                return [...prevState, name];
+            } else {
+                return prevState.filter(el => el !== name);
+            }
+        })
     }
 
     const isFormValid = () => {
