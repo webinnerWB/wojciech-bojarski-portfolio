@@ -6,10 +6,11 @@ import { Modal, Button, Dropdown, Form } from 'react-bootstrap'
 
 import style from '../../style/store.module.scss'
 
-// type Category = {
-//     name: string,
-//     [key: string]: string
-// }
+type Category = {
+    name: string,
+    id: string,
+    [key: string]: string
+}
 
 type Products = {
     name: string,
@@ -25,7 +26,7 @@ const Products: FC = () => {
     const [formValid, setFormValid] = useState<boolean>(false)
     const [edit, setEdit] = useState<boolean>(false)
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-    const [searchingFiledValue, setSearchingFiledValue] = useState<string>('')
+    const [allCategories, setAllCategories] = useState<Category[]>([])
     const [products, setProducts] = useState<Products[]>([])
     const [product, setProduct] = useState<Products>({
         name: '',
@@ -40,6 +41,14 @@ const Products: FC = () => {
 
     const { $getAllDocuments, $updateDocument, $handleSearchingValue, $removeDocument, $handleSearchResults, $addNewDocument, searchResults, valuesArray, searchingValue } = Methods()
 
+    const getAllCategories = async () => {
+        try {
+            const categories = await $getAllDocuments('categories')
+            setAllCategories(categories.docs.map(el => el.data() as Category))
+        } catch (err){
+            console.error(`Error: `, err)
+        }
+    }
     const getAllProducts = async () => {
         try {
             const products = await $getAllDocuments('products')
@@ -50,25 +59,21 @@ const Products: FC = () => {
             console.error(`Error: `, err)
         }
     }
+    const changehandler = () => {
 
-    const changehandler = (e: ChangeEvent<HTMLInputElement>) => {
-        e.stopPropagation()
-        const { name, value, checked } = e.target
-        setProduct({
-            ...product,
-            [name]: value,
-            id: products.length + 1,
-            category: checked ? [...selectedOptions, name] : selectedOptions.filter(el => el !== name)
-        })
-        setSelectedOptions(prevState => {
-            if (checked) {
-                return [...prevState, name];
-            } else {
-                return prevState.filter(el => el !== name);
-            }
-        })
     }
-
+    const dropDownElementCategory = allCategories.map((el: Category) => (
+        <React.Fragment key={`${el.id}${el.name}`}>
+             <Form.Check
+                type="checkbox"
+                id={el.id}
+                label={el.name}
+                name={`${el.name.toLocaleLowerCase()}`}
+                checked={selectedOptions.includes(el.name.toLocaleLowerCase())}
+                onChange={changehandler}
+            />
+        </React.Fragment>
+    ))
     const isFormValid = () => {
         setFormValid(false)
         for (const key in product) {
@@ -80,33 +85,18 @@ const Products: FC = () => {
         return true
     }
 
-    const submitHandler = (e: FormEvent<HTMLFormElement>) => {
-        console.log(`products: `, products)
-        e.preventDefault()
-        if (isFormValid() && !edit) {
-            $addNewDocument('products', product)
-                .then(() => {
-                    getAllProducts()
-                    handleClose()
-                })
-        }else if(isFormValid() && edit) {
-            
-            $updateDocument('products', 'id', '$id', product)
-                .then(() => {
-                    getAllProducts()
-                    handleClose()
-                })
-
-        }
-    }
-
-    const clickHandler = (product: Products, action: string) => {
+    const actionHandler = (product: Products, action: string) => {
         if (action === 'edit') {
-            // setProduct({
-            //     name: product.name,
-            //     icon: product.icon
-            // })
-            setSearchingFiledValue(product.name)
+            setSelectedOptions(product.category)
+            console.log(selectedOptions)
+            setProduct({
+                name: product.name,
+                imgurl: product.imgurl,
+                id: product.id,
+                quantity: product.quantity,
+                price: product.price,
+                category: selectedOptions
+            })
             setShowModal(true)
             setEdit(true)
         }else{
@@ -118,10 +108,6 @@ const Products: FC = () => {
     }
     const handleClose = () => {
         setShowModal(false)
-        // setProduct({
-        //     name: '',
-        //     icon: ''
-        // })
     }
 
     const productsList = products.map(el => (
@@ -150,8 +136,8 @@ const Products: FC = () => {
             </td>
             <td className={`${style.td}`}>
                 <div className={`${style.wrapperBtn}`}>
-                    <button type="button" className={`btn btn-light ${style.btnEdit} ${style.defaultBtn}`} onClick={() => clickHandler(el, 'edit')}>Edit</button>
-                    <button type="button" className={`btn btn-light ${style.btnDelete} ${style.defaultBtn}`} onClick={() => clickHandler(el, 'delete')}>Delete</button>
+                    <button type="button" className={`btn btn-light ${style.btnEdit} ${style.defaultBtn}`} onClick={() => actionHandler(el, 'edit')}>Edit</button>
+                    <button type="button" className={`btn btn-light ${style.btnDelete} ${style.defaultBtn}`} onClick={() => actionHandler(el, 'delete')}>Delete</button>
                 </div> 
             </td>
         </tr>
@@ -168,6 +154,7 @@ const Products: FC = () => {
         document.body.style.backgroundColor = '#161616'
         document.body.style.color = '#ffffff'
         getAllProducts()
+        getAllCategories()
     }, [])
 
     return (
@@ -180,7 +167,8 @@ const Products: FC = () => {
                         <Modal.Body className={`${style.modalBody}`}>
                         <button type="button" className={`${style.modalCloseBtn}`} onClick={() => setShowModal(false)}>X</button>
                             <div className={`col-lg-12  ${style.formWrapper} mt-5 mb-5`}>
-                                <form onSubmit={submitHandler}>
+                                <form >
+                                {/* onSubmit={submitHandler} */}
                                     <div className={`form-group ${style.formInputWrapper}`}>
                                         <label className={`${style.label}`} htmlFor="icon">Name</label>
                                         <input
@@ -227,33 +215,10 @@ const Products: FC = () => {
                                     </div>
                                     <Dropdown>
                                         <Dropdown.Toggle variant="secondary" id="dropdown-basic">
-                                        Wybierz opcje
+                                            Categories
                                         </Dropdown.Toggle>
                                         <Dropdown.Menu>
-                                            <Form.Check
-                                            type="checkbox"
-                                            id="option1"
-                                            label="Opcja 1"
-                                            name="option1"
-                                            checked={selectedOptions.includes("option1")}
-                                            onChange={changehandler}
-                                            />
-                                            <Form.Check
-                                            type="checkbox"
-                                            id="option2"
-                                            label="Opcja 2"
-                                            name="option2"
-                                            checked={selectedOptions.includes("option2")}
-                                            onChange={changehandler}
-                                            />
-                                            <Form.Check
-                                            type="checkbox"
-                                            id="option3"
-                                            label="Opcja 3"
-                                            name="option3"
-                                            checked={selectedOptions.includes("option3")}
-                                            onChange={changehandler}
-                                            />
+                                            {dropDownElementCategory}
                                         </Dropdown.Menu>
                                     </Dropdown>
                                     <button type="submit" className={`btn btn-light ${style.formButton}`}>Add</button>

@@ -1,16 +1,16 @@
 import React, {useEffect, useState, useContext, FC} from "react"
 import Link from "next/link"
-import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
+import { ServiceProductsContextProps, ProductsContext } from '../services/store/ProductsContextProvider'
 
 import style from '../../style/store.module.scss'
 
-type SucessPaiment = {
+type SucessPayment = {
     amount: number,
     products: any[],
     status: string,
 }
 
-const SucessPaiment: FC<SucessPaiment> = ({ amount, products, status }: SucessPaiment) => {
+const SucessPayment: FC<SucessPayment> = ({ amount, products, status }: SucessPayment) => {
 
     const { shippingCost }:ServiceProductsContextProps = useContext(ProductsContext)    
 
@@ -75,7 +75,7 @@ const SucessPaiment: FC<SucessPaiment> = ({ amount, products, status }: SucessPa
     )
 }
 
-export default SucessPaiment
+export default SucessPayment
 
 
 

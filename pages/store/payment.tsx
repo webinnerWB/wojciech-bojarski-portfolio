@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, FC } from "react"
 import Methods from "@/components/services/DB/Methods"
 import { ServiceProductsContextProps, ProductsContext } from '../../components/services/store/ProductsContextProvider'
 
-import SucessPaiment from '../../components/storeElements/SuccessPaiment'
+import SucessPayment from '../../components/storeElements/SucessPayment'
 import ErrorPaiment from '../../components/storeElements/ErrorPaiment'
 
 const Payment: FC = () => {
@@ -86,7 +86,7 @@ const Payment: FC = () => {
     return(
         <div className="col-lg-12">
             {dataReqProducts && dataReq 
-            ? <SucessPaiment amount={dataReq.orders[0].payMethod.amount} products={dataReqProducts.products} status={dataReq.orders[0].status} /> 
+            ? <SucessPayment amount={dataReq.orders[0].payMethod.amount} products={dataReqProducts.products} status={dataReq.orders[0].status} /> 
             : <ErrorPaiment status={dataReq && dataReq.status.statusCode} />}
         </div>
     )
