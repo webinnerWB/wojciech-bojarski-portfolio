@@ -680,6 +680,9 @@ border-bottom: 1px solid #3a3a3a;
         &.products {
             width: auto;
         }
+        &.products:first-child {
+            padding: 20px 0 0 0;
+        }
         @media screen and (max-width: 991px){
             justify-content: center;
             margin-bottom: 10px;
@@ -731,4 +734,68 @@ border-bottom: 1px solid #3a3a3a;
 
 .modal-content {
     background-color: transparent !important;
+}
+
+.dropDownBTN {
+    background: transparent;
+    width: 100%;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: 700;
+}
+.dropDownBTN::after {
+    margin-left: 10px;
+    vertical-align: middle;
+}
+.dropDownListContainer {
+    width: 100%;
+    background-color: rgba(40, 40, 40, 1);
+    border: none;
+    color: #ffffff;
+    .dropDownWrapper {
+        display: grid;
+        .optionElemnt {
+            display: inline-flex;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            .checkbox {
+                margin-right: 10px;
+                input[type="checkbox"] {
+                    opacity: 0;
+                    position: absolute;
+                    height: 0;
+                    width: 0;
+                }
+            }
+            .checkmark {
+                position: relative;
+                height: 22px;
+                width: 22px;
+                top: 8px;
+                background-color: #ffffff;
+            }
+            .checkmark::after {
+                content: "";
+                position: absolute;
+                border: solid #000000;
+                border-width: 0 11px 11px 0;
+                transform: rotate(45deg);
+                left: 0;
+                top: 0;
+                z-index: 9999;
+                color: #000000;
+            }
+
+            .checkbox input[type="checkbox"]:checked  + &::after{
+                
+                background-color: #1fca27 !important;
+                
+            }
+            
+        }
+        .optionElemnt:hover {
+            background-color: #000000;
+        }
+    }
 }

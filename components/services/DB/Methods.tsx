@@ -180,7 +180,7 @@ const Methods = () => {
       }
     }
 
-    const $updateDocument = async (collectionR: string, searchingField: string, searchingFiledValue: string, obj: any) => {
+    const $updateDocument = async (collectionR: string, searchingField: string, searchingFiledValue: string|number, obj: any) => {
       try {
         const collectionRef: CollectionReference = collection(db, collectionR)
         const queryRef = query(collectionRef, where(searchingField, '==', searchingFiledValue))
@@ -191,6 +191,8 @@ const Methods = () => {
           console.log(`Document has been successfully updated`)
         } else {
           console.error(`Document not found`)
+          console.error(`searchingField ${searchingField}`)
+          console.error(`searchingFiledValue ${searchingFiledValue}`)
         }
       } catch(err) {
         console.error(`Error: `, err)

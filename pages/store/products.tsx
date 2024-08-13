@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC, ChangeEvent, FormEvent } from "react"
+import React, { useState, useEffect, FC, ChangeEvent, FormEvent, useRef } from "react"
 import { Header } from '../../components/storeElements/Header'
 import Methods from '../../components/services/DB/Methods'
 import SearchResults from "@/components/storeElements/SearchResults"
@@ -53,25 +53,54 @@ const Products: FC = () => {
         try {
             const products = await $getAllDocuments('products')
             const productsList = products.docs.map(el => el.data() as Products)
-            const sortedProductsList = productsList.sort((a, b) => b.id - a.id)
+            const sortedProductsList = productsList.sort((b, a) => b.id - a.id)
             setProducts(sortedProductsList)
         } catch (err) {
             console.error(`Error: `, err)
         }
     }
-    const changehandler = () => {
-
+    
+    const changehandler = (e: ChangeEvent<HTMLInputElement>) => {
+        const {name, value, type, checked} = e.target
+        const setID = products.length + 1
+        let updatedCategories = [...selectedOptions]
+        if(type === 'checkbox') {
+            if(checked){
+                updatedCategories.push(name)
+            }else{
+                updatedCategories = updatedCategories.filter(el => el !== name)
+            }
+        }
+        if(!edit){
+            setProduct({
+                ...product,
+                [name]: value,
+                category: updatedCategories,
+                id: setID
+            })
+        }else{
+            setProduct({
+                ...product,
+                [name]: value,
+                category: updatedCategories
+            })
+        }
+        setSelectedOptions(updatedCategories)
     }
     const dropDownElementCategory = allCategories.map((el: Category) => (
         <React.Fragment key={`${el.id}${el.name}`}>
-             <Form.Check
-                type="checkbox"
-                id={el.id}
-                label={el.name}
-                name={`${el.name.toLocaleLowerCase()}`}
-                checked={selectedOptions.includes(el.name.toLocaleLowerCase())}
-                onChange={changehandler}
-            />
+            <label className={style.optionElemnt}>
+                <Form.Check
+                    type="checkbox"
+                    className={style.checkbox}
+                    id={el.id}
+                    name={`${el.name.toLocaleLowerCase()}`}
+                    checked={selectedOptions.includes(el.name.toLocaleLowerCase())}
+                    onChange={changehandler}
+                />
+                <span className={style.checkmark}></span>
+                <span>{el.name}</span>
+            </label>
         </React.Fragment>
     ))
     const isFormValid = () => {
@@ -82,11 +111,31 @@ const Products: FC = () => {
                 return false
             }
         }
+        if(selectedOptions.length === 0) {
+            setFormValid(true)
+            return false
+        }
         return true
     }
-
+    const submitHandler = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        if(isFormValid() && !edit) {
+            $addNewDocument('products', product)
+                .then(() => {
+                    getAllProducts()
+                    handleClose()
+                })
+        }else if(isFormValid() && edit) {
+            $updateDocument('products', 'id', product.id, product)
+                .then(() => {
+                    getAllProducts()
+                    handleClose()
+                })
+        }
+    }
     const actionHandler = (product: Products, action: string) => {
         if (action === 'edit') {
+            setEdit(true)
             setSelectedOptions(product.category)
             console.log(selectedOptions)
             setProduct({
@@ -98,8 +147,8 @@ const Products: FC = () => {
                 category: selectedOptions
             })
             setShowModal(true)
-            setEdit(true)
         }else{
+            setEdit(false)
             $removeDocument('products', product.id, 'id')
                 .then(() => {
                     getAllProducts()
@@ -107,7 +156,17 @@ const Products: FC = () => {
         }
     }
     const handleClose = () => {
-        setShowModal(false)
+            setEdit(false)
+            setShowModal(false)
+            setSelectedOptions([])
+            setProduct({
+                name: '',
+                imgurl: '',
+                id: 0,
+                quantity: '',
+                price: '',
+                category: selectedOptions
+            })
     }
 
     const productsList = products.map(el => (
@@ -165,10 +224,9 @@ const Products: FC = () => {
                     <Button className={`btn ${style.defaultBtn} ${style.category}`} onClick={() => setShowModal(true)}>Add new product:</Button>
                     <Modal show={showModal} onHide={handleClose}>
                         <Modal.Body className={`${style.modalBody}`}>
-                        <button type="button" className={`${style.modalCloseBtn}`} onClick={() => setShowModal(false)}>X</button>
+                        <button type="button" className={`${style.modalCloseBtn}`} onClick={() => handleClose()}>X</button>
                             <div className={`col-lg-12  ${style.formWrapper} mt-5 mb-5`}>
-                                <form >
-                                {/* onSubmit={submitHandler} */}
+                                <form onSubmit={submitHandler}>
                                     <div className={`form-group ${style.formInputWrapper}`}>
                                         <label className={`${style.label}`} htmlFor="icon">Name</label>
                                         <input
@@ -214,14 +272,16 @@ const Products: FC = () => {
                                         />
                                     </div>
                                     <Dropdown>
-                                        <Dropdown.Toggle variant="secondary" id="dropdown-basic">
+                                        <Dropdown.Toggle className={style.dropDownBTN} variant="secondary" id="dropdown-basic">
                                             Categories
                                         </Dropdown.Toggle>
-                                        <Dropdown.Menu>
-                                            {dropDownElementCategory}
+                                        <Dropdown.Menu className={style.dropDownListContainer}>
+                                            <div className={style.dropDownWrapper}>
+                                                {dropDownElementCategory}
+                                            </div>
                                         </Dropdown.Menu>
                                     </Dropdown>
-                                    <button type="submit" className={`btn btn-light ${style.formButton}`}>Add</button>
+                                    <button type="submit" className={`btn btn-light ${style.formButton}`}>{!edit ? 'Add' : 'Edit'}</button>
                                 </form>
                             </div>
                         </Modal.Body>

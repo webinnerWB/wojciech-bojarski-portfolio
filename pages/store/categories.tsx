@@ -75,14 +75,15 @@ const Categories: FC = () => {
 
     const clickHandler = (category: Category, action: string) => {
         if (action === 'edit') {
+            setEdit(true)
             setCategory({
                 name: category.name,
                 icon: category.icon
             })
             setSearchingFiledValue(category.name)
             setShowModal(true)
-            setEdit(true)
         }else{
+            setEdit(false)
             $removeDocument('categories', category.name, 'name')
                 .then(() => {
                     getAllCategories()
@@ -91,6 +92,7 @@ const Categories: FC = () => {
     }
     const handleClose = () => {
         setShowModal(false)
+        setEdit(false)
         setCategory({
             name: '',
             icon: ''
@@ -131,7 +133,7 @@ const Categories: FC = () => {
                     <Button className={`btn ${style.defaultBtn} ${style.category}`} onClick={() => setShowModal(true)}>Add new category:</Button>
                     <Modal show={showModal} onHide={handleClose}>
                         <Modal.Body className={`${style.modalBody}`}>
-                        <button type="button" className={`${style.modalCloseBtn}`} onClick={() => setShowModal(false)}>X</button>
+                        <button type="button" className={`${style.modalCloseBtn}`} onClick={() => handleClose()}>X</button>
                             <div className={`col-lg-12  ${style.formWrapper} mt-5 mb-5`}>
                                 <form onSubmit={submitHandler}>
                                     <div className={`form-group ${style.formInputWrapper}`}>
@@ -158,7 +160,7 @@ const Categories: FC = () => {
                                             onChange={changehandler}
                                         />
                                     </div>
-                                    <button type="submit" className={`btn btn-light ${style.formButton}`}>Add</button>
+                                    <button type="submit" className={`btn btn-light ${style.formButton}`}>{!edit ? 'Add' : 'Edit'}</button>
                                 </form>
                             </div>
                         </Modal.Body>
