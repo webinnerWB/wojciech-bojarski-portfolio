@@ -38,6 +38,9 @@ const Products: FC = () => {
     })
 
     const [showModal, setShowModal] = useState<boolean>(false)
+    const [showDelateModal, setShowDelateModal] = useState<boolean>(false)
+    const [delateConfirmation, setDelateConfirmation] = useState<boolean>(false)
+    const [productToRemove, setProductToRemove] = useState<Products>()
 
     const { $getAllDocuments, $updateDocument, $handleSearchingValue, $removeDocument, $handleSearchResults, $addNewDocument, searchResults, valuesArray, searchingValue } = Methods()
 
@@ -59,10 +62,27 @@ const Products: FC = () => {
             console.error(`Error: `, err)
         }
     }
+
+    const generateIDs = async (newID: number) => {
+        try {
+            const products = await $getAllDocuments('products')
+            const productsList = products.docs.map(el => el.data() as Products)
+            let arrayIDs: number[] = []
+            productsList.forEach(el => {
+                arrayIDs.push(el.id)
+            })
+            while(arrayIDs.includes(newID)) {
+                newID++
+            }
+            return newID
+        } catch (err) {
+            console.error(`Error: `, err)
+        }
+    }
     
-    const changehandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const changehandler = async (e: ChangeEvent<HTMLInputElement>) => {
         const {name, value, type, checked} = e.target
-        const setID = products.length + 1
+        const setID = await generateIDs(0)
         let updatedCategories = [...selectedOptions]
         if(type === 'checkbox') {
             if(checked){
@@ -76,7 +96,7 @@ const Products: FC = () => {
                 ...product,
                 [name]: value,
                 category: updatedCategories,
-                id: setID
+                id: Number(setID)
             })
         }else{
             setProduct({
@@ -85,12 +105,14 @@ const Products: FC = () => {
                 category: updatedCategories
             })
         }
+        console.log(setID)
+
         setSelectedOptions(updatedCategories)
     }
     const dropDownElementCategory = allCategories.map((el: Category) => (
         <React.Fragment key={`${el.id}${el.name}`}>
             <label className={style.optionElemnt}>
-                <Form.Check
+                <input
                     type="checkbox"
                     className={style.checkbox}
                     id={el.id}
@@ -149,12 +171,27 @@ const Products: FC = () => {
             setShowModal(true)
         }else{
             setEdit(false)
-            $removeDocument('products', product.id, 'id')
-                .then(() => {
-                    getAllProducts()
-                })
+            setShowDelateModal(true)
+            setProductToRemove(product)
         }
     }
+
+    const deleteFunction = () => {
+        if(productToRemove) {
+            $removeDocument('products', productToRemove.id, 'id')
+            .then(() => {
+                setShowDelateModal(false)
+                setProductToRemove(undefined)
+                setDelateConfirmation(false)
+            })
+        }
+    }
+    useEffect(() => {
+        if(delateConfirmation) {
+            deleteFunction()
+        }
+        getAllProducts()
+    }, [delateConfirmation])
     const handleClose = () => {
             setEdit(false)
             setShowModal(false)
@@ -207,13 +244,13 @@ const Products: FC = () => {
         if (modalContent) {
         modalContent.style.backgroundColor = 'transparent'
         }
-    }, [showModal])
+    }, [showModal, showDelateModal])
 
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
         document.body.style.color = '#ffffff'
         getAllProducts()
-        getAllCategories()
+        getAllCategories()       
     }, [])
 
     return (
@@ -283,6 +320,16 @@ const Products: FC = () => {
                                     </Dropdown>
                                     <button type="submit" className={`btn btn-light ${style.formButton}`}>{!edit ? 'Add' : 'Edit'}</button>
                                 </form>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+
+                    <Modal show={showDelateModal} onHide={() => setShowDelateModal(false)}>
+                        <Modal.Body className={`${style.modalBody}`}>
+                            <div className={style.removeModalWrapper}>
+                                <h2 className={style.title}>Delate the product?</h2>
+                                <button type="button" className={`btn btn-light  ${style.btnDelete} ${style.defaultBtn} ${style.removebtn}`} onClick={() => setDelateConfirmation(true)}>Yes</button>
+                                <button type="button" className={`btn btn-light ${style.btnEdit} ${style.defaultBtn} ${style.removebtn}`} onClick={() => setShowDelateModal(false)}>No</button>
                             </div>
                         </Modal.Body>
                     </Modal>
