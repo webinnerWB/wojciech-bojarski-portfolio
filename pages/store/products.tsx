@@ -13,23 +13,24 @@ type Category = {
 }
 
 type Products = {
-    name: string,
+    name: Array<string>,
     imgurl: string,
     price: string,
     id: number,
     quantity: string,
-    category: string[],
-    [key: string]: string | number| string[]
+    category: Array<string>,
+    [key: string]: string | number| Array<string>
 }
 
 const Products: FC = () => {
     const [formValid, setFormValid] = useState<boolean>(false)
     const [edit, setEdit] = useState<boolean>(false)
     const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+    const [newProductName, setNewProductName] = useState<string[]>([]);
     const [allCategories, setAllCategories] = useState<Category[]>([])
     const [products, setProducts] = useState<Products[]>([])
     const [product, setProduct] = useState<Products>({
-        name: '',
+        name: newProductName,
         imgurl: '',
         id: 0,
         quantity: '',
@@ -84,6 +85,7 @@ const Products: FC = () => {
         const {name, value, type, checked} = e.target
         const setID = await generateIDs(0)
         let updatedCategories = [...selectedOptions]
+        let productName = [...newProductName]
         if(type === 'checkbox') {
             if(checked){
                 updatedCategories.push(name)
@@ -91,10 +93,15 @@ const Products: FC = () => {
                 updatedCategories = updatedCategories.filter(el => el !== name)
             }
         }
+        if(name === 'name' && type !== 'checkbox') {
+            productName = value.split(/(\s+)/)
+            setNewProductName(productName)
+        }
         if(!edit){
             setProduct({
                 ...product,
                 [name]: value,
+                name: productName,
                 category: updatedCategories,
                 id: Number(setID)
             })
@@ -102,6 +109,7 @@ const Products: FC = () => {
             setProduct({
                 ...product,
                 [name]: value,
+                name: productName,
                 category: updatedCategories
             })
         }
@@ -197,7 +205,7 @@ const Products: FC = () => {
             setShowModal(false)
             setSelectedOptions([])
             setProduct({
-                name: '',
+                name: [],
                 imgurl: '',
                 id: 0,
                 quantity: '',
@@ -206,13 +214,18 @@ const Products: FC = () => {
             })
     }
 
+    const toUpperLetter = (words: string[]) => {
+        words[0] = words[0].charAt(0).toUpperCase() + words[0].slice(1)
+        return words
+    }
+
     const productsList = products.map(el => (
         <tr key={el.id} className={`${style.categoryWrapper}`}>
             <th className={`${style.td}`} scope="row">{el.id}</th>
             <td className={`${style.td}`}>
                 <div className={`${style.wrapperCell} ${style.products}`}>
-                    <img className={`${style.img} mr-5`} src={`${el.imgurl}`} alt={`${el.name}`} />
-                    <p className={`${style.text}`}>{el.name}</p>
+                    <img className={`${style.img} mr-5`} src={`${el.imgurl}`} alt={`${el.name.join('')}`} />
+                    <p className={`${style.text}`}>{toUpperLetter(el.name)}</p>
                 </div> 
             </td>
             <td className={`${style.td}`}>
@@ -269,8 +282,8 @@ const Products: FC = () => {
                                         <input
                                             type="text"
                                             name='name'
-                                            value={product.name}
-                                            className={`form-control ${style.input} ${formValid && product.name === '' ? style.inputError : null}`}
+                                            value={product.name.join('')}
+                                            className={`form-control ${style.input} ${formValid && product.name.length === 0 ? style.inputError : null}`}
                                             id="name"
                                             onChange={changehandler}
                                         />
