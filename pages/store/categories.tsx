@@ -9,38 +9,77 @@ import style from '../../style/store.module.scss'
 type Category = {
     name: string,
     icon: string,
-    [key: string]: string
+    id: number,
+    [key: string | number]: string | number
 }
 
 const Categories: FC = () => {
     const [formValid, setFormValid] = useState<boolean>(false)
     const [edit, setEdit] = useState<boolean>(false)
-    const [searchingFiledValue, setSearchingFiledValue] = useState<string>('')
+    // const [searchingFiledValue, setSearchingFiledValue] = useState<string>('')
     const [categories, setCategories] = useState<Category[]>([])
     const [category, setCategory] = useState<Category>({
         name: '',
-        icon: ''
+        icon: '',
+        id: 0
     })
 
     const [showModal, setShowModal] = useState<boolean>(false)
+    const [showDelateModal, setShowDelateModal] = useState<boolean>(false)
+    const [delateConfirmation, setDelateConfirmation] = useState<boolean>(false)
+    const [categoryToRemove, setCategoryToRemove] = useState<Category>()
 
-    const { $getAllDocuments, $updateFieldInDocument, $handleSearchingValue, $removeDocument, $handleSearchResults, $addNewDocument, searchResults, valuesArray, searchingValue } = Methods()
+    const { $getAllDocuments, $updateDocument, $handleSearchingValue, $removeDocument, $handleSearchResults, $addNewDocument, searchResults, valuesArray, searchingValue } = Methods()
 
     const getAllCategories = async () => {
         try {
             const categories = await $getAllDocuments('categories')
-            setCategories(categories.docs.map(el => el.data() as Category))
+            const categoryList = categories.docs.map(el => el.data() as Category)
+            const sortedCategoryList = categoryList.sort((b, a) => b.id - a.id)
+            setCategories(sortedCategoryList)
         } catch (err) {
             console.error(`Error: `, err)
         }
     }
 
-    const changehandler = (e: ChangeEvent<HTMLInputElement>) => {
+    const generateIDs = async (newID: number) => {
+        try {
+            const categories = await $getAllDocuments('categories')
+            const categoriesList = categories.docs.map(el => el.data() as Category)
+            let arrayIDs: number[] = []
+            categoriesList.forEach(el => {
+                arrayIDs.push(el.id)
+            })
+            while(arrayIDs.includes(newID)) {
+                newID++
+            }
+            return newID
+        } catch (err) {
+            console.error(`Error: `, err)
+        }
+    }
+
+    const changehandler = async (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target
-        setCategory({
-            ...category,
-            [name]: value
-        })
+        const cursorPopsition = e.target.selectionStart
+        let setID = await generateIDs(0)
+
+        if(edit) {
+            setCategory({
+                ...category,
+                [name]: value
+            })
+        } else {
+            setCategory({
+                ...category,
+                id: Number(setID),
+                [name]: value
+            })
+        }
+
+        setTimeout(() => {
+            e.target.setSelectionRange(cursorPopsition, cursorPopsition)
+        }, 0.1)
     }
 
     const isFormValid = () => {
@@ -63,39 +102,60 @@ const Categories: FC = () => {
                     handleClose()
                 })
         }else if(isFormValid() && edit) {
-            $updateFieldInDocument('categories', 'name', searchingFiledValue, category.name, 'name')
-            $updateFieldInDocument('categories', 'name', searchingFiledValue, category.icon, 'icon')
-                .then(() => {
-                    getAllCategories()
-                    handleClose()
-                })
+            $updateDocument('categories', 'id', category.id, category)
+            // $updateFieldInDocument('categories', 'name', searchingFiledValue, category.name, 'name')
+            // $updateFieldInDocument('categories', 'name', searchingFiledValue, category.icon, 'icon')
+            //     .then(() => {
+            //         getAllCategories()
+            //         handleClose()
+            //     })
 
         }
     }
 
-    const clickHandler = (category: Category, action: string) => {
+    const actionHandler = (category: Category, action: string) => {
         if (action === 'edit') {
             setEdit(true)
             setCategory({
+                ...category,
                 name: category.name,
                 icon: category.icon
             })
-            setSearchingFiledValue(category.name)
+            // setSearchingFiledValue(category.name)
             setShowModal(true)
         }else{
             setEdit(false)
-            $removeDocument('categories', category.name, 'name')
+            setShowDelateModal(true)
+            setCategoryToRemove(category)
+            
+        }
+    }
+
+    const deleteFunction = () => {
+        if(categoryToRemove) {
+            $removeDocument('categories', categoryToRemove.id, 'id')
                 .then(() => {
-                    getAllCategories()
+                    setShowDelateModal(false)
+                    setCategoryToRemove(undefined)
+                    setDelateConfirmation(false)
                 })
         }
     }
+
+    useEffect(() => {
+        if(delateConfirmation) {
+            deleteFunction()
+        }
+        getAllCategories()
+    }, [delateConfirmation])
+
     const handleClose = () => {
         setShowModal(false)
         setEdit(false)
         setCategory({
             name: '',
-            icon: ''
+            icon: '',
+            id: 0
         })
     }
 
@@ -104,10 +164,11 @@ const Categories: FC = () => {
             <div className={`${style.wrapperCell}`}>
                 <i className={`${el.icon}`}></i>
                 <p className={`${style.text}`}>{el.name}</p>
+                <p className={`${style.text}`}>{el.id}</p>
             </div>
             <div className={`${style.wrapperBtn}`}>
-                <button type="button" className={`btn btn-light ${style.btnEdit} ${style.defaultBtn}`} onClick={() => clickHandler(el, 'edit')}>Edit</button>
-                <button type="button" className={`btn btn-light ${style.btnDelete} ${style.defaultBtn}`} onClick={() => clickHandler(el, 'delete')}>Delete</button>
+                <button type="button" className={`btn btn-light ${style.btnEdit} ${style.defaultBtn}`} onClick={() => actionHandler(el, 'edit')}>Edit</button>
+                <button type="button" className={`btn btn-light ${style.btnDelete} ${style.defaultBtn}`} onClick={() => actionHandler(el, 'delete')}>Delete</button>
             </div>
         </div>
     ))
@@ -117,7 +178,7 @@ const Categories: FC = () => {
         if (modalContent) {
         modalContent.style.backgroundColor = 'transparent'
         }
-    }, [showModal])
+    }, [showModal, showDelateModal])
 
     useEffect(() => {
         document.body.style.backgroundColor = '#161616'
@@ -162,6 +223,16 @@ const Categories: FC = () => {
                                     </div>
                                     <button type="submit" className={`btn btn-light ${style.formButton}`}>{!edit ? 'Add' : 'Edit'}</button>
                                 </form>
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+
+                    <Modal show={showDelateModal} onHide={() => setShowDelateModal(false)}>
+                        <Modal.Body className={`${style.modalBody}`}>
+                            <div className={style.removeModalWrapper}>
+                                <h2 className={style.title}>{`Delate the "${categoryToRemove && categoryToRemove.name}"?`}</h2>
+                                <button type="button" className={`btn btn-light  ${style.btnDelete} ${style.defaultBtn} ${style.removebtn}`} onClick={() => setDelateConfirmation(true)}>Yes</button>
+                                <button type="button" className={`btn btn-light ${style.btnEdit} ${style.defaultBtn} ${style.removebtn}`} onClick={() => setShowDelateModal(false)}>No</button>
                             </div>
                         </Modal.Body>
                     </Modal>

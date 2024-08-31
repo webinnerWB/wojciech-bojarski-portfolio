@@ -92,16 +92,16 @@ const Products: FC = () => {
             }else{
                 updatedCategories = updatedCategories.filter(el => el !== name)
             }
-        }
-        if(name === 'name' && type !== 'checkbox') {
+        } else if(name === 'name') {
             productName = value.split(/(\s+)/)
             setNewProductName(productName)
         }
+        
         if(!edit){
             setProduct({
                 ...product,
                 [name]: value,
-                name: productName,
+                name: name === 'name' ? productName : product.name,
                 category: updatedCategories,
                 id: Number(setID)
             })
@@ -109,11 +109,10 @@ const Products: FC = () => {
             setProduct({
                 ...product,
                 [name]: value,
-                name: productName,
+                name: name === 'name' ? productName : product.name,
                 category: updatedCategories
             })
         }
-        console.log(setID)
 
         setSelectedOptions(updatedCategories)
     }
@@ -167,7 +166,6 @@ const Products: FC = () => {
         if (action === 'edit') {
             setEdit(true)
             setSelectedOptions(product.category)
-            console.log(selectedOptions)
             setProduct({
                 name: product.name,
                 imgurl: product.imgurl,
@@ -194,12 +192,14 @@ const Products: FC = () => {
             })
         }
     }
+
     useEffect(() => {
         if(delateConfirmation) {
             deleteFunction()
         }
         getAllProducts()
     }, [delateConfirmation])
+
     const handleClose = () => {
             setEdit(false)
             setShowModal(false)
@@ -219,37 +219,40 @@ const Products: FC = () => {
         return words
     }
 
-    const productsList = products.map(el => (
-        <tr key={el.id} className={`${style.categoryWrapper}`}>
-            <th className={`${style.td}`} scope="row">{el.id}</th>
-            <td className={`${style.td}`}>
-                <div className={`${style.wrapperCell} ${style.products}`}>
-                    <img className={`${style.img} mr-5`} src={`${el.imgurl}`} alt={`${el.name.join('')}`} />
-                    <p className={`${style.text}`}>{toUpperLetter(el.name)}</p>
-                </div> 
-            </td>
-            <td className={`${style.td}`}>
-                <div className={`${style.wrapperCell} ${style.products}`}>
-                    <p className={`${style.text}`}>{el.category.join(', ')}</p>
-                </div> 
-            </td>
-            <td className={`${style.td}`}>
-                <div className={`${style.wrapperCell} ${style.products}`}>
-                    <p className={`${style.text}`}>{el.quantity}</p>
-                </div> 
-            </td>
-            <td className={`${style.td}`}>
-                <div className={`${style.wrapperCell} ${style.products}`}>
-                    <p className={`${style.text}`}>{el.price} PLN</p>
-                </div> 
-            </td>
-            <td className={`${style.td}`}>
-                <div className={`${style.wrapperBtn}`}>
-                    <button type="button" className={`btn btn-light ${style.btnEdit} ${style.defaultBtn}`} onClick={() => actionHandler(el, 'edit')}>Edit</button>
-                    <button type="button" className={`btn btn-light ${style.btnDelete} ${style.defaultBtn}`} onClick={() => actionHandler(el, 'delete')}>Delete</button>
-                </div> 
-            </td>
-        </tr>
+    const productsList = products.map((el, i)=> (
+        <>
+            <tr key={`-${i}`} className={`${style.trSpace}`}></tr>
+            <tr key={el.id} className={`${style.categoryWrapper}`}>
+                <th className={`${style.td}`} scope="row">{el.id}</th>
+                <td className={`${style.td}`}>
+                    <div className={`${style.wrapperCell} ${style.products}`}>
+                        <img className={`${style.img} mr-5`} src={`${el.imgurl}`} alt={`${el.name.join('')}`} />
+                        <p className={`${style.text}`}>{toUpperLetter(el.name)}</p>
+                    </div> 
+                </td>
+                <td className={`${style.td}`}>
+                    <div className={`${style.wrapperCell} ${style.tdProducts}`}>
+                        <p className={`${style.text}`}>{el.category.join(', ')}</p>
+                    </div> 
+                </td>
+                <td className={`${style.td}`}>
+                    <div className={`${style.wrapperCell} ${style.products}`}>
+                        <p className={`${style.text}`}>{el.quantity}</p>
+                    </div> 
+                </td>
+                <td className={`${style.td}`}>
+                    <div className={`${style.wrapperCell} ${style.products}`}>
+                        <p className={`${style.text}`}>{el.price} PLN</p>
+                    </div> 
+                </td>
+                <td className={`${style.td}`}>
+                    <div className={`${style.wrapperBtn}`}>
+                        <button type="button" className={`btn btn-light ${style.btnEdit} ${style.defaultBtn}`} onClick={() => actionHandler(el, 'edit')}>Edit</button>
+                        <button type="button" className={`btn btn-light ${style.btnDelete} ${style.defaultBtn}`} onClick={() => actionHandler(el, 'delete')}>Delete</button>
+                    </div> 
+                </td>
+            </tr>
+        </>
     ))
 
     useEffect(() => {
@@ -340,7 +343,7 @@ const Products: FC = () => {
                     <Modal show={showDelateModal} onHide={() => setShowDelateModal(false)}>
                         <Modal.Body className={`${style.modalBody}`}>
                             <div className={style.removeModalWrapper}>
-                                <h2 className={style.title}>Delate the product?</h2>
+                                <h2 className={style.title}>{`Delate the "${productToRemove && productToRemove.name.join('')}"?`}</h2>
                                 <button type="button" className={`btn btn-light  ${style.btnDelete} ${style.defaultBtn} ${style.removebtn}`} onClick={() => setDelateConfirmation(true)}>Yes</button>
                                 <button type="button" className={`btn btn-light ${style.btnEdit} ${style.defaultBtn} ${style.removebtn}`} onClick={() => setShowDelateModal(false)}>No</button>
                             </div>
