@@ -25,8 +25,8 @@ type Products = {
 const Products: FC = () => {
     const [formValid, setFormValid] = useState<boolean>(false)
     const [edit, setEdit] = useState<boolean>(false)
-    const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-    const [newProductName, setNewProductName] = useState<string[]>([]);
+    const [selectedOptions, setSelectedOptions] = useState<string[]>([])
+    const [newProductName, setNewProductName] = useState<string[]>([])
     const [allCategories, setAllCategories] = useState<Category[]>([])
     const [products, setProducts] = useState<Products[]>([])
     const [product, setProduct] = useState<Products>({
@@ -92,31 +92,27 @@ const Products: FC = () => {
             }else{
                 updatedCategories = updatedCategories.filter(el => el !== name)
             }
+            setSelectedOptions(updatedCategories)
+            setProduct(prevState => ({
+                ...prevState,
+                category: updatedCategories
+            }))
         } else if(name === 'name') {
             productName = value.split(/(\s+)/)
             setNewProductName(productName)
-        }
-        
-        if(!edit){
-            setProduct({
-                ...product,
+            setProduct(prevState => ({
+                ...prevState,
+                name: productName
+            }))
+        } else {
+            setProduct(prevState => ({
+                ...prevState,
                 [name]: value,
-                name: name === 'name' ? productName : product.name,
-                category: updatedCategories,
-                id: Number(setID)
-            })
-        }else{
-            setProduct({
-                ...product,
-                [name]: value,
-                name: name === 'name' ? productName : product.name,
-                category: updatedCategories
-            })
+                id: !edit ? Number(setID) : prevState.id
+            }))
         }
-
-        setSelectedOptions(updatedCategories)
     }
-    const dropDownElementCategory = allCategories.map((el: Category) => (
+    const dropDownElementCategory = allCategories.map((el: Category, i: number) => (
         <React.Fragment key={`${el.id}${el.name}`}>
             <label className={style.optionElemnt}>
                 <input
@@ -220,9 +216,9 @@ const Products: FC = () => {
     }
 
     const productsList = products.map((el, i)=> (
-        <>
-            <tr key={`-${i}`} className={`${style.trSpace}`}></tr>
-            <tr key={el.id} className={`${style.categoryWrapper}`}>
+        <React.Fragment key={`category-${el.id}`}>
+            <tr className={`${style.trSpace}`}></tr>
+            <tr className={`${style.categoryWrapper}`}>
                 <th className={`${style.td}`} scope="row">{el.id}</th>
                 <td className={`${style.td}`}>
                     <div className={`${style.wrapperCell} ${style.products}`}>
@@ -252,7 +248,7 @@ const Products: FC = () => {
                     </div> 
                 </td>
             </tr>
-        </>
+        </React.Fragment>
     ))
 
     useEffect(() => {

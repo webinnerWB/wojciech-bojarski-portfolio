@@ -103,13 +103,8 @@ const Categories: FC = () => {
                 })
         }else if(isFormValid() && edit) {
             $updateDocument('categories', 'id', category.id, category)
-            // $updateFieldInDocument('categories', 'name', searchingFiledValue, category.name, 'name')
-            // $updateFieldInDocument('categories', 'name', searchingFiledValue, category.icon, 'icon')
-            //     .then(() => {
-            //         getAllCategories()
-            //         handleClose()
-            //     })
-
+            getAllCategories()
+            handleClose()
         }
     }
 
@@ -121,7 +116,6 @@ const Categories: FC = () => {
                 name: category.name,
                 icon: category.icon
             })
-            // setSearchingFiledValue(category.name)
             setShowModal(true)
         }else{
             setEdit(false)

@@ -5,7 +5,7 @@ import {firestore} from './FirebaseConfig'
 import React, { useState, ChangeEvent, useEffect } from "react"
 import { useRouter } from 'next/router' 
 
-import soreStyle from '../../../style/store.module.scss'
+import storeStyle from '../../../style/store.module.scss'
 
 const Methods = () => {
 
@@ -264,9 +264,9 @@ const Methods = () => {
             })
             ref.scrollIntoView({ behavior: 'smooth' })
             ref.innerHTML = 'Registration was successful, you will be automatically logged into your account immediately.'
-            ref.classList.add(`${soreStyle.showFormMsg}`, `${soreStyle.success}`)
+            ref.classList.add(`${storeStyle.showFormMsg}`, `${storeStyle.success}`)
                 setTimeout(() => {
-                    ref.classList.remove(`${soreStyle.showFormMsg}`, `${soreStyle.success}`)
+                    ref.classList.remove(`${storeStyle.showFormMsg}`, `${storeStyle.success}`)
                     router.push('/store')
                 }, 3500)
         } catch (err: any) {
@@ -279,17 +279,17 @@ const Methods = () => {
                   console.error('The password is too weak!')
                   ref.scrollIntoView({ behavior: 'smooth' })
                   ref.innerHTML = 'The password is too weak!'
-                  ref.classList.add(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
+                  ref.classList.add(`${storeStyle.showFormMsg}`, `${storeStyle.error}`)
                   setTimeout(() => {
-                      ref.classList.remove(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
+                      ref.classList.remove(`${storeStyle.showFormMsg}`, `${storeStyle.error}`)
                   }, 10000)
               } else if(errorCode === 'auth/email-already-in-use') {
                   ref.scrollIntoView({ behavior: 'smooth' })
                   console.error('E-mail address has already been used')
                   ref.innerHTML = 'E-mail address has already been used '
-                  ref.classList.add(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
+                  ref.classList.add(`${storeStyle.showFormMsg}`, `${storeStyle.error}`)
                   setTimeout(() => {
-                      ref.classList.remove(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
+                      ref.classList.remove(`${storeStyle.showFormMsg}`, `${storeStyle.error}`)
                   }, 10000)
               } else {
                 console.error(errorCode)
@@ -313,9 +313,9 @@ const Methods = () => {
               if (errorCode === 'auth/invalid-credential') {
                 console.error('Incorrect login credentials')
                 ref.innerHTML = 'Incorrect login credentials'
-                ref.classList.add(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
+                ref.classList.add(`${storeStyle.showFormMsg}`, `${storeStyle.error}`)
                 setTimeout(() => {
-                    ref.classList.remove(`${soreStyle.showFormMsg}`, `${soreStyle.error}`)
+                    ref.classList.remove(`${storeStyle.showFormMsg}`, `${storeStyle.error}`)
                 }, 10000)
               } else {
                 console.error(errorCode)
